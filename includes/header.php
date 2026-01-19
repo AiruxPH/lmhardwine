@@ -24,9 +24,9 @@
             <nav>
                 <ul class="nav-links">
                     <li><a href="index.php">Home</a></li>
-                    <li><a href="#collection">Collection</a></li>
-                    <li><a href="#about">Our Story</a></li>
-                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="products.php">Collection</a></li>
+                    <li><a href="index.php#about">Our Story</a></li>
+                    <li><a href="index.php#contact">Contact</a></li>
                 </ul>
             </nav>
             <div class="header-actions">

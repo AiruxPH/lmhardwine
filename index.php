@@ -139,19 +139,104 @@
         </div>
     </section>
 
-    <!-- Banner Section -->
-    <section
-        style="background: url('assets/vineyard-bg.jpg') no-repeat center center/cover; position: relative; padding: var(--spacing-xl) 0;">
-        <div style="position: absolute; inset: 0; background: rgba(0,0,0,0.8);"></div>
-        <div class="container animate-on-scroll"
-            style="position: relative; z-index: 1; text-align: center; max-width: 800px; opacity: 0; transform: translateY(20px); transition: 1s ease;">
-            <h2 style="font-size: 3rem; margin-bottom: 1.5rem;">Heritage of Hardness</h2>
-            <p style="font-size: 1.1rem; color: #ccc; margin-bottom: 2rem;">
-                Our vines grow in the toughest volcanic soils, struggling for every drop of water.
-                This struggle produces fruit of concentrated power and unparalleled depth.
-                We don't make easy wine. We make Hard Wine.
-            </p>
-            <a href="#about" class="btn">Read Our Story</a>
+    <!-- About Section -->
+    <section id="about" style="padding: var(--spacing-xl) 0; background: #0f0f0f;">
+        <div class="container">
+            <div
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--spacing-xl); align-items: center;">
+                <div class="animate-on-scroll" style="opacity: 0; transform: translateY(20px); transition: 1s ease;">
+                    <div
+                        style="width: 100%; height: 400px; background: #1a1a1a; border-radius: 8px; position: relative; overflow: hidden;">
+                        <!-- Placeholder for About Image -->
+                        <div
+                            style="position: absolute; inset: 0; background: linear-gradient(135deg, rgba(30,30,30,0.8), rgba(0,0,0,0.9)); display: flex; align-items: center; justify-content: center;">
+                            <span style="font-size: 5rem; opacity: 0.05; font-weight: 700;">STORY</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="animate-on-scroll"
+                    style="opacity: 0; transform: translateY(20px); transition: 1s ease; transition-delay: 0.2s;">
+                    <p class="text-accent"
+                        style="text-transform: uppercase; letter-spacing: 2px; font-weight: 600; margin-bottom: 1rem;">
+                        Our Heritage</p>
+                    <h2 style="margin-bottom: 1.5rem;">Forged in Fire & Stone</h2>
+                    <p style="color: var(--color-text-muted); margin-bottom: 1.5rem;">
+                        LM Hard Wine isn't born in a gentle valley. It fights for existence on the scorched slopes of
+                        ancient volcanoes. The soil is unforgiving—rocky, mineral-rich, and hard.
+                    </p>
+                    <p style="color: var(--color-text-muted); margin-bottom: 2rem;">
+                        This struggle forces our vines to drive their roots deep into the earth, resulting in grapes of
+                        extraordinary concentration and complexity. We don't interfere. We simply bottle the intensity.
+                    </p>
+
+                    <div style="display: flex; gap: 2rem;">
+                        <div>
+                            <h3 style="font-size: 2.5rem; color: var(--color-primary); margin-bottom: 0;">1885</h3>
+                            <span style="font-size: 0.9rem; color: var(--color-text-muted);">Est. Date</span>
+                        </div>
+                        <div>
+                            <h3 style="font-size: 2.5rem; color: var(--color-primary); margin-bottom: 0;">2,400ft</h3>
+                            <span style="font-size: 0.9rem; color: var(--color-text-muted);">Elevation</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" style="padding: var(--spacing-xl) 0; position: relative; overflow: hidden;">
+        <!-- Background Decor -->
+        <div
+            style="position: absolute; top: 0; right: 0; width: 40vw; height: 40vw; background: radial-gradient(circle, rgba(114, 14, 30, 0.1) 0%, transparent 70%); filter: blur(60px); opacity: 0.5;">
+        </div>
+
+        <div class="container" style="position: relative; z-index: 1;">
+            <div class="text-center" style="margin-bottom: var(--spacing-lg);">
+                <h2>Taste the Intensity</h2>
+                <p style="color: var(--color-text-muted);">Book a private tasting or inquire about trade partnerships.
+                </p>
+            </div>
+
+            <div class="glass-card animate-on-scroll"
+                style="max-width: 800px; margin: 0 auto; opacity: 0; transform: translateY(20px); transition: 1s ease;">
+                <form action="#" method="POST"
+                    style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-md);">
+                    <div style="grid-column: 1 / -1; display: flex; flex-direction: column; gap: 0.5rem;">
+                        <label style="font-size: 0.9rem; color: var(--color-text-muted);">Name</label>
+                        <input type="text"
+                            style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px; color: white; border-radius: 4px; font-family: inherit;">
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <label style="font-size: 0.9rem; color: var(--color-text-muted);">Email</label>
+                        <input type="email"
+                            style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px; color: white; border-radius: 4px; font-family: inherit;">
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <label style="font-size: 0.9rem; color: var(--color-text-muted);">Subject</label>
+                        <select
+                            style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px; color: white; border-radius: 4px; font-family: inherit;">
+                            <option style="background: #141414;">Private Tasting</option>
+                            <option style="background: #141414;">Trade Inquiry</option>
+                            <option style="background: #141414;">General Question</option>
+                        </select>
+                    </div>
+
+                    <div style="grid-column: 1 / -1; display: flex; flex-direction: column; gap: 0.5rem;">
+                        <label style="font-size: 0.9rem; color: var(--color-text-muted);">Message</label>
+                        <textarea rows="4"
+                            style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px; color: white; border-radius: 4px; font-family: inherit; resize: vertical;"></textarea>
+                    </div>
+
+                    <div style="grid-column: 1 / -1; margin-top: 1rem;">
+                        <button type="submit" class="btn btn-primary" style="width: 100%; border: none;">Send
+                            Enquiry</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </section>
 </main>
