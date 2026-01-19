@@ -61,75 +61,83 @@
                 <!-- Product Card 1 -->
                 <div class="glass-card animate-on-scroll"
                     style="opacity: 0; transform: translateY(20px); transition: 1s ease; transition-delay: 0.1s;">
-                    <div
-                        style="height: 300px; background: #1a1a1a; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: center; border-radius: 4px; position: relative; overflow: hidden;">
-                        <span style="font-size: 4rem; opacity: 0.1; font-weight: 700;">RED</span>
-                        <!-- Placeholder specific style -->
+                    <a href="product-details.php?id=1" style="text-decoration: none; color: inherit;">
                         <div
-                            style="position: absolute; inset: 0; background: linear-gradient(45deg, rgba(114, 14, 30, 0.1), transparent);">
+                            style="height: 300px; background: #1a1a1a; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: center; border-radius: 4px; position: relative; overflow: hidden;">
+                            <span style="font-size: 4rem; opacity: 0.1; font-weight: 700;">RED</span>
+                            <div
+                                style="position: absolute; inset: 0; background: linear-gradient(45deg, rgba(114, 14, 30, 0.1), transparent);">
+                            </div>
                         </div>
-                    </div>
-                    <div
-                        style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
-                        <div>
-                            <h3 style="font-size: 1.5rem; margin-bottom: 0.25rem;">Crimson Impact</h3>
-                            <p style="color: var(--color-accent); font-size: 0.9rem;">Cabernet Sauvignon • 2024</p>
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+                            <div>
+                                <h3 style="font-size: 1.5rem; margin-bottom: 0.25rem;">Crimson Impact</h3>
+                                <p style="color: var(--color-accent); font-size: 0.9rem;">Cabernet Sauvignon • 2024</p>
+                            </div>
+                            <span style="font-size: 1.25rem; font-weight: 600;">$89</span>
                         </div>
-                        <span style="font-size: 1.25rem; font-weight: 600;">$89</span>
-                    </div>
+                    </a>
                     <p style="color: var(--color-text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
                         A full-bodied giant with notes of dark cherry, leather, and smoked oak. Not for the faint of
                         heart.
                     </p>
-                    <a href="#" class="btn" style="width: 100%; text-align: center;">Add to Cellar</a>
+                    <a href="product-details.php?id=1" class="btn" style="width: 100%; text-align: center;">View
+                        Details</a>
                 </div>
 
                 <!-- Product Card 2 -->
                 <div class="glass-card animate-on-scroll"
                     style="opacity: 0; transform: translateY(20px); transition: 1s ease; transition-delay: 0.2s;">
-                    <div
-                        style="height: 300px; background: #1a1a1a; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: center; border-radius: 4px; position: relative; overflow: hidden;">
-                        <span style="font-size: 4rem; opacity: 0.1; font-weight: 700;">ONYX</span>
+                    <a href="product-details.php?id=2" style="text-decoration: none; color: inherit;">
                         <div
-                            style="position: absolute; inset: 0; background: linear-gradient(45deg, rgba(80, 80, 80, 0.1), transparent);">
+                            style="height: 300px; background: #1a1a1a; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: center; border-radius: 4px; position: relative; overflow: hidden;">
+                            <span style="font-size: 4rem; opacity: 0.1; font-weight: 700;">ONYX</span>
+                            <div
+                                style="position: absolute; inset: 0; background: linear-gradient(45deg, rgba(80, 80, 80, 0.1), transparent);">
+                            </div>
                         </div>
-                    </div>
-                    <div
-                        style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
-                        <div>
-                            <h3 style="font-size: 1.5rem; margin-bottom: 0.25rem;">Midnight Reserve</h3>
-                            <p style="color: var(--color-accent); font-size: 0.9rem;">Syrah Blend • 2022</p>
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+                            <div>
+                                <h3 style="font-size: 1.5rem; margin-bottom: 0.25rem;">Midnight Reserve</h3>
+                                <p style="color: var(--color-accent); font-size: 0.9rem;">Syrah Blend • 2022</p>
+                            </div>
+                            <span style="font-size: 1.25rem; font-weight: 600;">$120</span>
                         </div>
-                        <span style="font-size: 1.25rem; font-weight: 600;">$120</span>
-                    </div>
+                    </a>
                     <p style="color: var(--color-text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
                         Velvety texture meets intense spice. Aged in charred barrels for a finish that lingers forever.
                     </p>
-                    <a href="#" class="btn" style="width: 100%; text-align: center;">Add to Cellar</a>
+                    <a href="product-details.php?id=2" class="btn" style="width: 100%; text-align: center;">View
+                        Details</a>
                 </div>
 
                 <!-- Product Card 3 -->
                 <div class="glass-card animate-on-scroll"
                     style="opacity: 0; transform: translateY(20px); transition: 1s ease; transition-delay: 0.3s;">
-                    <div
-                        style="height: 300px; background: #1a1a1a; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: center; border-radius: 4px; position: relative; overflow: hidden;">
-                        <span style="font-size: 4rem; opacity: 0.1; font-weight: 700;">GOLD</span>
+                    <a href="product-details.php?id=3" style="text-decoration: none; color: inherit;">
                         <div
-                            style="position: absolute; inset: 0; background: linear-gradient(45deg, rgba(212, 175, 55, 0.1), transparent);">
+                            style="height: 300px; background: #1a1a1a; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: center; border-radius: 4px; position: relative; overflow: hidden;">
+                            <span style="font-size: 4rem; opacity: 0.1; font-weight: 700;">GOLD</span>
+                            <div
+                                style="position: absolute; inset: 0; background: linear-gradient(45deg, rgba(212, 175, 55, 0.1), transparent);">
+                            </div>
                         </div>
-                    </div>
-                    <div
-                        style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
-                        <div>
-                            <h3 style="font-size: 1.5rem; margin-bottom: 0.25rem;">Liquid Gold</h3>
-                            <p style="color: var(--color-accent); font-size: 0.9rem;">Chardonnay • 2023</p>
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+                            <div>
+                                <h3 style="font-size: 1.5rem; margin-bottom: 0.25rem;">Liquid Gold</h3>
+                                <p style="color: var(--color-accent); font-size: 0.9rem;">Chardonnay • 2023</p>
+                            </div>
+                            <span style="font-size: 1.25rem; font-weight: 600;">$95</span>
                         </div>
-                        <span style="font-size: 1.25rem; font-weight: 600;">$95</span>
-                    </div>
+                    </a>
                     <p style="color: var(--color-text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
                         Unexpectedly crisp with a steel backbone. Notes of granite, lemon zest, and white flowers.
                     </p>
-                    <a href="#" class="btn" style="width: 100%; text-align: center;">Add to Cellar</a>
+                    <a href="product-details.php?id=3" class="btn" style="width: 100%; text-align: center;">View
+                        Details</a>
                 </div>
             </div>
 

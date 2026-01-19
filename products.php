@@ -58,37 +58,41 @@ try {
                 <div class="glass-card animate-on-scroll"
                     style="opacity: 0; transform: translateY(20px); transition: 1s ease;">
 
-                    <!-- Image Placeholder -->
-                    <div
-                        style="height: 300px; background: #1a1a1a; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: center; border-radius: 4px; position: relative; overflow: hidden;">
-                        <span style="font-size: 3rem; opacity: 0.1; font-weight: 700; text-transform: uppercase;">
-                            <?php echo $product['type']; ?>
-                        </span>
-                        <div style="position: absolute; inset: 0; background: <?php echo $product['color']; ?>;"></div>
-                    </div>
-
-                    <!-- Content -->
-                    <div
-                        style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
-                        <div>
-                            <h3 style="font-size: 1.5rem; margin-bottom: 0.25rem;">
-                                <?php echo $product['name']; ?>
-                            </h3>
-                            <p style="color: var(--color-accent); font-size: 0.9rem;">
-                                <?php echo $product['varietal']; ?> •
-                                <?php echo $product['year']; ?>
-                            </p>
+                    <a href="product-details.php?id=<?php echo $product['id']; ?>"
+                        style="text-decoration: none; color: inherit;">
+                        <!-- Image Placeholder -->
+                        <div
+                            style="height: 300px; background: #1a1a1a; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: center; border-radius: 4px; position: relative; overflow: hidden; transition: transform 0.3s ease;">
+                            <span style="font-size: 3rem; opacity: 0.1; font-weight: 700; text-transform: uppercase;">
+                                <?php echo $product['type']; ?>
+                            </span>
+                            <div style="position: absolute; inset: 0; background: <?php echo $product['color']; ?>;"></div>
                         </div>
-                        <span style="font-size: 1.25rem; font-weight: 600;">$
-                            <?php echo $product['price']; ?>
-                        </span>
-                    </div>
+
+                        <!-- Content -->
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+                            <div>
+                                <h3 style="font-size: 1.5rem; margin-bottom: 0.25rem;">
+                                    <?php echo $product['name']; ?>
+                                </h3>
+                                <p style="color: var(--color-accent); font-size: 0.9rem;">
+                                    <?php echo $product['varietal']; ?> •
+                                    <?php echo $product['year']; ?>
+                                </p>
+                            </div>
+                            <span style="font-size: 1.25rem; font-weight: 600;">$
+                                <?php echo $product['price']; ?>
+                            </span>
+                        </div>
+                    </a>
 
                     <p style="color: var(--color-text-muted); font-size: 0.9rem; margin-bottom: 1.5rem; min-height: 3em;">
                         <?php echo $product['desc']; ?>
                     </p>
 
-                    <a href="#" class="btn" style="width: 100%; text-align: center;">Add to Cellar</a>
+                    <a href="product-details.php?id=<?php echo $product['id']; ?>" class="btn"
+                        style="width: 100%; text-align: center;">View Details</a>
                 </div>
             <?php endforeach; ?>
         </div>
