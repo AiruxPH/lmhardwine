@@ -26,7 +26,7 @@ error_reporting(E_ALL);
     <header class="main-header">
         <div class="container nav-container">
             <a href="index.php" class="logo">LM <span>HARD</span> WINE</a>
-            <nav>
+            <nav class="nav-menu">
                 <ul class="nav-links">
                     <li><a href="index.php">Home</a></li>
                     <li><a href="products.php">Collection</a></li>
@@ -35,6 +35,11 @@ error_reporting(E_ALL);
                 </ul>
             </nav>
             <div class="header-actions" style="display: flex; align-items: center; gap: 1.5rem;">
+                <button id="mobile-menu-toggle" class="mobile-toggle" aria-label="Toggle navigation">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </button>
                 <a href="#" id="cart-toggle"
                     style="position: relative; display: flex; align-items: center; color: white;">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
