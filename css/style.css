@@ -246,7 +246,7 @@ img {
 .cart-panel {
     position: fixed;
     top: 0;
-    right: -400px;
+    right: 0;
     width: 100%;
     max-width: 400px;
     height: 100%;
@@ -256,10 +256,11 @@ img {
     transition: var(--transition-fast);
     display: flex;
     flex-direction: column;
+    transform: translateX(100%);
 }
 
 .cart-panel.open {
-    right: 0;
+    transform: translateX(0);
     box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
 }
 
