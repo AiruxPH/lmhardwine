@@ -1,78 +1,34 @@
 <?php
 include 'includes/header.php';
+include 'includes/db.php';
 
-// Mock Data Source - To be replaced by Database later
-$products = [
-    [
-        'id' => 1,
-        'name' => 'Crimson Impact',
-        'type' => 'Red',
-        'varietal' => 'Cabernet Sauvignon',
-        'price' => 89,
-        'year' => 2024,
-        'desc' => 'A full-bodied giant with notes of dark cherry, leather, and smoked oak.',
-        'color' => 'linear-gradient(45deg, rgba(114, 14, 30, 0.1), transparent)'
-    ],
-    [
-        'id' => 2,
-        'name' => 'Midnight Reserve',
-        'type' => 'Red',
-        'varietal' => 'Syrah Blend',
-        'price' => 120,
-        'year' => 2022,
-        'desc' => 'Velvety texture meets intense spice. Aged in charred barrels.',
-        'color' => 'linear-gradient(45deg, rgba(80, 80, 80, 0.1), transparent)'
-    ],
-    [
-        'id' => 3,
-        'name' => 'Liquid Gold',
-        'type' => 'White',
-        'varietal' => 'Chardonnay',
-        'price' => 95,
-        'year' => 2023,
-        'desc' => 'Unexpectedly crisp with a steel backbone. Notes of granite and lemon zest.',
-        'color' => 'linear-gradient(45deg, rgba(212, 175, 55, 0.1), transparent)'
-    ],
-    [
-        'id' => 4,
-        'name' => 'Obsidian Rose',
-        'type' => 'Rose',
-        'varietal' => 'Grenache',
-        'price' => 75,
-        'year' => 2024,
-        'desc' => 'Dry, tart, and dangerously drinkable. Not your average summer water.',
-        'color' => 'linear-gradient(45deg, rgba(255, 105, 180, 0.1), transparent)'
-    ],
-    [
-        'id' => 5,
-        'name' => 'Volcanic Ash',
-        'type' => 'Red',
-        'varietal' => 'Pinot Noir',
-        'price' => 110,
-        'year' => 2021,
-        'desc' => 'Grown in volcanic soil, earthy and complex with a smokey finish.',
-        'color' => 'linear-gradient(45deg, rgba(100, 30, 22, 0.1), transparent)'
-    ],
-    [
-        'id' => 6,
-        'name' => 'Frost Bite',
-        'type' => 'White',
-        'varietal' => 'Ice Wine',
-        'price' => 150,
-        'year' => 2023,
-        'desc' => 'Sweetness with a sharp edge. Harvested at the first deep freeze.',
-        'color' => 'linear-gradient(45deg, rgba(200, 240, 255, 0.1), transparent)'
-    ]
-];
-
-// Simple Filter Logic (Mock)
 $filter = isset($_GET['type']) ? $_GET['type'] : 'All';
-$filtered_products = $products;
+$filtered_products = [];
 
-if ($filter != 'All') {
-    $filtered_products = array_filter($products, function ($p) use ($filter) {
-        return $p['type'] === $filter;
-    });
+try {
+    $sql = "SELECT 
+                id, 
+                name, 
+                type, 
+                varietal, 
+                price, 
+                vintage_year as year, 
+                description as `desc`, 
+                color_style as color 
+            FROM products";
+
+    if ($filter != 'All') {
+        $sql .= " WHERE type = :type";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute(['type' => $filter]);
+    } else {
+        $stmt = $pdo->query($sql);
+    }
+
+    $filtered_products = $stmt->fetchAll();
+
+} catch (PDOException $e) {
+    echo "<div class='container' style='padding: 20px; color: red;'>Error fetching products: " . $e->getMessage() . "</div>";
 }
 ?>
 
