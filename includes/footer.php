@@ -40,7 +40,7 @@
     </div>
 </footer>
 
-<script src="js/app.js"></script>
+<script src="js/app.js?v=1.1"></script>
 </body>
 
 </html>
