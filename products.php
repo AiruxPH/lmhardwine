@@ -56,7 +56,7 @@ try {
             style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: var(--spacing-md);">
             <?php foreach ($filtered_products as $product): ?>
                 <div class="glass-card animate-on-scroll"
-                    style="opacity: 0; transform: translateY(20px); transition: 1s ease;">
+                    style="">
 
                     <a href="product-details.php?id=<?php echo $product['id']; ?>"
                         style="text-decoration: none; color: inherit;">

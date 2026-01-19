@@ -51,7 +51,7 @@
     <section id="collection" style="padding: var(--spacing-xl) 0;">
         <div class="container">
             <div class="text-center animate-on-scroll"
-                style="margin-bottom: var(--spacing-lg); opacity: 0; transform: translateY(20px); transition: 1s ease;">
+                style="margin-bottom: var(--spacing-lg); ">
                 <h2 style="margin-bottom: 0.5rem;">The Hard Collection</h2>
                 <div style="width: 60px; height: 3px; background: var(--color-primary); margin: 0 auto;"></div>
             </div>
@@ -60,7 +60,7 @@
                 style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--spacing-md);">
                 <!-- Product Card 1 -->
                 <div class="glass-card animate-on-scroll"
-                    style="opacity: 0; transform: translateY(20px); transition: 1s ease; transition-delay: 0.1s;">
+                    style=" transition-delay: 0.1s;">
                     <a href="product-details.php?id=1" style="text-decoration: none; color: inherit;">
                         <div
                             style="height: 300px; background: #1a1a1a; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: center; border-radius: 4px; position: relative; overflow: hidden;">
@@ -88,7 +88,7 @@
 
                 <!-- Product Card 2 -->
                 <div class="glass-card animate-on-scroll"
-                    style="opacity: 0; transform: translateY(20px); transition: 1s ease; transition-delay: 0.2s;">
+                    style=" transition-delay: 0.2s;">
                     <a href="product-details.php?id=2" style="text-decoration: none; color: inherit;">
                         <div
                             style="height: 300px; background: #1a1a1a; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: center; border-radius: 4px; position: relative; overflow: hidden;">
@@ -115,7 +115,7 @@
 
                 <!-- Product Card 3 -->
                 <div class="glass-card animate-on-scroll"
-                    style="opacity: 0; transform: translateY(20px); transition: 1s ease; transition-delay: 0.3s;">
+                    style=" transition-delay: 0.3s;">
                     <a href="product-details.php?id=3" style="text-decoration: none; color: inherit;">
                         <div
                             style="height: 300px; background: #1a1a1a; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: center; border-radius: 4px; position: relative; overflow: hidden;">
@@ -152,7 +152,7 @@
         <div class="container">
             <div
                 style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--spacing-xl); align-items: center;">
-                <div class="animate-on-scroll" style="opacity: 0; transform: translateY(20px); transition: 1s ease;">
+                <div class="animate-on-scroll" style="">
                     <div
                         style="width: 100%; height: 400px; background: #1a1a1a; border-radius: 8px; position: relative; overflow: hidden;">
                         <!-- Placeholder for About Image -->
@@ -164,7 +164,7 @@
                 </div>
 
                 <div class="animate-on-scroll"
-                    style="opacity: 0; transform: translateY(20px); transition: 1s ease; transition-delay: 0.2s;">
+                    style=" transition-delay: 0.2s;">
                     <p class="text-accent"
                         style="text-transform: uppercase; letter-spacing: 2px; font-weight: 600; margin-bottom: 1rem;">
                         Our Heritage</p>
@@ -208,7 +208,7 @@
             </div>
 
             <div class="glass-card animate-on-scroll"
-                style="max-width: 800px; margin: 0 auto; opacity: 0; transform: translateY(20px); transition: 1s ease;">
+                style="max-width: 800px; margin: 0 auto; ">
                 <form action="#" method="POST"
                     style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-md);">
                     <div style="grid-column: 1 / -1; display: flex; flex-direction: column; gap: 0.5rem;">

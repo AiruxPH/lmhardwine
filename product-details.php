@@ -50,7 +50,7 @@ if (!$product) {
 
             <!-- Visual Side -->
             <div class="glass-card animate-on-scroll"
-                style="padding: 0; overflow: hidden; opacity: 0; transform: translateY(20px); transition: 1s ease;">
+                style="padding: 0; overflow: hidden; ">
                 <div
                     style="height: 500px; background: #1a1a1a; display: flex; align-items: center; justify-content: center; position: relative;">
                     <span style="font-size: 6rem; opacity: 0.1; font-weight: 700; text-transform: uppercase;">
@@ -62,7 +62,7 @@ if (!$product) {
 
             <!-- Details Side -->
             <div class="animate-on-scroll"
-                style="opacity: 0; transform: translateY(20px); transition: 1s ease; transition-delay: 0.2s;">
+                style=" transition-delay: 0.2s;">
                 <p
                     style="color: var(--color-accent); text-transform: uppercase; letter-spacing: 2px; font-weight: 600; margin-bottom: 0.5rem;">
                     <?php echo $product['year']; ?> Vintage
