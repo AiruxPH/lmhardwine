@@ -19,7 +19,7 @@ error_reporting(E_ALL);
         rel="stylesheet">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?v=1.1">
 </head>
 
 <body>
