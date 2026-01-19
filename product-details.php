@@ -49,8 +49,7 @@ if (!$product) {
             style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: var(--spacing-xl); align-items: start;">
 
             <!-- Visual Side -->
-            <div class="glass-card animate-on-scroll"
-                style="padding: 0; overflow: hidden; ">
+            <div class="glass-card animate-on-scroll" style="padding: 0; overflow: hidden; ">
                 <div
                     style="height: 500px; background: #1a1a1a; display: flex; align-items: center; justify-content: center; position: relative;">
                     <span style="font-size: 6rem; opacity: 0.1; font-weight: 700; text-transform: uppercase;">
@@ -61,8 +60,7 @@ if (!$product) {
             </div>
 
             <!-- Details Side -->
-            <div class="animate-on-scroll"
-                style=" transition-delay: 0.2s;">
+            <div class="animate-on-scroll" style=" transition-delay: 0.2s;">
                 <p
                     style="color: var(--color-accent); text-transform: uppercase; letter-spacing: 2px; font-weight: 600; margin-bottom: 0.5rem;">
                     <?php echo $product['year']; ?> Vintage
@@ -96,8 +94,11 @@ if (!$product) {
                     </div>
                 </div>
 
-                <button class="btn btn-primary" style="width: 100%; max-width: 300px; font-size: 1.1rem;">Add to
-                    Cellar</button>
+                <button
+                    onclick="Cart.add(<?php echo $product['id']; ?>, '<?php echo addslashes($product['name']); ?>', <?php echo $product['price']; ?>, '<?php echo $product['type']; ?>')"
+                    class="btn btn-primary" style="width: 100%; max-width: 300px; font-size: 1.1rem; cursor: pointer;">
+                    Add to Cellar
+                </button>
 
                 <div style="margin-top: 3rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                     <div>

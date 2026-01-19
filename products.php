@@ -55,8 +55,7 @@ try {
         <div
             style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: var(--spacing-md);">
             <?php foreach ($filtered_products as $product): ?>
-                <div class="glass-card animate-on-scroll"
-                    style="">
+                <div class="glass-card animate-on-scroll" style="">
 
                     <a href="product-details.php?id=<?php echo $product['id']; ?>"
                         style="text-decoration: none; color: inherit;">
@@ -91,8 +90,16 @@ try {
                         <?php echo $product['desc']; ?>
                     </p>
 
-                    <a href="product-details.php?id=<?php echo $product['id']; ?>" class="btn"
-                        style="width: 100%; text-align: center;">View Details</a>
+                    <div style="display: flex; gap: 0.5rem; width: 100%;">
+                        <a href="product-details.php?id=<?php echo $product['id']; ?>" class="btn"
+                            style="flex: 1; text-align: center; font-size: 0.8rem; padding: 10px 0;">Details</a>
+                        <button
+                            onclick="Cart.add(<?php echo $product['id']; ?>, '<?php echo addslashes($product['name']); ?>', <?php echo $product['price']; ?>, '<?php echo $product['type']; ?>')"
+                            class="btn btn-primary"
+                            style="flex: 1; text-align: center; font-size: 0.8rem; padding: 10px 0; border: none; cursor: pointer;">
+                            Add
+                        </button>
+                    </div>
                 </div>
             <?php endforeach; ?>
         </div>
