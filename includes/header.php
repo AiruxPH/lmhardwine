@@ -73,8 +73,9 @@ error_reporting(E_ALL);
                 <span>Total</span>
                 <span id="cart-total">$0.00</span>
             </div>
-            <button class="btn btn-primary" style="width: 100%; text-align: center; border: none;">Proceed to
-                Checkout</button>
+            <a href="checkout.php" class="btn btn-primary"
+                style="width: 100%; text-align: center; border: none; display: block; text-decoration: none;">Proceed to
+                Checkout</a>
         </div>
     </div>
 

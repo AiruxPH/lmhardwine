@@ -20,12 +20,15 @@ const Cart = {
         });
     },
 
-    add(id, name, price, type) {
+    add(id, name, price, type, qty = 1) {
+        qty = parseInt(qty);
+        if (qty < 1) qty = 1;
+
         const existing = this.items.find(item => item.id === id);
         if (existing) {
-            existing.qty++;
+            existing.qty += qty;
         } else {
-            this.items.push({ id, name, price, type, qty: 1 });
+            this.items.push({ id, name, price, type, qty: qty });
         }
         this.save();
         this.updateUI();

@@ -85,17 +85,17 @@ if (!$product) {
 
                     <div
                         style="display: flex; align-items: center; background: rgba(255,255,255,0.05); border-radius: 4px;">
-                        <button
+                        <button onclick="document.getElementById('qty-input').stepDown()"
                             style="background: none; border: none; color: white; padding: 10px 15px; cursor: pointer; font-size: 1.2rem;">-</button>
-                        <input type="number" value="1"
+                        <input type="number" id="qty-input" value="1" min="1"
                             style="background: none; border: none; color: white; width: 40px; text-align: center; font-size: 1rem;">
-                        <button
+                        <button onclick="document.getElementById('qty-input').stepUp()"
                             style="background: none; border: none; color: white; padding: 10px 15px; cursor: pointer; font-size: 1.2rem;">+</button>
                     </div>
                 </div>
 
                 <button
-                    onclick="Cart.add(<?php echo $product['id']; ?>, '<?php echo addslashes($product['name']); ?>', <?php echo $product['price']; ?>, '<?php echo $product['type']; ?>')"
+                    onclick="Cart.add(<?php echo $product['id']; ?>, '<?php echo addslashes($product['name']); ?>', <?php echo $product['price']; ?>, '<?php echo $product['type']; ?>', document.getElementById('qty-input').value)"
                     class="btn btn-primary" style="width: 100%; max-width: 300px; font-size: 1.1rem; cursor: pointer;">
                     Add to Cellar
                 </button>
