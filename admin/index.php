@@ -2,9 +2,24 @@
 include 'auth.php';
 include '../includes/db.php';
 
-// Fetch all orders
+// ... includes ...
+
+// 1. Total Sales (Revenue)
+$stmt = $pdo->query("SELECT SUM(total_amount) as total FROM orders WHERE is_deleted = 0");
+$total_sales = $stmt->fetch()['total'] ?? 0;
+
+// 2. Total Orders Count
+$stmt = $pdo->query("SELECT COUNT(*) as count FROM orders WHERE is_deleted = 0");
+$total_orders = $stmt->fetch()['count'];
+
+// 3. Pending Orders Count
+$stmt = $pdo->query("SELECT COUNT(*) as count FROM orders WHERE status = 'Pending' AND is_deleted = 0");
+$pending_orders = $stmt->fetch()['count'];
+
+// 4. Fetch Recent Orders (Existing code)
 $stmt = $pdo->query("SELECT * FROM orders WHERE is_deleted = 0 ORDER BY order_date DESC");
 $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -48,6 +63,36 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
             padding: 5px 15px;
             font-size: 0.8rem;
         }
+
+        /* Add to your existing styles */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--color-text-main);
+            margin-bottom: 0.5rem;
+            line-height: 1;
+        }
+
+        .stat-label {
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
     </style>
 </head>
 
@@ -58,11 +103,35 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <a href="../index.php" style="color: var(--color-text-muted);">← Back to Store</a>
         </header>
 
+        <div class="stats-grid">
+            <div class="glass-card stat-card">
+                <div class="stat-value text-accent">$
+                    <?php echo number_format($total_sales, 2); ?>
+                </div>
+                <div class="stat-label">Total Revenue</div>
+            </div>
+
+            <div class="glass-card stat-card">
+                <div class="stat-value">
+                    <?php echo $total_orders; ?>
+                </div>
+                <div class="stat-label">Total Orders</div>
+            </div>
+
+            <div class="glass-card stat-card" style="border-left: 3px solid #d4af37;">
+                <div class="stat-value" style="color: #d4af37;">
+                    <?php echo $pending_orders; ?>
+                </div>
+                <div class="stat-label">Orders Pending</div>
+            </div>
+        </div>
+
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
             <h2>Recent Orders</h2>
             <div>
-                 <a href="products.php" class="btn btn-sm" style="margin-right: 10px; border-color: #888; color: #ccc;">Manage Products</a>
-                 <a href="add_product.php" class="btn btn-primary btn-sm">Add New Product</a>
+                <a href="products.php" class="btn btn-sm"
+                    style="margin-right: 10px; border-color: #888; color: #ccc;">Manage Products</a>
+                <a href="add_product.php" class="btn btn-primary btn-sm">Add New Product</a>
             </div>
         </div>
 
