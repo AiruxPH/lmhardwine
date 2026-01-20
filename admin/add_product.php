@@ -1,0 +1,167 @@
+<?php
+include 'auth.php';
+include '../includes/db.php';
+
+$error = '';
+$success = '';
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $name = $_POST['name'];
+    $type = $_POST['type'];
+    $varietal = $_POST['varietal'];
+    $price = $_POST['price'];
+    $year = $_POST['year'];
+    $description = $_POST['description'];
+
+    // Auto-generate color_style fallback
+    $color_style = "linear-gradient(45deg, #333, #000)"; // default
+    if ($type == 'Red') {
+        $color_style = "linear-gradient(45deg, rgba(114, 14, 30, 0.1), transparent)";
+    } elseif ($type == 'White') {
+        $color_style = "linear-gradient(45deg, rgba(212, 175, 55, 0.1), transparent)";
+    } elseif ($type == 'Rose') {
+        $color_style = "linear-gradient(45deg, rgba(255, 105, 180, 0.1), transparent)";
+    }
+
+    // Image Upload Logic
+    $image_path = null;
+    if (isset($_FILES['product_image']) && $_FILES['product_image']['error'] == 0) {
+        $allowed = ['jpg', 'jpeg', 'png', 'webp'];
+        $filename = $_FILES['product_image']['name'];
+        $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+
+        if (in_array($ext, $allowed)) {
+            $new_name = "wine_" . time() . "." . $ext;
+            $destination = "../uploads/" . $new_name;
+
+            if (move_uploaded_file($_FILES['product_image']['tmp_name'], $destination)) {
+                $image_path = $new_name;
+            } else {
+                $error = "Failed to move uploaded file.";
+            }
+        } else {
+            $error = "Invalid file type. Only JPG, PNG, WEBP allowed.";
+        }
+    }
+
+    if (!$error) {
+        try {
+            $sql = "INSERT INTO products (name, type, varietal, price, vintage_year, description, color_style, image_path) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([$name, $type, $varietal, $price, $year, $description, $color_style, $image_path]);
+            $success = "Product added successfully!";
+        } catch (PDOException $e) {
+            $error = "Database Error: " . $e->getMessage();
+        }
+    }
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product - Admin</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .admin-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--color-text-muted);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 4px;
+        }
+
+        .alert {
+            padding: 10px;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+        }
+
+        .alert-success {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+        }
+
+        .alert-error {
+            background: rgba(244, 67, 54, 0.2);
+            color: #f44336;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="admin-container">
+        <header style="margin-bottom: 2rem; border-bottom: 1px solid #333; padding-bottom: 1rem;">
+            <h1>Add New Wine</h1>
+            <a href="index.php" style="color: var(--color-text-muted);">← Back to Dashboard</a>
+        </header>
+
+        <?php if ($success): ?>
+            <div class="alert alert-success">
+                <?php echo htmlspecialchars($success); ?>
+            </div>
+        <?php endif; ?>
+        <?php if ($error): ?>
+            <div class="alert alert-error">
+                <?php echo htmlspecialchars($error); ?>
+            </div>
+        <?php endif; ?>
+
+        <form method="POST" enctype="multipart/form-data" class="glass-card">
+            <div class="form-group">
+                <label>Name</label>
+                <input type="text" name="name" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Type</label>
+                <select name="type" class="form-control">
+                    <option value="Red">Red</option>
+                    <option value="White">White</option>
+                    <option value="Rose">Rose</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Varietal</label>
+                <input type="text" name="varietal" class="form-control" placeholder="e.g. Cabernet Sauvignon" required>
+            </div>
+            <div class="form-group">
+                <label>Price</label>
+                <input type="number" step="0.01" name="price" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Vintage Year</label>
+                <input type="number" name="year" class="form-control" value="2024" required>
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea name="description" class="form-control" rows="4"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Product Image</label>
+                <input type="file" name="product_image" class="form-control" accept="image/*">
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Add Product</button>
+        </form>
+    </div>
+</body>
+
+</html>

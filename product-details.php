@@ -16,7 +16,8 @@ if ($id > 0) {
                                     price, 
                                     vintage_year as year, 
                                     description as `desc`, 
-                                    color_style as color 
+                                    color_style as color,
+                                    image_path 
                                FROM products WHERE id = ?");
         $stmt->execute([$id]);
         $product = $stmt->fetch();
@@ -52,10 +53,18 @@ if (!$product) {
             <div class="glass-card animate-on-scroll" style="padding: 0; overflow: hidden; ">
                 <div
                     style="height: 500px; background: #1a1a1a; display: flex; align-items: center; justify-content: center; position: relative;">
-                    <span style="font-size: 6rem; opacity: 0.1; font-weight: 700; text-transform: uppercase;">
-                        <?php echo $product['type']; ?>
-                    </span>
-                    <div style="position: absolute; inset: 0; background: <?php echo $product['color']; ?>;"></div>
+
+                    <?php if (!empty($product['image_path'])): ?>
+                        <img src="uploads/<?php echo htmlspecialchars($product['image_path']); ?>"
+                            alt="<?php echo htmlspecialchars($product['name']); ?>"
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                    <?php else: ?>
+                        <span style="font-size: 6rem; opacity: 0.1; font-weight: 700; text-transform: uppercase;">
+                            <?php echo $product['type']; ?>
+                        </span>
+                        <div style="position: absolute; inset: 0; background: <?php echo $product['color']; ?>;"></div>
+                    <?php endif; ?>
+
                 </div>
             </div>
 

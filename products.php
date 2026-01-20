@@ -14,7 +14,8 @@ try {
                 price, 
                 vintage_year as year, 
                 description as `desc`, 
-                color_style as color 
+                color_style as color,
+                image_path 
             FROM products";
 
     if ($filter != 'All') {
@@ -62,10 +63,18 @@ try {
                         <!-- Image Placeholder -->
                         <div
                             style="height: 300px; background: #1a1a1a; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: center; border-radius: 4px; position: relative; overflow: hidden; transition: transform 0.3s ease;">
-                            <span style="font-size: 3rem; opacity: 0.1; font-weight: 700; text-transform: uppercase;">
-                                <?php echo $product['type']; ?>
-                            </span>
-                            <div style="position: absolute; inset: 0; background: <?php echo $product['color']; ?>;"></div>
+
+                            <?php if (!empty($product['image_path'])): ?>
+                                <img src="uploads/<?php echo htmlspecialchars($product['image_path']); ?>"
+                                    alt="<?php echo htmlspecialchars($product['name']); ?>"
+                                    style="width: 100%; height: 100%; object-fit: cover;">
+                            <?php else: ?>
+                                <span style="font-size: 3rem; opacity: 0.1; font-weight: 700; text-transform: uppercase;">
+                                    <?php echo $product['type']; ?>
+                                </span>
+                                <div style="position: absolute; inset: 0; background: <?php echo $product['color']; ?>;"></div>
+                            <?php endif; ?>
+
                         </div>
 
                         <!-- Content -->

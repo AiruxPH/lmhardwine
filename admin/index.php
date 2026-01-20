@@ -58,7 +58,10 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <a href="../index.php" style="color: var(--color-text-muted);">← Back to Store</a>
         </header>
 
-        <h2>Recent Orders</h2>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <h2>Recent Orders</h2>
+            <a href="add_product.php" class="btn btn-primary btn-sm">Add New Product</a>
+        </div>
 
         <div class="glass-card">
             <table class="orders-table">
