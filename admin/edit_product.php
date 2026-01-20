@@ -19,6 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $type = $_POST['type'];
     $varietal = $_POST['varietal'];
     $price = $_POST['price'];
+    $stock_qty = $_POST['stock_qty'];
     $year = $_POST['year'];
     $description = $_POST['description'];
 
@@ -56,9 +57,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     if (!$error) {
-        $sql = "UPDATE products SET name=?, type=?, varietal=?, price=?, vintage_year=?, description=?, color_style=?, image_path=? WHERE id=?";
+        $sql = "UPDATE products SET name=?, type=?, varietal=?, price=?, stock_qty=?, vintage_year=?, description=?, color_style=?, image_path=? WHERE id=?";
         $stmt = $pdo->prepare($sql);
-        $stmt->execute([$name, $type, $varietal, $price, $year, $description, $color_style, $image_path, $id]);
+        $stmt->execute([$name, $type, $varietal, $price, $stock_qty, $year, $description, $color_style, $image_path, $id]);
 
         $success = "Product updated!";
         // Refresh data
@@ -155,6 +156,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <label>Price</label>
                 <input type="number" step="0.01" name="price" class="form-control"
                     value="<?php echo $product['price']; ?>" required>
+            </div>
+
+            <div class="form-group">
+                <label>Stock Quantity</label>
+                <input type="number" name="stock_qty" class="form-control" value="<?php echo $product['stock_qty']; ?>"
+                    required>
             </div>
 
             <div class="form-group">

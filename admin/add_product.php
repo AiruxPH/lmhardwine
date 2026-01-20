@@ -10,6 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $type = $_POST['type'];
     $varietal = $_POST['varietal'];
     $price = $_POST['price'];
+    $stock_qty = $_POST['stock_qty'];
     $year = $_POST['year'];
     $description = $_POST['description'];
 
@@ -54,9 +55,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (!$error) {
         try {
-            $sql = "INSERT INTO products (name, type, varietal, price, vintage_year, description, color_style, image_path) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            $sql = "INSERT INTO products (name, type, varietal, price, stock_qty, vintage_year, description, color_style, image_path) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $stmt = $pdo->prepare($sql);
-            $stmt->execute([$name, $type, $varietal, $price, $year, $description, $color_style, $image_path]);
+            $stmt->execute([$name, $type, $varietal, $price, $stock_qty, $year, $description, $color_style, $image_path]);
             $success = "Product added successfully!";
         } catch (PDOException $e) {
             $error = "Database Error: " . $e->getMessage();
@@ -131,6 +132,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <div class="form-group">
                 <label>Price</label>
                 <input type="number" step="0.01" name="price" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Stock Quantity</label>
+                <input type="number" name="stock_qty" class="form-control" value="10" min="0" required>
             </div>
             <div class="form-group">
                 <label>Vintage Year</label>

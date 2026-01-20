@@ -28,9 +28,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->execute([$name, $email, $address, $total_amount]);
         $order_id = $pdo->lastInsertId();
 
+
         // 2. Insert Items
         $sql_item = "INSERT INTO order_items (order_id, product_id, product_name, price_at_purchase, quantity) VALUES (?, ?, ?, ?, ?)";
         $stmt_item = $pdo->prepare($sql_item);
+
+        $stmt_deduct = $pdo->prepare("UPDATE products SET stock_qty = stock_qty - ? WHERE id = ?");
 
         foreach ($cart_items as $item) {
             $stmt_item->execute([
@@ -40,6 +43,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $item['price'],
                 $item['qty']
             ]);
+
+            $stmt_deduct->execute([$item['qty'], $item['id']]);
         }
 
         $pdo->commit();
