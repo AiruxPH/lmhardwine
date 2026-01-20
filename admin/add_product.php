@@ -71,25 +71,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             padding: 2rem;
         }
 
-        .form-group {
-            margin-bottom: 1rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: var(--color-text-muted);
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: white;
-            border-radius: 4px;
-        }
-
         .alert {
             padding: 10px;
             margin-bottom: 1rem;
@@ -116,14 +97,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </header>
 
         <?php if ($success): ?>
-            <div class="alert alert-success">
-                <?php echo htmlspecialchars($success); ?>
-            </div>
+            <div class="alert alert-success"><?php echo htmlspecialchars($success); ?></div>
         <?php endif; ?>
         <?php if ($error): ?>
-            <div class="alert alert-error">
-                <?php echo htmlspecialchars($error); ?>
-            </div>
+            <div class="alert alert-error"><?php echo htmlspecialchars($error); ?></div>
         <?php endif; ?>
 
         <form method="POST" enctype="multipart/form-data" class="glass-card">
@@ -157,7 +134,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
             <div class="form-group">
                 <label>Product Image</label>
-                <input type="file" name="product_image" class="form-control" accept="image/*">
+                <div class="file-upload-wrapper">
+                    <div class="file-upload-icon">📷</div>
+                    <span id="file-label">Click or Drag Image Here</span>
+                    <input type="file" name="product_image" accept="image/*"
+                        onchange="document.getElementById('file-label').textContent = this.files[0].name">
+                </div>
             </div>
             <button type="submit" class="btn btn-primary" style="width: 100%;">Add Product</button>
         </form>
