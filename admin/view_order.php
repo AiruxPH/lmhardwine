@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     if (isset($_POST['delete_order'])) {
-        $stmt = $pdo->prepare("DELETE FROM orders WHERE id = ?");
+        $stmt = $pdo->prepare("UPDATE orders SET is_deleted = 1 WHERE id = ?");
         $stmt->execute([$order_id]);
 
         // Redirect to Dashboard

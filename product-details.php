@@ -18,7 +18,7 @@ if ($id > 0) {
                                     description as `desc`, 
                                     color_style as color,
                                     image_path 
-                               FROM products WHERE id = ?");
+                               FROM products WHERE id = ? AND is_deleted = 0");
         $stmt->execute([$id]);
         $product = $stmt->fetch();
     } catch (PDOException $e) {

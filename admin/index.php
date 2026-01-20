@@ -3,7 +3,7 @@ include 'auth.php';
 include '../includes/db.php';
 
 // Fetch all orders
-$stmt = $pdo->query("SELECT * FROM orders ORDER BY order_date DESC");
+$stmt = $pdo->query("SELECT * FROM orders WHERE is_deleted = 0 ORDER BY order_date DESC");
 $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>

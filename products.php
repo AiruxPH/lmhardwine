@@ -16,10 +16,10 @@ try {
                 description as `desc`, 
                 color_style as color,
                 image_path 
-            FROM products";
+            FROM products WHERE is_deleted = 0";
 
     if ($filter != 'All') {
-        $sql .= " WHERE type = :type";
+        $sql .= " AND type = :type";
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['type' => $filter]);
     } else {
