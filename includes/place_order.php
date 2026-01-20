@@ -33,9 +33,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $sql_item = "INSERT INTO order_items (order_id, product_id, product_name, price_at_purchase, quantity) VALUES (?, ?, ?, ?, ?)";
         $stmt_item = $pdo->prepare($sql_item);
 
+
+        $stmt_check_stock = $pdo->prepare("SELECT stock_qty, name FROM products WHERE id = ? FOR UPDATE");
         $stmt_deduct = $pdo->prepare("UPDATE products SET stock_qty = stock_qty - ? WHERE id = ?");
 
         foreach ($cart_items as $item) {
+            // Check stock first
+            $stmt_check_stock->execute([$item['id']]);
+            $product_stock = $stmt_check_stock->fetch(PDO::FETCH_ASSOC);
+
+            if (!$product_stock) {
+                throw new Exception("Product ID " . $item['id'] . " not found.");
+            }
+
+            if ($product_stock['stock_qty'] < $item['qty']) {
+                throw new Exception("Insufficient stock for " . $product_stock['name'] . ". Available: " . $product_stock['stock_qty']);
+            }
+
+            // Deduct Stock
+            $stmt_deduct->execute([$item['qty'], $item['id']]);
+
+            // Insert Item
             $stmt_item->execute([
                 $order_id,
                 $item['id'],
@@ -43,8 +61,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $item['price'],
                 $item['qty']
             ]);
-
-            $stmt_deduct->execute([$item['qty'], $item['id']]);
         }
 
         $pdo->commit();

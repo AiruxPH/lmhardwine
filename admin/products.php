@@ -76,6 +76,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <th>Image</th>
                         <th>Name</th>
                         <th>Type</th>
+                        <th>Stock</th>
                         <th>Price</th>
                         <th>Year</th>
                         <th>Actions</th>
@@ -102,6 +103,9 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 </td>
                                 <td>
                                     <?php echo htmlspecialchars($p['type']); ?>
+                                </td>
+                                <td style="<?php echo ($p['stock_qty'] < 5) ? 'color: #ff9800; font-weight:bold;' : ''; ?>">
+                                    <?php echo htmlspecialchars($p['stock_qty']); ?>
                                 </td>
                                 <td>$
                                     <?php echo number_format($p['price'], 2); ?>

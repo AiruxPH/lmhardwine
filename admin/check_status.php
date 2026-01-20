@@ -20,9 +20,9 @@ try {
         $stmt = $pdo->query("SELECT * FROM admins LIMIT 1");
         $admin = $stmt->fetch();
         if (password_verify('Admin123!', $admin['password_hash'])) {
-             $status[] = "<span style='color:green'>✅ Default password 'Admin123!' is valid for user '{$admin['username']}'</span>";
+            $status[] = "<span style='color:green'>✅ Default password 'Admin123!' is valid for user '{$admin['username']}'</span>";
         } else {
-             $status[] = "<span style='color:orange'>ℹ️ Admin found, but 'Admin123!' is not their password.</span>";
+            $status[] = "<span style='color:orange'>ℹ️ Admin found, but 'Admin123!' is not their password.</span>";
         }
     } else {
         $status[] = "<span style='color:red'>❌ No Admin User Found! Login will fail.</span>";
@@ -31,14 +31,26 @@ try {
     $status[] = "<span style='color:red'>❌ Error checking admins: " . $e->getMessage() . "</span>";
 }
 
-// 3. Check Stock Column
+// 3. Check Product Schema
 try {
+    $status[] = "<h3>Product Schema Check:</h3>";
+
+    // Check stock_qty
     $stmt = $pdo->query("SHOW COLUMNS FROM products LIKE 'stock_qty'");
     if ($stmt->fetch()) {
-        $status[] = "<span style='color:green'>✅ 'stock_qty' column exists in products table</span>";
+        $status[] = "<span style='color:green'>✅ 'stock_qty' column exists</span>";
     } else {
-        $status[] = "<span style='color:red'>❌ 'stock_qty' column MISSING in products table!</span>";
+        $status[] = "<span style='color:red'>❌ 'stock_qty' column MISSING!</span>";
     }
+
+    // Check is_deleted
+    $stmt = $pdo->query("SHOW COLUMNS FROM products LIKE 'is_deleted'");
+    if ($stmt->fetch()) {
+        $status[] = "<span style='color:green'>✅ 'is_deleted' column exists</span>";
+    } else {
+        $status[] = "<span style='color:red'>❌ 'is_deleted' column MISSING! Soft delete will fail.</span>";
+    }
+
 } catch (Exception $e) {
     $status[] = "<span style='color:red'>❌ Error checking products: " . $e->getMessage() . "</span>";
 }
@@ -46,14 +58,16 @@ try {
 ?>
 <!DOCTYPE html>
 <html>
+
 <body style="font-family: sans-serif; padding: 2rem; background: #222; color: #eee;">
     <h1>System Status Check</h1>
     <div style="background: #333; padding: 1rem; border-radius: 8px;">
-        <?php foreach($status as $s): ?>
+        <?php foreach ($status as $s): ?>
             <p><?php echo $s; ?></p>
         <?php endforeach; ?>
     </div>
     <br>
     <a href="login.php" style="color: #4CAF50">Go to Login</a>
 </body>
+
 </html>
