@@ -12,6 +12,7 @@ try {
                 type, 
                 varietal, 
                 price, 
+                stock_qty, 
                 vintage_year as year, 
                 description as `desc`, 
                 color_style as color,
@@ -64,6 +65,22 @@ try {
                         <div
                             style="height: 300px; background: #1a1a1a; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: center; border-radius: 4px; position: relative; overflow: hidden; transition: transform 0.3s ease;">
 
+                            <?php if ($product['stock_qty'] <= 0): ?>
+                                <div style="
+            position: absolute; 
+            top: 10px; 
+            right: 10px; 
+            background: #ff4444; 
+            color: white; 
+            padding: 5px 10px; 
+            font-weight: bold; 
+            z-index: 10; 
+            border-radius: 4px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        ">Sold Out</div>
+                            <?php endif; ?>
                             <?php if (!empty($product['image_path'])): ?>
                                 <img src="uploads/<?php echo htmlspecialchars($product['image_path']); ?>"
                                     alt="<?php echo htmlspecialchars($product['name']); ?>"
