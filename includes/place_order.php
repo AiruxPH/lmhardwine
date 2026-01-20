@@ -44,10 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $pdo->commit();
 
-        // Success Page
-        $pdo->commit();
-
-        // Success Page
+        // 3. Show Success Page (HTML mode)
         ?>
         <!DOCTYPE html>
         <html lang='en'>
@@ -83,10 +80,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <body>
             <div>
                 <h1 style='color: #d4af37;'>Order Confirmed!</h1>
-                <p>Thank you, <?php echo htmlspecialchars($name, ENT_QUOTES, 'UTF-8'); ?>. Your order #<?php echo $order_id; ?>
-                    has been placed.</p>
+                <p>Thank you,
+                    <?php echo htmlspecialchars($name, ENT_QUOTES, 'UTF-8'); ?>. Your order #
+                    <?php echo $order_id; ?> has been placed.
+                </p>
                 <p>We will contact you shortly.</p>
-                <a href='../index.php' class='btn' onclick='localStorage.removeItem("lm_cart")'>Return Home</a>
+                <a href="../index.php" class="btn" onclick="localStorage.removeItem('lm_cart')">Return Home</a>
             </div>
         </body>
 
@@ -94,9 +93,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <?php
 
     } catch (Exception $e) {
-
-    } catch (Exception $e) {
-        $pdo->rollBack();
+        // If anything goes wrong, undo the database changes
+        if ($pdo->inTransaction()) {
+            $pdo->rollBack();
+        }
         echo "Error placing order: " . $e->getMessage();
     }
 }
