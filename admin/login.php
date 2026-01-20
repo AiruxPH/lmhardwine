@@ -1,18 +1,26 @@
 <?php
 session_start();
+include '../includes/db.php'; // We need the DB connection now!
 
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $username = $_POST['username'];
     $password = $_POST['password'];
 
-    // Hardcoded password
-    if ($password === 'Admin123!') {
+    // 1. Find the user in the database
+    $stmt = $pdo->prepare("SELECT * FROM admins WHERE username = ?");
+    $stmt->execute([$username]);
+    $admin = $stmt->fetch();
+
+    // 2. Verify the password
+    if ($admin && password_verify($password, $admin['password_hash'])) {
         $_SESSION['admin_logged_in'] = true;
+        $_SESSION['admin_id'] = $admin['id']; // Handy to keep track of who logged in
         header('Location: index.php');
         exit();
     } else {
-        $error = 'Invalid password.';
+        $error = 'Invalid username or password.';
     }
 }
 ?>
@@ -75,6 +83,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <?php endif; ?>
 
         <form method="POST">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" class="form-control" required>
+            </div>
+
             <div class="form-group">
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" class="form-control" required>
