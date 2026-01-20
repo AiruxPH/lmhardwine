@@ -119,12 +119,20 @@ try {
                     <div style="display: flex; gap: 0.5rem; width: 100%;">
                         <a href="product-details.php?id=<?php echo $product['id']; ?>" class="btn"
                             style="flex: 1; text-align: center; font-size: 0.8rem; padding: 10px 0;">Details</a>
-                        <button
-                            onclick="Cart.add(<?php echo $product['id']; ?>, '<?php echo addslashes($product['name']); ?>', <?php echo $product['price']; ?>, '<?php echo $product['type']; ?>')"
-                            class="btn btn-primary"
-                            style="flex: 1; text-align: center; font-size: 0.8rem; padding: 10px 0; border: none; cursor: pointer;">
-                            Add
-                        </button>
+
+                        <?php if ($product['stock_qty'] > 0): ?>
+                            <button
+                                onclick="Cart.add(<?php echo $product['id']; ?>, '<?php echo addslashes($product['name']); ?>', <?php echo $product['price']; ?>, '<?php echo $product['type']; ?>')"
+                                class="btn btn-primary"
+                                style="flex: 1; text-align: center; font-size: 0.8rem; padding: 10px 0; border: none; cursor: pointer;">
+                                Add
+                            </button>
+                        <?php else: ?>
+                            <button disabled class="btn"
+                                style="flex: 1; text-align: center; font-size: 0.8rem; padding: 10px 0; border: 1px solid #444; color: #666; background: transparent; cursor: not-allowed;">
+                                Sold Out
+                            </button>
+                        <?php endif; ?>
                     </div>
                 </div>
             <?php endforeach; ?>
