@@ -22,6 +22,28 @@ $stmt_items = $pdo->prepare("SELECT * FROM order_items WHERE order_id = ?");
 $stmt_items->execute([$order_id]);
 $items = $stmt_items->fetchAll(PDO::FETCH_ASSOC);
 
+// Handle Actions
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if (isset($_POST['update_status'])) {
+        $status = $_POST['status'];
+        $stmt = $pdo->prepare("UPDATE orders SET status = ? WHERE id = ?");
+        $stmt->execute([$status, $order_id]);
+
+        // Refresh
+        header("Location: view_order.php?id=$order_id");
+        exit;
+    }
+
+    if (isset($_POST['delete_order'])) {
+        $stmt = $pdo->prepare("DELETE FROM orders WHERE id = ?");
+        $stmt->execute([$order_id]);
+
+        // Redirect to Dashboard
+        header("Location: index.php");
+        exit;
+    }
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -134,19 +156,29 @@ $items = $stmt_items->fetchAll(PDO::FETCH_ASSOC);
             </div>
 
             <div class="details-card glass-card">
-                <h3>Order Info</h3>
-                <div class="info-row">
-                    <span class="info-label">Date:</span>
-                    <span>
-                        <?php echo htmlspecialchars($order['order_date']); ?>
-                    </span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Status:</span>
-                    <span style="color: <?php echo $order['status'] == 'Pending' ? '#d4af37' : '#4caf50'; ?>">
-                        <?php echo htmlspecialchars($order['status']); ?>
-                    </span>
-                </div>
+                <h3>Order Status</h3>
+                <form method="POST" style="margin-top: 1rem;">
+                    <div class="form-group">
+                        <select name="status" class="form-control">
+                            <?php
+                            $statuses = ['Pending', 'Processing', 'Shipped', 'Delivered', 'Canceled'];
+                            foreach ($statuses as $s) {
+                                $selected = ($order['status'] == $s) ? 'selected' : '';
+                                echo "<option value='$s' $selected>$s</option>";
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <button type="submit" name="update_status" class="btn btn-primary" style="width: 100%;">Update
+                        Status</button>
+                </form>
+
+                <form method="POST"
+                    onsubmit="return confirm('Are you sure you want to delete this order? This cannot be undone.');"
+                    style="margin-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem;">
+                    <button type="submit" name="delete_order" class="btn"
+                        style="width: 100%; border-color: #f44336; color: #f44336;">Delete Order</button>
+                </form>
             </div>
         </div>
 
