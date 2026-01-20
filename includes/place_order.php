@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         die("Error: Cart is empty.");
     }
 
-    // Calculate Total
+    // Calculate Total Amount
     $total_amount = 0;
     foreach ($cart_items as $item) {
         $total_amount += ($item['price'] * $item['qty']);
