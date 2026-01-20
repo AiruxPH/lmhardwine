@@ -45,26 +45,55 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $pdo->commit();
 
         // Success Page
-        echo "<!DOCTYPE html>
-              <html lang='en'>
-              <head>
-                  <meta charset='UTF-8'>
-                  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-                  <title>Order Confirmed</title>
-                  <style>
-                      body { background: #0a0a0a; color: white; font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; text-align: center; }
-                      .btn { padding: 10px 20px; background: #720e1e; color: white; text-decoration: none; border-radius: 4px; display: inline-block; margin-top: 20px; }
-                  </style>
-              </head>
-              <body>
-                  <div>
-                      <h1 style='color: #d4af37;'>Order Confirmed!</h1>
-                      <p>Thank you, <?php echo htmlspecialchars($name, ENT_QUOTES, 'UTF-8'); ?>. Your order #<?php echo $order_id; ?> has been placed.</p>
-                      <p>We will contact you shortly.</p>
-                      <a href='../index.php' class='btn' onclick='localStorage.removeItem(\"lm_cart\")'>Return Home</a>
-                  </div>
-              </body>
-              </html>";
+        $pdo->commit();
+
+        // Success Page
+        ?>
+        <!DOCTYPE html>
+        <html lang='en'>
+
+        <head>
+            <meta charset='UTF-8'>
+            <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+            <title>Order Confirmed</title>
+            <style>
+                body {
+                    background: #0a0a0a;
+                    color: white;
+                    font-family: sans-serif;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    height: 100vh;
+                    text-align: center;
+                }
+
+                .btn {
+                    padding: 10px 20px;
+                    background: #720e1e;
+                    color: white;
+                    text-decoration: none;
+                    border-radius: 4px;
+                    display: inline-block;
+                    margin-top: 20px;
+                }
+            </style>
+        </head>
+
+        <body>
+            <div>
+                <h1 style='color: #d4af37;'>Order Confirmed!</h1>
+                <p>Thank you, <?php echo htmlspecialchars($name, ENT_QUOTES, 'UTF-8'); ?>. Your order #<?php echo $order_id; ?>
+                    has been placed.</p>
+                <p>We will contact you shortly.</p>
+                <a href='../index.php' class='btn' onclick='localStorage.removeItem("lm_cart")'>Return Home</a>
+            </div>
+        </body>
+
+        </html>
+        <?php
+
+    } catch (Exception $e) {
 
     } catch (Exception $e) {
         $pdo->rollBack();

@@ -1,4 +1,5 @@
 <?php
+include 'auth.php';
 include '../includes/db.php';
 
 // Fetch all orders
