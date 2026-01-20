@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
               <body>
                   <div>
                       <h1 style='color: #d4af37;'>Order Confirmed!</h1>
-                      <p>Thank you, $name. Your order #$order_id has been placed.</p>
+                      <p>Thank you, <?php echo htmlspecialchars($name, ENT_QUOTES, 'UTF-8'); ?>. Your order #<?php echo $order_id; ?> has been placed.</p>
                       <p>We will contact you shortly.</p>
                       <a href='../index.php' class='btn' onclick='localStorage.removeItem(\"lm_cart\")'>Return Home</a>
                   </div>
