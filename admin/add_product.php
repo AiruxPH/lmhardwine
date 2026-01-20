@@ -32,12 +32,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         if (in_array($ext, $allowed)) {
             $new_name = "wine_" . time() . "." . $ext;
-            $destination = "../uploads/" . $new_name;
+            // Use absolute path for reliability
+            $upload_dir = __DIR__ . '/../uploads/';
+
+            // Ensure uploads directory exists
+            if (!is_dir($upload_dir)) {
+                mkdir($upload_dir, 0777, true);
+            }
+
+            $destination = $upload_dir . $new_name;
 
             if (move_uploaded_file($_FILES['product_image']['tmp_name'], $destination)) {
                 $image_path = $new_name;
             } else {
-                $error = "Failed to move uploaded file.";
+                $error = "Failed to move uploaded file to: " . $destination;
             }
         } else {
             $error = "Invalid file type. Only JPG, PNG, WEBP allowed.";
