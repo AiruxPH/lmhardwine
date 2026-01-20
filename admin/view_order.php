@@ -35,10 +35,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     if (isset($_POST['delete_order'])) {
+        // 1. Hide the Order
         $stmt = $pdo->prepare("UPDATE orders SET is_deleted = 1 WHERE id = ?");
         $stmt->execute([$order_id]);
 
-        // Redirect to Dashboard
+        // 2. Hide the Items belonging to that Order (Optional but clean)
+        $stmtItems = $pdo->prepare("UPDATE order_items SET is_deleted = 1 WHERE order_id = ?");
+        $stmtItems->execute([$order_id]);
+
         header("Location: index.php");
         exit;
     }
