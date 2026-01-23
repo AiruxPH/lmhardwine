@@ -85,7 +85,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <tbody>
                     <?php if (empty($products)): ?>
                         <tr>
-                            <td colspan="6" class="text-center">No products found.</td>
+                            <td colspan="7" class="text-center">No products found.</td>
                         </tr>
                     <?php else: ?>
                         <?php foreach ($products as $p): ?>

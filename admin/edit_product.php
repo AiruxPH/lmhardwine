@@ -46,6 +46,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (in_array($ext, $allowed)) {
             $new_name = "wine_" . time() . "." . $ext;
             $destination = "../uploads/" . $new_name;
+
+            // Ensure uploads directory exists
+            if (!is_dir(dirname($destination))) {
+                mkdir(dirname($destination), 0777, true);
+            }
+
             if (move_uploaded_file($_FILES['product_image']['tmp_name'], $destination)) {
                 $image_path = $new_name;
             } else {
