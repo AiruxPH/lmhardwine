@@ -132,12 +132,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <form method="POST" autocomplete="off">
                 <div class="form-group">
                     <label>Username or Email</label>
-                    <input type="text" name="username" class="form-control" required>
+                    <input type="text" name="username" class="form-control" required autocomplete="off">
                 </div>
 
                 <div class="form-group">
                     <label>Password</label>
-                    <input type="password" name="password" class="form-control" required>
+                    <input type="password" name="password" class="form-control" required autocomplete="off"
+                        placeholder="Enter your password">
                 </div>
 
                 <button type="submit" class="btn btn-primary"
