@@ -105,7 +105,7 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         <div class="stats-grid">
             <div class="glass-card stat-card">
-                <div class="stat-value text-accent">$
+                <div class="stat-value text-accent">₱
                     <?php echo number_format($total_sales, 2); ?>
                 </div>
                 <div class="stat-label">Total Revenue</div>

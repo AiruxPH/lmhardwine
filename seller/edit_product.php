@@ -169,7 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         value="<?php echo htmlspecialchars($product['varietal']); ?>" required>
                 </div>
                 <div class="form-group">
-                    <label>Price</label>
+                    <label>Price (₱)</label>
                     <input type="number" step="0.01" name="price" class="form-control"
                         value="<?php echo $product['price']; ?>" required>
                 </div>

@@ -164,7 +164,7 @@ const Cart = {
                     <span style="font-size: 0.8rem; color: #888;">${item.type}</span>
                 </div>
                 <div style="display: flex; align-items: center; gap: 1rem;">
-                    <span>$${item.price} x ${item.qty}</span>
+                    <span>₱${item.price} x ${item.qty}</span>
                     <button onclick="Cart.remove(${item.id})" style="background: none; border: none; color: #720e1e; cursor: pointer;">&times;</button>
                 </div>
             `;
@@ -173,7 +173,7 @@ const Cart = {
 
         // Update Total
         const totalEl = document.getElementById('cart-total');
-        if (totalEl) totalEl.innerText = '$' + totalPrice.toFixed(2);
+        if (totalEl) totalEl.innerText = '₱' + totalPrice.toFixed(2);
     }
 };
 

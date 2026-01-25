@@ -107,7 +107,7 @@ if (!$product) {
                 if (!$hidePurchase): ?>
                     <?php if ($product['stock_qty'] > 0): ?>
                         <div style="display: flex; align-items: center; gap: 2rem; margin-bottom: 2rem;">
-                            <span style="font-size: 2.5rem; font-weight: 700;">$
+                            <span style="font-size: 2.5rem; font-weight: 700;">₱
                                 <?php echo $product['price']; ?>
                             </span>
 
@@ -132,14 +132,14 @@ if (!$product) {
                     <?php else: ?>
                         <div style="margin-bottom: 2rem;">
                             <span
-                                style="font-size: 2.5rem; font-weight: 700; color: #666;">$<?php echo $product['price']; ?></span>
+                                style="font-size: 2.5rem; font-weight: 700; color: #666;">₱<?php echo $product['price']; ?></span>
                         </div>
                         <button disabled class="btn"
                             style="width: 100%; border-color: #666; color: #666; cursor: not-allowed;">Sold Out</button>
                     <?php endif; ?>
                 <?php elseif (isset($_SESSION['role']) && $_SESSION['role'] === 'seller'): ?>
                     <div style="margin-bottom: 2rem;">
-                        <span style="font-size: 2.5rem; font-weight: 700;">$<?php echo $product['price']; ?></span>
+                        <span style="font-size: 2.5rem; font-weight: 700;">₱<?php echo $product['price']; ?></span>
                     </div>
                     <div class="alert-error" style="display:inline-block; margin-bottom: 0;">
                         You are viewing this product as a Seller.

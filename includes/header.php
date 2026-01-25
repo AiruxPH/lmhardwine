@@ -118,7 +118,7 @@ error_reporting(E_ALL);
             <div
                 style="display: flex; justify-content: space-between; margin-bottom: 1rem; font-size: 1.2rem; font-weight: 700;">
                 <span>Total</span>
-                <span id="cart-total">$0.00</span>
+                <span id="cart-total">₱0.00</span>
             </div>
             <a href="checkout.php" class="btn btn-primary"
                 style="width: 100%; text-align: center; border: none; display: block; text-decoration: none;">Proceed to

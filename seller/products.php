@@ -379,7 +379,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     </div>
                                 </td>
                                 <td>
-                                    <span class="price-tag">$<?php echo number_format($p['price'], 2); ?></span>
+                                    <span class="price-tag">₱<?php echo number_format($p['price'], 2); ?></span>
                                 </td>
                                 <td>
                                     <?php

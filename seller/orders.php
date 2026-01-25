@@ -131,7 +131,7 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <td>
                                     <?php echo htmlspecialchars($o['customer_name'] ?? 'Guest'); ?>
                                 </td>
-                                <td class="text-accent">$
+                                <td class="text-accent">₱
                                     <?php echo number_format($o['seller_total'], 2); ?>
                                 </td>
                                 <td>

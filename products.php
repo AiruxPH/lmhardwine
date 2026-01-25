@@ -117,7 +117,7 @@ try {
                                     <?php echo $product['year']; ?>
                                 </p>
                             </div>
-                            <span style="font-size: 1.25rem; font-weight: 600;">$
+                            <span style="font-size: 1.25rem; font-weight: 600;">₱
                                 <?php echo $product['price']; ?>
                             </span>
                         </div>

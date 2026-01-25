@@ -208,13 +208,13 @@ foreach ($items as $item) {
                                 <img src="<?php echo htmlspecialchars($display_path); ?>" class="product-thumb">
                                 <?php echo htmlspecialchars($item['product_name']); ?>
                             </td>
-                            <td>$
+                            <td>₱
                                 <?php echo number_format($item['price'], 2); ?>
                             </td>
                             <td>
                                 <?php echo $item['quantity']; ?>
                             </td>
-                            <td class="text-accent">$
+                            <td class="text-accent">₱
                                 <?php echo number_format($item['price'] * $item['quantity'], 2); ?>
                             </td>
                         </tr>
@@ -226,7 +226,7 @@ foreach ($items as $item) {
                             Total:</td>
                         <td
                             style="font-weight: bold; padding-top: 1.5rem; font-size: 1.2rem; color: var(--color-accent);">
-                            $
+                            ₱
                             <?php echo number_format($seller_total, 2); ?>
                         </td>
                     </tr>

@@ -105,7 +105,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'seller') {
                                     <?php echo htmlspecialchars($p['varietal']); ?> • <?php echo $p['vintage_year']; ?>
                                 </p>
                             </div>
-                            <span style="font-size: 1.25rem; font-weight: 600;">$<?php echo number_format($p['price'], 2); ?></span>
+                            <span style="font-size: 1.25rem; font-weight: 600;">₱<?php echo number_format($p['price'], 2); ?></span>
                         </div>
                         
                         <!-- Seller Info -->

@@ -150,7 +150,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <input type="text" name="varietal" class="form-control" placeholder="e.g. Cabernet Sauvignon" required>
             </div>
             <div class="form-group">
-                <label>Price</label>
+                <label>Price (₱)</label>
                 <input type="number" step="0.01" name="price" class="form-control" required>
             </div>
             <div class="form-group">

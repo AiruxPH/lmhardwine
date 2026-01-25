@@ -203,20 +203,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <td>
                                 <?php echo htmlspecialchars($item['product_name']); ?>
                             </td>
-                            <td>$
+                            <td>₱
                                 <?php echo number_format($item['price_at_purchase'], 2); ?>
                             </td>
                             <td>
                                 <?php echo htmlspecialchars($item['quantity']); ?>
                             </td>
-                            <td>$
+                            <td>₱
                                 <?php echo number_format($item['price_at_purchase'] * $item['quantity'], 2); ?>
                             </td>
                         </tr>
                     <?php endforeach; ?>
                     <tr class="total-row">
                         <td colspan="3" style="text-align: right;">Grand Total:</td>
-                        <td>$
+                        <td>₱
                             <?php echo number_format($order['total_amount'], 2); ?>
                         </td>
                     </tr>

@@ -116,7 +116,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <td style="<?php echo ($p['stock_qty'] < 5) ? 'color: #ff9800; font-weight:bold;' : ''; ?>">
                                     <?php echo htmlspecialchars($p['stock_qty']); ?>
                                 </td>
-                                <td>$
+                                <td>₱
                                     <?php echo number_format($p['price'], 2); ?>
                                 </td>
                                 <td>
