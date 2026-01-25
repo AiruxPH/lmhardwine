@@ -1,12 +1,7 @@
 <?php
-include 'includes/db.php';
-session_start();
-
-// Ensure user is logged in and is a seller
-if (!isset($_SESSION['user_logged_in']) || $_SESSION['user_logged_in'] !== true || $_SESSION['role'] !== 'seller') {
-    header('Location: login.php');
-    exit();
-}
+include 'auth.php';
+include '../includes/db.php';
+// session_start() handled by auth.php
 
 $user_id = $_SESSION['user_id'];
 $success = '';
@@ -17,24 +12,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $brand_name = trim($_POST['brand_name']);
     $brand_description = trim($_POST['brand_description']);
     $contact_email = trim($_POST['contact_email']);
-
+    
     // File Upload Handling
     $logo_path = null;
     if (isset($_FILES['brand_logo']) && $_FILES['brand_logo']['error'] == 0) {
-        $upload_dir = 'uploads/logos/';
+        // Upload to main uploads folder (up one level)
+        $upload_dir = '../uploads/logos/';
         if (!is_dir($upload_dir)) {
             mkdir($upload_dir, 0777, true);
         }
-
+        
         $file_ext = strtolower(pathinfo($_FILES['brand_logo']['name'], PATHINFO_EXTENSION));
         $allowed_ext = ['jpg', 'jpeg', 'png', 'webp'];
-
+        
         if (in_array($file_ext, $allowed_ext)) {
             $new_filename = uniqid('brand_') . '.' . $file_ext;
             $destination = $upload_dir . $new_filename;
-
+            
             if (move_uploaded_file($_FILES['brand_logo']['tmp_name'], $destination)) {
-                $logo_path = $destination;
+                // Store path relative to root for consistency
+                $logo_path = 'uploads/logos/' . $new_filename;
             } else {
                 $error = "Failed to upload logo.";
             }
@@ -86,7 +83,7 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Seller Profile - LM Hard Wine</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
     <style>
         body {
             padding-top: 80px;
@@ -124,13 +121,6 @@ try {
             border: 2px solid var(--color-accent);
             margin-bottom: 1rem;
         }
-
-        .dashboard-link {
-            display: inline-block;
-            margin-left: 1rem;
-            color: var(--color-accent);
-            text-decoration: underline;
-        }
     </style>
 </head>
 
@@ -140,42 +130,33 @@ try {
 
     <div class="profile-container">
         <div class="glass-card">
-            <div
-                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem;">
                 <div>
                     <h2>Brand Profile</h2>
                     <p style="color: var(--color-text-muted);">Manage your brand identity.</p>
                 </div>
-                <!-- Future Link to Dashboard -->
-                <a href="seller_dashboard.php" class="btn btn-primary">Go to Dashboard</a>
+                <a href="index.php" class="btn btn-primary">Back to Dashboard</a>
             </div>
 
             <?php if (!empty($success)) { ?>
-                <div class="alert alert-success">
-                    <?php echo $success; ?>
-                </div>
+                <div class="alert alert-success"><?php echo $success; ?></div>
             <?php } ?>
 
             <?php if (!empty($error)) { ?>
-                <div class="alert alert-error">
-                    <?php echo htmlspecialchars($error); ?>
-                </div>
+                <div class="alert alert-error"><?php echo htmlspecialchars($error); ?></div>
             <?php } ?>
 
             <form method="POST" enctype="multipart/form-data">
                 <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
-
+                    
                     <!-- Logo Section -->
                     <div style="flex: 0 0 200px; text-align: center;">
                         <?php if (!empty($seller['brand_logo_path'])): ?>
-                            <img src="<?php echo htmlspecialchars($seller['brand_logo_path']); ?>" alt="Logo"
-                                class="logo-preview">
+                            <img src="<?php echo '../' . htmlspecialchars($seller['brand_logo_path']); ?>" alt="Logo" class="logo-preview">
                         <?php else: ?>
-                            <div class="logo-preview"
-                                style="display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05);">
-                                No Logo</div>
+                            <div class="logo-preview" style="display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05);">No Logo</div>
                         <?php endif; ?>
-
+                        
                         <label class="btn btn-sm" style="cursor: pointer; display: inline-block; width: 100%;">
                             Change Logo
                             <input type="file" name="brand_logo" style="display: none;" accept="image/*">
@@ -186,27 +167,22 @@ try {
                     <div style="flex: 1; min-width: 300px;">
                         <div class="form-group">
                             <label>Username (Read-only)</label>
-                            <input type="text" class="form-control"
-                                value="<?php echo htmlspecialchars($seller['username']); ?>" disabled
-                                style="opacity: 0.7;">
+                            <input type="text" class="form-control" value="<?php echo htmlspecialchars($seller['username']); ?>" disabled style="opacity: 0.7;">
                         </div>
 
                         <div class="form-group">
                             <label>Brand Name</label>
-                            <input type="text" name="brand_name" class="form-control"
-                                value="<?php echo htmlspecialchars($seller['brand_name']); ?>" required>
+                            <input type="text" name="brand_name" class="form-control" value="<?php echo htmlspecialchars($seller['brand_name']); ?>" required>
                         </div>
 
                         <div class="form-group">
                             <label>Contact Email</label>
-                            <input type="email" name="contact_email" class="form-control"
-                                value="<?php echo htmlspecialchars($seller['contact_email'] ?? ''); ?>" required>
+                            <input type="email" name="contact_email" class="form-control" value="<?php echo htmlspecialchars($seller['contact_email'] ?? ''); ?>" required>
                         </div>
 
                         <div class="form-group">
                             <label>Brand Description</label>
-                            <textarea name="brand_description" class="form-control"
-                                rows="5"><?php echo htmlspecialchars($seller['brand_description'] ?? ''); ?></textarea>
+                            <textarea name="brand_description" class="form-control" rows="5"><?php echo htmlspecialchars($seller['brand_description'] ?? ''); ?></textarea>
                         </div>
 
                         <div style="text-align: right; margin-top: 1rem;">
@@ -219,5 +195,4 @@ try {
     </div>
 
 </body>
-
 </html>

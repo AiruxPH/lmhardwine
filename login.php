@@ -42,8 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $_SESSION['email'] = $user['email'];
 
                 if ($user['role'] == 'seller') {
-                    // Redirect seller (using main index for now, or dedicated dashboard later)
-                    header('Location: index.php');
+                    // Redirect seller to dashboard
+                    header('Location: seller/index.php');
                 } else {
                     // Redirect customer
                     header('Location: index.php');
