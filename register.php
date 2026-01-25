@@ -5,6 +5,22 @@ session_start();
 $error = '';
 $success = '';
 
+// Check if Admin is logged in
+if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true) {
+    header('Location: admin/index.php');
+    exit;
+}
+
+// Check if User (Seller/Customer) is logged in
+if (isset($_SESSION['user_logged_in']) && $_SESSION['user_logged_in'] === true) {
+    if (isset($_SESSION['role']) && $_SESSION['role'] === 'seller') {
+        header('Location: seller/index.php');
+    } else {
+        header('Location: index.php');
+    }
+    exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = trim($_POST['username']);
     $email = trim($_POST['email']);

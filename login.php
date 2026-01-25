@@ -4,6 +4,22 @@ include 'includes/db.php';
 
 $error = '';
 
+// 1. Check if Admin is logged in
+if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true) {
+    header('Location: admin/index.php');
+    exit;
+}
+
+// 2. Check if User (Seller/Customer) is logged in
+if (isset($_SESSION['user_logged_in']) && $_SESSION['user_logged_in'] === true) {
+    if (isset($_SESSION['role']) && $_SESSION['role'] === 'seller') {
+        header('Location: seller/index.php');
+    } else {
+        header('Location: index.php');
+    }
+    exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = trim($_POST['username']);
     $password = $_POST['password'];

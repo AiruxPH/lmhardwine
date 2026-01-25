@@ -8,6 +8,13 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'seller') {
     exit;
 }
 
+// Gatekeeping: Redirect Admins
+if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true) {
+    header('Location: admin/index.php');
+    exit;
+}
+
+
 
 // Ensure user is logged in
 if (!isset($_SESSION['user_logged_in']) || $_SESSION['user_logged_in'] !== true) {

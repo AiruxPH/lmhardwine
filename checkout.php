@@ -1,4 +1,18 @@
-<?php include 'includes/header.php'; ?>
+<?php
+include 'includes/header.php';
+
+// Gatekeeping: Block Admins
+if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true) {
+    header('Location: admin/index.php');
+    exit;
+}
+
+// Gatekeeping: Block Sellers
+if (isset($_SESSION['role']) && $_SESSION['role'] === 'seller') {
+    header('Location: seller/index.php');
+    exit;
+}
+?>
 
 <main style="padding-top: 100px; padding-bottom: var(--spacing-xl);">
     <div class="container" style="max-width: 600px;">
