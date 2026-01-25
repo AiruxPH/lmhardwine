@@ -61,20 +61,38 @@ error_reporting(E_ALL);
                     <span class="bar"></span>
                     <span class="bar"></span>
                 </button>
-                <a href="#" id="cart-toggle"
-                    style="position: relative; display: flex; align-items: center; color: white;">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-                        <line x1="3" y1="6" x2="21" y2="6"></line>
-                        <path d="M16 10a4 4 0 0 1-8 0"></path>
-                    </svg>
-                    <span id="cart-count" class="cart-badge">0</span>
-                </a>
+
+                <!-- Cart Icon (Hidden for Admins) -->
+                <?php if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true): ?>
+                    <a href="#" id="cart-toggle"
+                        style="position: relative; display: flex; align-items: center; color: white;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <path d="M16 10a4 4 0 0 1-8 0"></path>
+                        </svg>
+                        <span id="cart-count" class="cart-badge">0</span>
+                    </a>
+                <?php endif; ?>
+
                 <a href="products.php" class="btn btn-primary" style="padding: 8px 20px; font-size: 0.8rem;">Shop
                     Now</a>
             </div>
         </div>
     </header>
+
+    <!-- Pass Session Info to JS -->
+    <script>
+        <?php
+        $cartKey = 'guest';
+        if (isset($_SESSION['user_logged_in']) && $_SESSION['user_logged_in'] === true) {
+            $cartKey = 'user_' . $_SESSION['user_id'];
+        }
+        $isAdmin = (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true) ? 'true' : 'false';
+        ?>
+        const CART_USER_KEY = "<?php echo $cartKey; ?>";
+        const IS_ADMIN = <?php echo $isAdmin; ?>;
+    </script>
 
     <!-- Cart Sidebar -->
     <div id="cart-overlay" class="cart-overlay"></div>

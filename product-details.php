@@ -95,37 +95,39 @@ if (!$product) {
                     </p>
                 </div>
 
-                <?php if ($product['stock_qty'] > 0): ?>
-                    <div style="display: flex; align-items: center; gap: 2rem; margin-bottom: 2rem;">
-                        <span style="font-size: 2.5rem; font-weight: 700;">$
-                            <?php echo $product['price']; ?>
-                        </span>
+                <?php if (!isset($_SESSION['admin_logged_in']) || !$_SESSION['admin_logged_in']): ?>
+                    <?php if ($product['stock_qty'] > 0): ?>
+                        <div style="display: flex; align-items: center; gap: 2rem; margin-bottom: 2rem;">
+                            <span style="font-size: 2.5rem; font-weight: 700;">$
+                                <?php echo $product['price']; ?>
+                            </span>
 
-                        <div
-                            style="display: flex; align-items: center; background: rgba(255,255,255,0.05); border-radius: 4px;">
-                            <button onclick="document.getElementById('qty-input').stepDown()"
-                                style="background: none; border: none; color: white; padding: 10px 15px; cursor: pointer; font-size: 1.2rem;">-</button>
-                            <input type="number" id="qty-input" value="1" min="1"
-                                style="background: none; border: none; color: white; width: 40px; text-align: center; font-size: 1rem;">
-                            <button onclick="document.getElementById('qty-input').stepUp()"
-                                style="background: none; border: none; color: white; padding: 10px 15px; cursor: pointer; font-size: 1.2rem;">+</button>
+                            <div
+                                style="display: flex; align-items: center; background: rgba(255,255,255,0.05); border-radius: 4px;">
+                                <button onclick="document.getElementById('qty-input').stepDown()"
+                                    style="background: none; border: none; color: white; padding: 10px 15px; cursor: pointer; font-size: 1.2rem;">-</button>
+                                <input type="number" id="qty-input" value="1" min="1"
+                                    style="background: none; border: none; color: white; width: 40px; text-align: center; font-size: 1rem;">
+                                <button onclick="document.getElementById('qty-input').stepUp()"
+                                    style="background: none; border: none; color: white; padding: 10px 15px; cursor: pointer; font-size: 1.2rem;">+</button>
+                            </div>
                         </div>
-                    </div>
-                    <p style="color: #d4af37; font-size: 0.9rem; margin-bottom: 1rem;">
-                        Only <?php echo $product['stock_qty']; ?> bottles left!
-                    </p>
-                    <button
-                        onclick="Cart.add(<?php echo $product['id']; ?>, '<?php echo addslashes($product['name']); ?>', <?php echo $product['price']; ?>, '<?php echo $product['type']; ?>', document.getElementById('qty-input').value)"
-                        class="btn btn-primary" style="width: 100%; max-width: 300px; font-size: 1.1rem; cursor: pointer;">
-                        Add to Cellar
-                    </button>
-                <?php else: ?>
-                    <div style="margin-bottom: 2rem;">
-                        <span
-                            style="font-size: 2.5rem; font-weight: 700; color: #666;">$<?php echo $product['price']; ?></span>
-                    </div>
-                    <button disabled class="btn"
-                        style="width: 100%; border-color: #666; color: #666; cursor: not-allowed;">Sold Out</button>
+                        <p style="color: #d4af37; font-size: 0.9rem; margin-bottom: 1rem;">
+                            Only <?php echo $product['stock_qty']; ?> bottles left!
+                        </p>
+                        <button
+                            onclick="Cart.add(<?php echo $product['id']; ?>, '<?php echo addslashes($product['name']); ?>', <?php echo $product['price']; ?>, '<?php echo $product['type']; ?>', document.getElementById('qty-input').value)"
+                            class="btn btn-primary" style="width: 100%; max-width: 300px; font-size: 1.1rem; cursor: pointer;">
+                            Add to Cellar
+                        </button>
+                    <?php else: ?>
+                        <div style="margin-bottom: 2rem;">
+                            <span
+                                style="font-size: 2.5rem; font-weight: 700; color: #666;">$<?php echo $product['price']; ?></span>
+                        </div>
+                        <button disabled class="btn"
+                            style="width: 100%; border-color: #666; color: #666; cursor: not-allowed;">Sold Out</button>
+                    <?php endif; ?>
                 <?php endif; ?>
 
                 <div style="margin-top: 3rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
