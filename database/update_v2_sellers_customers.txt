@@ -1,0 +1,43 @@
+-- 1. Create Users Table (Handles both Customers and Sellers)
+-- NOTE: 'password_hash' currently stores PLAIN TEXT passwords for 'customer' and 'seller' roles as requested.
+CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL, -- Storing Plain Text for now
+    role ENUM('customer', 'seller') NOT NULL DEFAULT 'customer',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- 2. Create Seller Profiles Table (Brand Information)
+CREATE TABLE IF NOT EXISTS seller_profiles (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    brand_name VARCHAR(100) NOT NULL,
+    brand_description TEXT,
+    brand_logo_path VARCHAR(255),
+    contact_email VARCHAR(100),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- 3. Create Customer Profiles Table (Shipping/Contact Info)
+CREATE TABLE IF NOT EXISTS customer_profiles (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    full_name VARCHAR(100),
+    phone_number VARCHAR(20),
+    default_shipping_address TEXT,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- 4. Update Products Table to link to Sellers
+-- We assume products are owned by a user (seller).
+-- Existing products will have seller_id = NULL (Admin products)
+ALTER TABLE products ADD COLUMN seller_id INT DEFAULT NULL;
+ALTER TABLE products ADD CONSTRAINT fk_product_seller FOREIGN KEY (seller_id) REFERENCES users(id) ON DELETE SET NULL;
+
+-- 5. Update Orders Table to link to Registered Customers
+-- Optional: Link orders to the registered user who placed them
+ALTER TABLE orders ADD COLUMN user_id INT DEFAULT NULL;
+ALTER TABLE orders ADD CONSTRAINT fk_order_customer FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL;

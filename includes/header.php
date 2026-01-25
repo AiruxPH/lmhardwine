@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -35,6 +38,24 @@ error_reporting(E_ALL);
                 </ul>
             </nav>
             <div class="header-actions" style="display: flex; align-items: center; gap: 1.5rem;">
+                <!-- Auth Links -->
+                <?php if (isset($_SESSION['user_logged_in']) && $_SESSION['user_logged_in'] === true): ?>
+                    <div style="color: white; font-size: 0.9rem;">
+                        <span style="color: var(--color-text-muted);">Hello,</span>
+                        <span
+                            style="color: var(--color-accent); font-weight: bold;"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
+                    </div>
+                    <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'seller'): ?>
+                        <a href="#" style="color: white; font-size: 0.9rem;">My Dashboard</a>
+                    <?php endif; ?>
+                    <a href="logout.php" style="color: white; font-size: 0.9rem; text-decoration: underline;">Logout</a>
+                <?php elseif (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true): ?>
+                    <a href="admin/index.php" style="color: var(--color-accent); font-weight: bold;">Admin Panel</a>
+                    <a href="logout.php" style="color: white; font-size: 0.9rem;">Logout</a>
+                <?php else: ?>
+                    <a href="login.php" style="color: white; font-size: 0.9rem;">Login / Register</a>
+                <?php endif; ?>
+
                 <button id="mobile-menu-toggle" class="mobile-toggle" aria-label="Toggle navigation">
                     <span class="bar"></span>
                     <span class="bar"></span>
