@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jan 25, 2026 at 04:40 AM
+-- Generation Time: Jan 25, 2026 at 07:23 AM
 -- Server version: 11.8.3-MariaDB-log
 -- PHP Version: 7.2.34
 
@@ -44,6 +44,33 @@ INSERT INTO `admins` (`id`, `username`, `password_hash`, `created_at`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `carts`
+--
+
+CREATE TABLE `carts` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cart_items`
+--
+
+CREATE TABLE `cart_items` (
+  `id` int(11) NOT NULL,
+  `cart_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `quantity` int(11) DEFAULT 1,
+  `added_at` timestamp NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `customer_profiles`
 --
 
@@ -54,6 +81,13 @@ CREATE TABLE `customer_profiles` (
   `phone_number` varchar(20) DEFAULT NULL,
   `default_shipping_address` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `customer_profiles`
+--
+
+INSERT INTO `customer_profiles` (`id`, `user_id`, `full_name`, `phone_number`, `default_shipping_address`) VALUES
+(1, 1, 'Anecito Randy E. Calunod Jr.', '09168811468', NULL);
 
 -- --------------------------------------------------------
 
@@ -121,8 +155,8 @@ INSERT INTO `products` (`id`, `name`, `type`, `varietal`, `price`, `vintage_year
 (4, 'Obsidian Rose', 'Rose', 'Grenache', 75.00, 2024, 'Dry, tart, and dangerously drinkable. Not your average summer water.', 'linear-gradient(45deg, rgba(255, 105, 180, 0.1), transparent)', NULL, 0, 10, NULL),
 (5, 'Volcanic Ash', 'Red', 'Pinot Noir', 110.00, 2021, 'Grown in volcanic soil, earthy and complex with a smokey finish.', 'linear-gradient(45deg, rgba(100, 30, 22, 0.1), transparent)', NULL, 0, 10, NULL),
 (6, 'Frost Bite', 'White', 'Ice Wine', 150.00, 2023, 'Sweetness with a sharp edge. Harvested at the first deep freeze.', 'linear-gradient(45deg, rgba(200, 240, 255, 0.1), transparent)', NULL, 0, 10, NULL),
-(7, 'Smirnoff', 'Red', 'Smirnoff Red, White & Merry is a limited edition, seasonal flavored vodka with festive notes of cran', 500.00, 2023, 'Smirnoff is the world\'s No. 1 vodka, triple distilled and ten times filtered for a smooth, versatile and gold award-winning taste.', 'linear-gradient(45deg, rgba(114, 14, 30, 0.1), transparent)', 'wine_1768923022.webp', 0, 10, NULL),
-(8, 'whiskey', 'White', 'Whiskey varieties are defined by origin, grain type, and production method, with major types includi', 750.00, 2024, 'Whiskey (or whisky) is a spirit distilled from fermented grain mash (like barley, corn, rye, wheat) and matured in wooden barrels, typically oak, giving it complex flavors from sweet (vanilla, caramel) to spicy (cinnamon) or earthy (peat).', 'linear-gradient(45deg, rgba(212, 175, 55, 0.1), transparent)', NULL, 0, 10, NULL);
+(7, 'Smirnoff', 'Red', 'Smirnoff Red, White & Merry is a limited edition, seasonal flavored vodka with festive notes of cran', 500.00, 2023, 'Smirnoff is the world\'s No. 1 vodka, triple distilled and ten times filtered for a smooth, versatile and gold award-winning taste.', 'linear-gradient(45deg, rgba(114, 14, 30, 0.1), transparent)', 'wine_1768923022.webp', 0, 10, 2),
+(8, 'whiskey', 'White', 'Whiskey varieties are defined by origin, grain type, and production method, with major types includi', 750.00, 2024, 'Whiskey (or whisky) is a spirit distilled from fermented grain mash (like barley, corn, rye, wheat) and matured in wooden barrels, typically oak, giving it complex flavors from sweet (vanilla, caramel) to spicy (cinnamon) or earthy (peat).', 'linear-gradient(45deg, rgba(212, 175, 55, 0.1), transparent)', 'wine_1769323624.png', 0, 10, 2);
 
 -- --------------------------------------------------------
 
@@ -138,6 +172,13 @@ CREATE TABLE `seller_profiles` (
   `brand_logo_path` varchar(255) DEFAULT NULL,
   `contact_email` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `seller_profiles`
+--
+
+INSERT INTO `seller_profiles` (`id`, `user_id`, `brand_name`, `brand_description`, `brand_logo_path`, `contact_email`) VALUES
+(1, 2, 'LM Hardwine', 'Best brand', 'uploads/logos/brand_6975b5ea55b23.png', 'lyndy@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -156,6 +197,14 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `username`, `email`, `password_hash`, `role`, `created_at`, `updated_at`) VALUES
+(1, 'AiruxPH', 'randythegreat000@gmail.com', 'RandyBOY999999@@@@@@', 'customer', '2026-01-25 05:44:20', '2026-01-25 05:44:20'),
+(2, 'Lyndy', 'lyndy@gmail.com', 'NDR0dSy8h5', 'seller', '2026-01-25 06:08:10', '2026-01-25 06:08:10');
+
+--
 -- Indexes for dumped tables
 --
 
@@ -165,6 +214,21 @@ CREATE TABLE `users` (
 ALTER TABLE `admins`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `username` (`username`);
+
+--
+-- Indexes for table `carts`
+--
+ALTER TABLE `carts`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `cart_items`
+--
+ALTER TABLE `cart_items`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `cart_id` (`cart_id`),
+  ADD KEY `product_id` (`product_id`);
 
 --
 -- Indexes for table `customer_profiles`
@@ -221,10 +285,22 @@ ALTER TABLE `admins`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT for table `carts`
+--
+ALTER TABLE `carts`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `cart_items`
+--
+ALTER TABLE `cart_items`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `customer_profiles`
 --
 ALTER TABLE `customer_profiles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `orders`
@@ -248,17 +324,30 @@ ALTER TABLE `products`
 -- AUTO_INCREMENT for table `seller_profiles`
 --
 ALTER TABLE `seller_profiles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `carts`
+--
+ALTER TABLE `carts`
+  ADD CONSTRAINT `carts_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `cart_items`
+--
+ALTER TABLE `cart_items`
+  ADD CONSTRAINT `cart_items_ibfk_1` FOREIGN KEY (`cart_id`) REFERENCES `carts` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `cart_items_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `customer_profiles`
