@@ -14,10 +14,10 @@
             <div style="flex: 1; min-width: 200px;">
                 <h4 style="color: var(--color-accent);">Explore</h4>
                 <ul style="display: flex; flex-direction: column; gap: 0.5rem;">
-                    <li><a href="#">Red Wines</a></li>
-                    <li><a href="#">White Wines</a></li>
-                    <li><a href="#">Limited Editions</a></li>
-                    <li><a href="#">Gift Sets</a></li>
+                    <li><a href="products.php?type=Red">Red Wines</a></li>
+                    <li><a href="products.php?type=White">White Wines</a></li>
+                    <li><a href="products.php">Limited Editions</a></li>
+                    <li><a href="products.php">Gift Sets</a></li>
                 </ul>
             </div>
 

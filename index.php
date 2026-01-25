@@ -116,7 +116,7 @@ include 'includes/db.php';
             </div>
 
             <div style="text-align: center; margin-top: var(--spacing-lg);">
-                <a href="#" class="btn btn-primary">View Full Catalogue</a>
+                <a href="products.php" class="btn btn-primary">View Full Catalogue</a>
             </div>
         </div>
     </section>
