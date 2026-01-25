@@ -17,8 +17,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $error = "All fields are required.";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = "Invalid email format.";
-    } elseif (!preg_match("/^[a-zA-Z\s'-]+$/", $full_name)) {
-        $error = "Invalid Full Name. Only letters, spaces, hyphens, and apostrophes allowed.";
+    } elseif (!preg_match("/^[a-zA-Z\s'\-\.]+$/", $full_name)) {
+        $error = "Invalid Full Name. Only letters, spaces, hyphens, apostrophes, and periods allowed.";
     } elseif (!preg_match("/^[a-zA-Z0-9_.]+$/", $username)) {
         $error = "Username can only contain letters, numbers, dots, and underscores.";
     } elseif (strlen($username) < 3 || strlen($username) > 20) {
@@ -260,8 +260,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Input Masking / Gatekeeping
         document.querySelector('input[name="full_name"]').addEventListener('input', function (e) {
-            // Allow letters, spaces, hyphens, apostrophes
-            this.value = this.value.replace(/[^a-zA-Z\s'-]/g, '');
+            // Allow letters, spaces, hyphens, apostrophes, and periods
+            this.value = this.value.replace(/[^a-zA-Z\s'\-\.]/g, '');
         });
 
         document.querySelector('input[name="username"]').addEventListener('input', function (e) {
