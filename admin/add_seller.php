@@ -171,12 +171,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
             <div class="form-group">
                 <label>Brand Logo</label>
-                <input type="file" name="brand_logo" class="form-control" accept="image/*">
+                <div style="text-align: center; margin-bottom: 0.5rem;">
+                    <img id="image-preview" src="#" alt="Preview"
+                        style="display: none; width: 100px; height: 100px; object-fit: cover; border-radius: 50%; border: 2px solid #d4af37;">
+                </div>
+                <input type="file" name="brand_logo" class="form-control" accept="image/*"
+                    onchange="previewImage(this)">
             </div>
 
             <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Create Seller</button>
         </form>
     </div>
 </body>
+<script>
+    function previewImage(input) {
+        var preview = document.getElementById('image-preview');
+
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+                preview.style.display = 'inline-block';
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
 
 </html>

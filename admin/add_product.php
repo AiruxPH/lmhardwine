@@ -167,16 +167,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
             <div class="form-group">
                 <label>Product Image</label>
-                <div class="file-upload-wrapper">
+                <div class="file-upload-wrapper" style="text-align: center;">
+                    <img id="image-preview" src="#" alt="Preview"
+                        style="display: none; max-width: 100%; max-height: 200px; margin-bottom: 1rem; border-radius: 4px; border: 1px solid #444;">
+
                     <div class="file-upload-icon">📷</div>
                     <span id="file-label">Click or Drag Image Here</span>
-                    <input type="file" name="product_image" accept="image/*"
-                        onchange="document.getElementById('file-label').textContent = this.files[0].name">
+                    <input type="file" name="product_image" accept="image/*" onchange="previewImage(this)">
                 </div>
             </div>
             <button type="submit" class="btn btn-primary" style="width: 100%;">Add Product</button>
         </form>
     </div>
+
+    <script>
+        function previewImage(input) {
+            var preview = document.getElementById('image-preview');
+            var label = document.getElementById('file-label');
+
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'inline-block';
+                }
+
+                reader.readAsDataURL(input.files[0]);
+                label.textContent = input.files[0].name;
+            }
+        }
+    </script>
 </body>
 
 </html>

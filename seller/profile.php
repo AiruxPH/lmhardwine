@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $brand_name = trim($_POST['brand_name']);
     $brand_description = trim($_POST['brand_description']);
     $contact_email = trim($_POST['contact_email']);
-    
+
     // File Upload Handling
     $logo_path = null;
     if (isset($_FILES['brand_logo']) && $_FILES['brand_logo']['error'] == 0) {
@@ -21,14 +21,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (!is_dir($upload_dir)) {
             mkdir($upload_dir, 0777, true);
         }
-        
+
         $file_ext = strtolower(pathinfo($_FILES['brand_logo']['name'], PATHINFO_EXTENSION));
         $allowed_ext = ['jpg', 'jpeg', 'png', 'webp'];
-        
+
         if (in_array($file_ext, $allowed_ext)) {
             $new_filename = uniqid('brand_') . '.' . $file_ext;
             $destination = $upload_dir . $new_filename;
-            
+
             if (move_uploaded_file($_FILES['brand_logo']['tmp_name'], $destination)) {
                 // Store path relative to root for consistency
                 $logo_path = 'uploads/logos/' . $new_filename;
@@ -130,7 +130,8 @@ try {
 
     <div class="profile-container">
         <div class="glass-card">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem;">
+            <div
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem;">
                 <div>
                     <h2>Brand Profile</h2>
                     <p style="color: var(--color-text-muted);">Manage your brand identity.</p>
@@ -148,18 +149,25 @@ try {
 
             <form method="POST" enctype="multipart/form-data">
                 <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
-                    
+
                     <!-- Logo Section -->
                     <div style="flex: 0 0 200px; text-align: center;">
                         <?php if (!empty($seller['brand_logo_path'])): ?>
-                            <img src="<?php echo '../' . htmlspecialchars($seller['brand_logo_path']); ?>" alt="Logo" class="logo-preview">
+                            <img id="image-preview"
+                                src="<?php echo '../' . htmlspecialchars($seller['brand_logo_path']); ?>" alt="Logo"
+                                class="logo-preview">
                         <?php else: ?>
-                            <div class="logo-preview" style="display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05);">No Logo</div>
+                            <!-- Placeholder - we need an img tag for preview to work easily, or we swap the div -->
+                            <div id="no-logo-placeholder" class="logo-preview"
+                                style="display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05);">
+                                No Logo</div>
+                            <img id="image-preview" src="#" alt="Logo" class="logo-preview" style="display: none;">
                         <?php endif; ?>
-                        
+
                         <label class="btn btn-sm" style="cursor: pointer; display: inline-block; width: 100%;">
                             Change Logo
-                            <input type="file" name="brand_logo" style="display: none;" accept="image/*">
+                            <input type="file" name="brand_logo" style="display: none;" accept="image/*"
+                                onchange="previewImage(this)">
                         </label>
                     </div>
 
@@ -167,22 +175,27 @@ try {
                     <div style="flex: 1; min-width: 300px;">
                         <div class="form-group">
                             <label>Username (Read-only)</label>
-                            <input type="text" class="form-control" value="<?php echo htmlspecialchars($seller['username']); ?>" disabled style="opacity: 0.7;">
+                            <input type="text" class="form-control"
+                                value="<?php echo htmlspecialchars($seller['username']); ?>" disabled
+                                style="opacity: 0.7;">
                         </div>
 
                         <div class="form-group">
                             <label>Brand Name</label>
-                            <input type="text" name="brand_name" class="form-control" value="<?php echo htmlspecialchars($seller['brand_name']); ?>" required>
+                            <input type="text" name="brand_name" class="form-control"
+                                value="<?php echo htmlspecialchars($seller['brand_name']); ?>" required>
                         </div>
 
                         <div class="form-group">
                             <label>Contact Email</label>
-                            <input type="email" name="contact_email" class="form-control" value="<?php echo htmlspecialchars($seller['contact_email'] ?? ''); ?>" required>
+                            <input type="email" name="contact_email" class="form-control"
+                                value="<?php echo htmlspecialchars($seller['contact_email'] ?? ''); ?>" required>
                         </div>
 
                         <div class="form-group">
                             <label>Brand Description</label>
-                            <textarea name="brand_description" class="form-control" rows="5"><?php echo htmlspecialchars($seller['brand_description'] ?? ''); ?></textarea>
+                            <textarea name="brand_description" class="form-control"
+                                rows="5"><?php echo htmlspecialchars($seller['brand_description'] ?? ''); ?></textarea>
                         </div>
 
                         <div style="text-align: right; margin-top: 1rem;">
@@ -195,4 +208,24 @@ try {
     </div>
 
 </body>
+<script>
+    function previewImage(input) {
+        var preview = document.getElementById('image-preview');
+        // We might have a placeholder that needs hiding
+        var placeholder = document.getElementById('no-logo-placeholder');
+
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+                preview.style.display = 'inline-block';
+                if (placeholder) placeholder.style.display = 'none';
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+
 </html>

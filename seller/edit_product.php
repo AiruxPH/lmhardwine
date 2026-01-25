@@ -193,21 +193,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             <div class="form-group">
                 <label>Product Image</label>
-                <?php if ($product['image_path']): ?>
-                    <!-- Note: Image path logic handling needed if absolute vs relative -->
-                    <!-- Attempting to show correct relative path. Assuming stored as 'uploads/file.jpg' or just 'file.jpg' -->
-                    <?php
-                    $display_path = strpos($product['image_path'], 'uploads/') === 0 ? '../' . $product['image_path'] : '../uploads/' . $product['image_path'];
-                    ?>
-                    <img src="<?php echo $display_path; ?>" class="current-img-preview">
-                    <p style="font-size: 0.8rem; color: #888; margin-bottom: 0.5rem;">Current Image</p>
-                <?php endif; ?>
+                <div style="text-align: center; margin-bottom: 1rem;">
+                    <?php if ($product['image_path']): ?>
+                        <?php
+                        $display_path = strpos($product['image_path'], 'uploads/') === 0 ? '../' . $product['image_path'] : '../uploads/' . $product['image_path'];
+                        ?>
+                        <img id="image-preview" src="<?php echo $display_path; ?>" class="current-img-preview"
+                            style="display: inline-block;">
+                    <?php else: ?>
+                        <img id="image-preview" src="#" class="current-img-preview" style="display: none;">
+                    <?php endif; ?>
+                </div>
 
                 <div class="file-upload-wrapper">
                     <div class="file-upload-icon">📷</div>
                     <span id="file-label">Change Image (Optional)</span>
-                    <input type="file" name="product_image" accept="image/*"
-                        onchange="document.getElementById('file-label').textContent = this.files[0].name">
+                    <input type="file" name="product_image" accept="image/*" onchange="previewImage(this)">
                 </div>
             </div>
 
@@ -215,5 +216,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </form>
     </div>
 </body>
+<script>
+    function previewImage(input) {
+        var preview = document.getElementById('image-preview');
+        var label = document.getElementById('file-label');
+
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+                preview.style.display = 'inline-block';
+            }
+
+            reader.readAsDataURL(input.files[0]);
+            label.textContent = input.files[0].name;
+        }
+    }
+</script>
 
 </html>
