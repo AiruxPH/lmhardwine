@@ -2,6 +2,13 @@
 include 'includes/db.php';
 session_start();
 
+// Gatekeeping: Redirect Sellers
+if (isset($_SESSION['role']) && $_SESSION['role'] === 'seller') {
+    header('Location: seller/profile.php');
+    exit;
+}
+
+
 // Ensure user is logged in
 if (!isset($_SESSION['user_logged_in']) || $_SESSION['user_logged_in'] !== true) {
     header('Location: login.php');

@@ -43,7 +43,7 @@ error_reporting(E_ALL);
                     <div style="color: white; font-size: 0.9rem;">
                         <span style="color: var(--color-text-muted);">Hello,</span>
                         <?php
-                        $profileLink = ($_SESSION['role'] === 'seller') ? 'seller_profile.php' : 'profile.php';
+                        $profileLink = ($_SESSION['role'] === 'seller') ? 'seller/profile.php' : 'profile.php';
                         ?>
                         <a href="<?php echo $profileLink; ?>"
                             style="color: var(--color-accent); font-weight: bold;"><?php echo htmlspecialchars($_SESSION['username']); ?></a>

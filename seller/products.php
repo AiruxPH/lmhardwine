@@ -400,8 +400,9 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     </span>
                                 </td>
                                 <td style="text-align: right;">
-                                    <a href="../product-details.php?id=<?php echo $p['id']; ?>" class="action-btn"
-                                        style="background: rgba(255, 255, 255, 0.1); color: #ccc; margin-right: 8px;">View</a>
+                                    <button type="button" class="action-btn"
+                                        style="background: rgba(255, 255, 255, 0.1); color: #ccc; margin-right: 8px; border: none; cursor: pointer;"
+                                        onclick='openProductModal(<?php echo json_encode($p, JSON_HEX_APOS | JSON_HEX_QUOT); ?>)'>View</button>
                                     <a href="edit_product.php?id=<?php echo $p['id']; ?>" class="action-btn btn-edit">Edit</a>
                                     <a href="?delete=<?php echo $p['id']; ?>" class="action-btn btn-delete"
                                         title="Remove Product"
