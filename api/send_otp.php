@@ -24,7 +24,7 @@ try {
 
     // 2. Generate OTP
     $otp = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
-    $expires = date('Y-m-d H:i:s', strtotime('+1 minute'));
+    $expires = date('Y-m-d H:i:s', strtotime('+2 minutes'));
 
     // 3. Save to DB
     // Clear old OTPs for this email first

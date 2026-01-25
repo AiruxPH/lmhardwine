@@ -1,7 +1,5 @@
 <?php
 session_start();
-// Redirect if already logged in? Optional.
-// if (isset($_SESSION['user_logged_in']) && $_SESSION['user_logged_in'] === true) { header('Location: index.php'); exit; }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -122,30 +120,6 @@ session_start();
             color: #f44336;
         }
 
-        /* OTP Input Styling */
-        .otp-group {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .otp-input {
-            width: 40px;
-            height: 50px;
-            text-align: center;
-            font-size: 1.5rem;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #fff;
-            border-radius: 6px;
-        }
-
-        .otp-input:focus {
-            border-color: #d4af37;
-            outline: none;
-        }
-
         .step-hidden {
             display: none;
         }
@@ -173,15 +147,29 @@ session_start();
             </div>
         </form>
 
-        <!-- STEP 2: VERIFY & RESET -->
-        <form id="resetForm" class="step-hidden" onsubmit="verifyAndReset(event)">
+        <!-- STEP 2: VERIFY OTP -->
+        <form id="otpForm" class="step-hidden" onsubmit="validateOTP(event)">
+            <p style="color: #999; margin-bottom: 1.5rem;">Please enter the 6-digit code sent to your email.</p>
             <div class="form-group">
-                <label style="display:block; margin-bottom:5px; color:#ccc; font-size:0.85rem;">Verification
-                    Code</label>
-                <input type="text" id="otp_code" class="form-control" placeholder="6-digit code" maxlength="6" required
-                    style="letter-spacing: 5px; text-align: center; font-size: 1.2rem;">
+                <input type="text" id="otp_code" class="form-control" placeholder="000000" maxlength="6" required
+                    style="letter-spacing: 8px; text-align: center; font-size: 1.5rem; font-weight: bold;">
             </div>
 
+            <button type="submit" id="btn-verify" class="btn-primary">Verify Code</button>
+
+            <div style="margin-top: 1.5rem;">
+                <button type="button" id="btn-resend" class="btn-link" onclick="resendOTP()">Resend Code</button>
+                <span id="timer" style="color: #666; margin-left: 5px;"></span>
+            </div>
+            <div style="margin-top: 1rem;">
+                <button type="button" class="btn-link" onclick="location.reload()"
+                    style="color: #888; font-size: 0.8rem;">Change Email</button>
+            </div>
+        </form>
+
+        <!-- STEP 3: RESET PASSWORD -->
+        <form id="resetForm" class="step-hidden" onsubmit="verifyAndReset(event)">
+            <p style="color: #4caf50; margin-bottom: 1.5rem;">Code verified! Set your new password.</p>
             <div class="form-group">
                 <input type="password" id="new_password" class="form-control" placeholder="New Password" required
                     minlength="6">
@@ -193,25 +181,16 @@ session_start();
             </div>
 
             <button type="submit" id="btn-reset" class="btn-primary">Reset Password</button>
-
-            <div style="margin-top: 1.5rem;">
-                <p style="margin-bottom: 0.5rem;">Did not receive the code?</p>
-                <button type="button" id="btn-resend" class="btn-link" onclick="resendOTP()">Resend Code</button>
-                <span id="timer" style="color: #666; margin-left: 5px;"></span>
-            </div>
-
-            <div style="margin-top: 1rem;">
-                <button type="button" class="btn-link" onclick="location.reload()"
-                    style="color: #888; font-size: 0.8rem;">Change Email</button>
-            </div>
         </form>
     </div>
 
     <script>
         const emailForm = document.getElementById('emailForm');
+        const otpForm = document.getElementById('otpForm');
         const resetForm = document.getElementById('resetForm');
         const alertBox = document.getElementById('alert-box');
         const btnSend = document.getElementById('btn-send');
+        const btnVerify = document.getElementById('btn-verify');
         const btnResend = document.getElementById('btn-resend');
         const timerSpan = document.getElementById('timer');
 
@@ -243,9 +222,11 @@ session_start();
                     showAlert('Code sent to ' + userEmail, 'success');
                     // Switch to Step 2
                     emailForm.classList.add('step-hidden');
-                    resetForm.classList.remove('step-hidden');
-                    document.getElementById('page-desc').innerText = 'Please enter the code sent to your email and set a new password.';
-                    startTimer(60);
+                    otpForm.classList.remove('step-hidden');
+                    document.title = "Verify Code | LM Hard Wine";
+                    document.getElementById('page-title').innerText = "Verification";
+                    document.getElementById('page-desc').style.display = 'none';
+                    startTimer(120); // 2 Minutes
                 } else {
                     showAlert(data.error || 'Failed to send OTP.', 'error');
                 }
@@ -254,6 +235,39 @@ session_start();
             } finally {
                 btnSend.disabled = false;
                 btnSend.innerText = 'Send Verification Code';
+            }
+        }
+
+        async function validateOTP(e) {
+            e.preventDefault();
+            const otp = document.getElementById('otp_code').value.trim();
+            btnVerify.disabled = true;
+            btnVerify.innerText = 'Verifying...';
+
+            try {
+                const res = await fetch('api/validate_otp.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: userEmail, otp: otp })
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    // Switch to Step 3
+                    otpForm.classList.add('step-hidden');
+                    resetForm.classList.remove('step-hidden');
+                    document.getElementById('page-title').innerText = "Create Password";
+                    alertBox.style.display = 'none';
+                    clearInterval(countdown);
+                } else {
+                    showAlert(data.error || 'Invalid code.', 'error');
+                    btnVerify.disabled = false;
+                    btnVerify.innerText = 'Verify Code';
+                }
+            } catch (err) {
+                showAlert('An error occurred.', 'error');
+                btnVerify.disabled = false;
+                btnVerify.innerText = 'Verify Code';
             }
         }
 
@@ -270,7 +284,7 @@ session_start();
             }
 
             btnReset.disabled = true;
-            btnReset.innerText = 'Verifying...';
+            btnReset.innerText = 'Resetting...';
 
             try {
                 const res = await fetch('api/verify_reset.php', {
@@ -290,7 +304,7 @@ session_start();
                         window.location.href = 'login.php';
                     }, 2000);
                 } else {
-                    showAlert(data.error || 'Invalid or expired code.', 'error');
+                    showAlert(data.error || 'Session expired. Please try again.', 'error');
                     btnReset.disabled = false;
                     btnReset.innerText = 'Reset Password';
                 }
@@ -303,8 +317,6 @@ session_start();
 
         function resendOTP() {
             if (btnResend.disabled) return;
-
-            // Re-trigger sendOTP logic essentially
             btnResend.disabled = true;
             btnResend.innerText = 'Sending...';
 
@@ -317,7 +329,7 @@ session_start();
                 .then(data => {
                     if (data.success) {
                         showAlert('New code sent!', 'success');
-                        startTimer(60);
+                        startTimer(120); // 2 Minutes
                     } else {
                         showAlert(data.error || 'Failed to resend.', 'error');
                         btnResend.disabled = false;
@@ -335,7 +347,6 @@ session_start();
             clearInterval(countdown);
             btnResend.disabled = true;
             let left = seconds;
-
             updateTimerText(left);
 
             countdown = setInterval(() => {
@@ -351,7 +362,9 @@ session_start();
         }
 
         function updateTimerText(sec) {
-            btnResend.innerText = `Resend in ${sec}s`;
+            const m = Math.floor(sec / 60);
+            const s = sec % 60;
+            btnResend.innerText = `Resend in ${m}:${s < 10 ? '0' : ''}${s}`;
         }
     </script>
 </body>
