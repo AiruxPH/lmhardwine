@@ -218,6 +218,10 @@ try {
                 <div class="form-group">
                     <label>Current Password</label>
                     <input type="password" id="current_password" class="form-control" required>
+                    <div style="text-align: right; margin-top: 5px;">
+                        <a href="forgot_password.php"
+                            style="color: #bbb; font-size: 0.8rem; text-decoration: none;">Forgot Password?</a>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>New Password</label>

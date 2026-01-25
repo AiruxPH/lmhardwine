@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jan 25, 2026 at 07:23 AM
+-- Generation Time: Jan 25, 2026 at 08:04 AM
 -- Server version: 11.8.3-MariaDB-log
 -- PHP Version: 7.2.34
 
@@ -87,7 +87,8 @@ CREATE TABLE `customer_profiles` (
 --
 
 INSERT INTO `customer_profiles` (`id`, `user_id`, `full_name`, `phone_number`, `default_shipping_address`) VALUES
-(1, 1, 'Anecito Randy E. Calunod Jr.', '09168811468', NULL);
+(1, 1, 'Anecito Randy E. Calunod Jr.', '09168811468', NULL),
+(2, 3, 'john', '', NULL);
 
 -- --------------------------------------------------------
 
@@ -126,6 +127,20 @@ CREATE TABLE `order_items` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `password_resets`
+--
+
+CREATE TABLE `password_resets` (
+  `id` int(11) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `otp_code` varchar(10) NOT NULL,
+  `expires_at` datetime NOT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `products`
 --
 
@@ -156,7 +171,8 @@ INSERT INTO `products` (`id`, `name`, `type`, `varietal`, `price`, `vintage_year
 (5, 'Volcanic Ash', 'Red', 'Pinot Noir', 110.00, 2021, 'Grown in volcanic soil, earthy and complex with a smokey finish.', 'linear-gradient(45deg, rgba(100, 30, 22, 0.1), transparent)', NULL, 0, 10, NULL),
 (6, 'Frost Bite', 'White', 'Ice Wine', 150.00, 2023, 'Sweetness with a sharp edge. Harvested at the first deep freeze.', 'linear-gradient(45deg, rgba(200, 240, 255, 0.1), transparent)', NULL, 0, 10, NULL),
 (7, 'Smirnoff', 'Red', 'Smirnoff Red, White & Merry is a limited edition, seasonal flavored vodka with festive notes of cran', 500.00, 2023, 'Smirnoff is the world\'s No. 1 vodka, triple distilled and ten times filtered for a smooth, versatile and gold award-winning taste.', 'linear-gradient(45deg, rgba(114, 14, 30, 0.1), transparent)', 'wine_1768923022.webp', 0, 10, 2),
-(8, 'whiskey', 'White', 'Whiskey varieties are defined by origin, grain type, and production method, with major types includi', 750.00, 2024, 'Whiskey (or whisky) is a spirit distilled from fermented grain mash (like barley, corn, rye, wheat) and matured in wooden barrels, typically oak, giving it complex flavors from sweet (vanilla, caramel) to spicy (cinnamon) or earthy (peat).', 'linear-gradient(45deg, rgba(212, 175, 55, 0.1), transparent)', 'wine_1769323624.png', 0, 10, 2);
+(8, 'whiskey', 'White', 'Whiskey varieties are defined by origin, grain type, and production method, with major types includi', 750.00, 2024, 'Whiskey (or whisky) is a spirit distilled from fermented grain mash (like barley, corn, rye, wheat) and matured in wooden barrels, typically oak, giving it complex flavors from sweet (vanilla, caramel) to spicy (cinnamon) or earthy (peat).', 'linear-gradient(45deg, rgba(212, 175, 55, 0.1), transparent)', 'uploads/wine_6975ccfc83197.jpg', 0, 10, 2),
+(9, 'Smirnoff', 'Red', 'Smirnoff Red, White & Merry is a limited edition, seasonal flavored vodka with festive notes of cran', 500.00, 2026, '', 'linear-gradient(45deg, rgba(114, 14, 30, 0.1), transparent)', NULL, 1, 10, 2);
 
 -- --------------------------------------------------------
 
@@ -202,7 +218,8 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `username`, `email`, `password_hash`, `role`, `created_at`, `updated_at`) VALUES
 (1, 'AiruxPH', 'randythegreat000@gmail.com', 'RandyBOY999999@@@@@@', 'customer', '2026-01-25 05:44:20', '2026-01-25 05:44:20'),
-(2, 'Lyndy', 'lyndy@gmail.com', 'NDR0dSy8h5', 'seller', '2026-01-25 06:08:10', '2026-01-25 06:08:10');
+(2, 'Lyndy', 'lyndy@gmail.com', 'NDR0dSy8h5', 'seller', '2026-01-25 06:08:10', '2026-01-25 06:08:10'),
+(3, 'dog', 'john@gmail.com', 'lylyndymae2003@', 'customer', '2026-01-25 08:00:30', '2026-01-25 08:00:30');
 
 --
 -- Indexes for dumped tables
@@ -253,6 +270,13 @@ ALTER TABLE `order_items`
   ADD KEY `product_id` (`product_id`);
 
 --
+-- Indexes for table `password_resets`
+--
+ALTER TABLE `password_resets`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `email` (`email`);
+
+--
 -- Indexes for table `products`
 --
 ALTER TABLE `products`
@@ -300,7 +324,7 @@ ALTER TABLE `cart_items`
 -- AUTO_INCREMENT for table `customer_profiles`
 --
 ALTER TABLE `customer_profiles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `orders`
@@ -315,10 +339,16 @@ ALTER TABLE `order_items`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `password_resets`
+--
+ALTER TABLE `password_resets`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `seller_profiles`
@@ -330,7 +360,7 @@ ALTER TABLE `seller_profiles`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables
