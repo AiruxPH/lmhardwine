@@ -11,8 +11,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_product_id'])) 
     exit;
 }
 
-// Fetch Products
-$stmt = $pdo->query("SELECT * FROM products WHERE is_deleted = 0 ORDER BY id DESC");
+// Fetch Products with Seller Info
+$stmt = $pdo->query("SELECT p.*, sp.brand_name FROM products p LEFT JOIN seller_profiles sp ON p.seller_id = sp.user_id WHERE p.is_deleted = 0 ORDER BY p.id DESC");
 $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
@@ -75,6 +75,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <tr>
                         <th>Image</th>
                         <th>Name</th>
+                        <th>Seller</th>
                         <th>Type</th>
                         <th>Stock</th>
                         <th>Price</th>
@@ -100,6 +101,14 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 </td>
                                 <td>
                                     <?php echo htmlspecialchars($p['name']); ?>
+                                </td>
+                                <td>
+                                    <?php if ($p['brand_name']): ?>
+                                        <span
+                                            style="color: var(--color-accent); font-weight: bold;"><?php echo htmlspecialchars($p['brand_name']); ?></span>
+                                    <?php else: ?>
+                                        <span style="color: #888; font-style: italic;">Admin (House)</span>
+                                    <?php endif; ?>
                                 </td>
                                 <td>
                                     <?php echo htmlspecialchars($p['type']); ?>
