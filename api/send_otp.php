@@ -42,8 +42,8 @@ try {
     // Attempt to send (might fail on local, so we ignore result for demo and return OTP in debug)
     @mail($email, $subject, $message, $headers);
 
-    // DEBUG: Return OTP in response so user can test without real mail server
-    echo json_encode(['success' => true, 'debug_otp' => $otp]);
+    // 4. Send Email success response
+    echo json_encode(['success' => true]);
 
 } catch (PDOException $e) {
     http_response_code(500);
