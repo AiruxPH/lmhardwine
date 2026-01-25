@@ -61,6 +61,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $stmt_log = $pdo->prepare("INSERT INTO order_history (order_id, status_from, status_to, notes) VALUES (?, ?, ?, ?)");
                 $stmt_log->execute([$order_id, $old_status, $new_status, $notes]);
 
+                // 3. Stock Reversion if Canceled
+                if ($new_status === 'Canceled') {
+                    $stmt_items_list = $pdo->prepare("SELECT product_id, quantity FROM order_items WHERE order_id = ?");
+                    $stmt_items_list->execute([$order_id]);
+                    $items_to_revert = $stmt_items_list->fetchAll();
+
+                    foreach ($items_to_revert as $item) {
+                        $stmt_stock = $pdo->prepare("UPDATE products SET stock_qty = stock_qty + ? WHERE id = ?");
+                        $stmt_stock->execute([$item['quantity'], $item['product_id']]);
+                    }
+                }
+
                 $pdo->commit();
                 header("Location: view_order.php?id=$order_id&success=1");
                 exit;
@@ -69,14 +81,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $error = "Failed to update: " . $e->getMessage();
             }
         }
-    }
-
-    if (isset($_POST['delete_order'])) {
-        // ... (existing delete logic)
-        $stmt = $pdo->prepare("UPDATE orders SET is_deleted = 1 WHERE id = ?");
-        $stmt->execute([$order_id]);
-        header("Location: index.php");
-        exit;
     }
 }
 
@@ -303,14 +307,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             transitions are shown. Logs are public.</p>
                     </form>
                 <?php endif; ?>
-
-                <form method="POST"
-                    onsubmit="return confirm('Are you sure you want to delete this order? This cannot be undone.');"
-                    style="margin-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem;">
-                    <button type="submit" name="delete_order" class="btn"
-                        style="width: 100%; border-color: #f44336; color: #f44336; opacity: 0.3;">Delete Order
-                        Record</button>
-                </form>
             </div>
         </div>
 
