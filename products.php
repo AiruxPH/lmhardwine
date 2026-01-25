@@ -143,7 +143,10 @@ try {
                         if (isset($_SESSION['role']) && $_SESSION['role'] === 'seller')
                             $hidePurchase = true;
 
-                        if (!$hidePurchase): ?>
+                        if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true): ?>
+                            <a href="admin/edit_product.php?id=<?php echo $product['id']; ?>" class="btn btn-primary"
+                                style="flex: 1; text-align: center; font-size: 0.8rem; padding: 10px 0;">Quick Edit</a>
+                        <?php elseif (!$hidePurchase): ?>
                             <?php if ($product['stock_qty'] > 0): ?>
                                 <button
                                     onclick="Cart.add(<?php echo $product['id']; ?>, '<?php echo addslashes($product['name']); ?>', <?php echo $product['price']; ?>, '<?php echo $product['type']; ?>')"

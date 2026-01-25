@@ -26,6 +26,36 @@ error_reporting(E_ALL);
 </head>
 
 <body>
+    <?php if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true): ?>
+        <div
+            style="background: #720e1e; color: white; padding: 5px 0; font-size: 0.8rem; text-align: center; font-weight: bold; position: fixed; top: 0; left: 0; width: 100%; z-index: 2000; letter-spacing: 1px;">
+            ADMINISTRATOR MODE | <a href="admin/index.php"
+                style="color: white; text-decoration: underline; margin-left: 10px;">Return to Dashboard</a>
+        </div>
+        <style>
+            header.main-header {
+                top: 25px !important;
+            }
+
+            .hero {
+                padding-top: 25px;
+            }
+
+            body::before {
+                content: '';
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                border: 3px solid #720e1e;
+                pointer-events: none;
+                z-index: 10000;
+                opacity: 0.6;
+            }
+        </style>
+    <?php endif; ?>
+
     <header class="main-header">
         <div class="container nav-container">
             <a href="index.php" class="logo">LM <span>HARD</span> WINE</a>

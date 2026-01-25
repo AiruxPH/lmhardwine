@@ -50,8 +50,13 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'seller') {
                 bottle.
             </p>
             <div class="fade-in">
-                <a href="products.php" class="btn btn-primary" style="margin-right: 1rem;">Explore Collection</a>
-                <a href="about.php" class="btn">Our Philosophy</a>
+                <?php if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true): ?>
+                    <a href="admin/products.php" class="btn btn-primary" style="margin-right: 1rem;">Manage Inventory</a>
+                    <a href="admin/index.php" class="btn">Admin Dashboard</a>
+                <?php else: ?>
+                    <a href="products.php" class="btn btn-primary" style="margin-right: 1rem;">Explore Collection</a>
+                    <a href="about.php" class="btn">Our Philosophy</a>
+                <?php endif; ?>
             </div>
         </div>
     </section>
@@ -116,8 +121,12 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'seller') {
                     <p style="color: var(--color-text-muted); font-size: 0.9rem; margin-bottom: 1.5rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
                         <?php echo htmlspecialchars($p['description']); ?>
                     </p>
-                    <a href="product-details.php?id=<?php echo $p['id']; ?>" class="btn" style="width: 100%; text-align: center;">View
-                        Details</a>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <a href="product-details.php?id=<?php echo $p['id']; ?>" class="btn" style="flex: 1; text-align: center;">View Details</a>
+                        <?php if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true): ?>
+                            <a href="admin/edit_product.php?id=<?php echo $p['id']; ?>" class="btn btn-primary" style="padding: 10px;">Edit</a>
+                        <?php endif; ?>
+                    </div>
                 </div>
                 <?php endforeach; ?>
                 

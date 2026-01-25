@@ -137,6 +137,16 @@ if (!$product) {
                         <button disabled class="btn"
                             style="width: 100%; border-color: #666; color: #666; cursor: not-allowed;">Sold Out</button>
                     <?php endif; ?>
+                <?php elseif (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true): ?>
+                    <div style="margin-bottom: 2rem;">
+                        <span style="font-size: 2.5rem; font-weight: 700;">₱<?php echo $product['price']; ?></span>
+                    </div>
+                    <a href="admin/edit_product.php?id=<?php echo $product['id']; ?>" class="btn btn-primary"
+                        style="display: inline-block; text-decoration: none;">Edit this Product</a>
+                    <div class="alert-error"
+                        style="display:inline-block; margin: 1rem 0 0 0; background: rgba(114, 14, 30, 0.2); border-color: rgba(114, 14, 30, 0.3);">
+                        Administrator Mode: Some shopper features are hidden.
+                    </div>
                 <?php elseif (isset($_SESSION['role']) && $_SESSION['role'] === 'seller'): ?>
                     <div style="margin-bottom: 2rem;">
                         <span style="font-size: 2.5rem; font-weight: 700;">₱<?php echo $product['price']; ?></span>
