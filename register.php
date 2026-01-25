@@ -48,7 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $pdo->beginTransaction();
 
             // 1. Create User
-            // Note: Storing password in plain text as requested for school project
+            // Note: Storing password in plain text as requested for school project.
+            // Plain Text Passwords are for demonstration purposes only.
             $stmt = $pdo->prepare("INSERT INTO users (username, email, password_hash, role) VALUES (?, ?, ?, 'customer')");
             $stmt->execute([$username, $email, $password]);
             $user_id = $pdo->lastInsertId();

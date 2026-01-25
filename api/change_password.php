@@ -58,6 +58,7 @@ try {
     // Check if it matches
     // NOTE: If we ever upgraded users to hash, we'd need password_verify here.
     // But sticking to the "Plain Text" rule for users/sellers:
+    // Plain Text Passwords are for demonstration purposes only.
     if ($current_password !== $stored_password) {
         echo json_encode(['error' => 'Incorrect current password.']);
         exit;

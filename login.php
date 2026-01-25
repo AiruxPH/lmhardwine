@@ -44,6 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         // 2. Check Users Table (Sellers/Customers) - Plain Text as requested
+        // Plain Text Passwords are for demonstration purposes only.
         $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ? OR email = ?");
         $stmt->execute([$username, $username]);
         $user = $stmt->fetch();

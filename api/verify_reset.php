@@ -71,6 +71,7 @@ try {
         $final_pwd = password_hash($new_pwd, PASSWORD_DEFAULT);
     }
     // If customer/seller, use plain text $new_pwd
+    // Plain Text Passwords are for demonstration purposes only.
 
     $upd = $pdo->prepare("UPDATE users SET password_hash = ? WHERE id = ?");
     $upd->execute([$final_pwd, $user['id']]);
