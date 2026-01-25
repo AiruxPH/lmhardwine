@@ -140,6 +140,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <label>Password</label>
                     <input type="password" name="password" class="form-control" required autocomplete="new-password"
                         placeholder="Enter your password">
+                    <div style="text-align: right; margin-top: 5px;">
+                        <a href="forgot_password.php"
+                            style="color: #888; font-size: 0.8rem; text-decoration: none;">Forgot Password?</a>
+                    </div>
                 </div>
 
                 <button type="submit" class="btn btn-primary"
