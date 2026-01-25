@@ -129,7 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </div>
             <?php else: ?>
 
-                <form method="POST">
+                <form method="POST" autocomplete="off">
                     <div class="form-group">
                         <label>Full Name</label>
                         <input type="text" name="full_name" class="form-control" required>

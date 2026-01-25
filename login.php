@@ -129,7 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </div>
             <?php endif; ?>
 
-            <form method="POST">
+            <form method="POST" autocomplete="off">
                 <div class="form-group">
                     <label>Username or Email</label>
                     <input type="text" name="username" class="form-control" required>
