@@ -152,11 +152,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                     <div class="form-group">
                         <label>Password</label>
-                        <input type="password" name="password" class="form-control" required>
+                        <input type="password" name="password" class="form-control" required autocomplete="new-password>
                     </div>
 
-                    <button type="submit" class="btn btn-primary"
-                        style="width: 100%; border: none; padding: 12px; font-size: 1rem;">Register</button>
+                    <button type=" submit" class="btn btn-primary"
+                            style="width: 100%; border: none; padding: 12px; font-size: 1rem;">Register</button>
                 </form>
             <?php endif; ?>
 

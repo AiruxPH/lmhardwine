@@ -132,7 +132,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <form method="POST" autocomplete="off">
                 <div class="form-group">
                     <label>Username or Email</label>
-                    <input type="text" name="username" class="form-control" required autocomplete="off">
+                    <input type="text" name="username" class="form-control" required autocomplete="off"
+                        placeholder="Enter your username or email">
                 </div>
 
                 <div class="form-group">
