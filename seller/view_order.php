@@ -256,7 +256,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
                         <div style="margin-bottom: 0.8rem;">
                             <label style="font-size: 0.75rem; color: #888; display: block; margin-bottom: 4px;">Transition
                                 To:</label>
-                            <select name="status" required
+                            <select name="status" id="status-select-seller" required onchange="updateNoteTemplatesSeller()"
                                 style="width: 100%; background: #1a1a1a; border: 1px solid #444; color: #fff; padding: 8px; border-radius: 4px;">
                                 <option value="" disabled selected>Select status...</option>
                                 <?php foreach ($next_steps as $s): ?>
@@ -264,12 +264,67 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
                                 <?php endforeach; ?>
                             </select>
                         </div>
+
+                        <div id="quick-note-container-seller" style="margin-bottom: 1rem; display: none;">
+                            <label
+                                style="font-size: 0.75rem; color: var(--color-accent); display: block; margin-bottom: 4px;">Quick
+                                Templates:</label>
+                            <div id="note-templates-seller" style="display: flex; flex-wrap: wrap; gap: 5px;">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+
                         <div style="margin-bottom: 1rem;">
                             <label style="font-size: 0.75rem; color: #888; display: block; margin-bottom: 4px;">Audit Note
                                 (Public):</label>
-                            <textarea name="status_notes" required rows="2" placeholder="e.g. Packing complete..."
+                            <textarea name="status_notes" id="status-notes-seller" required rows="2"
+                                placeholder="e.g. Packing complete..."
                                 style="width: 100%; background: #1a1a1a; border: 1px solid #444; color: #fff; padding: 8px; border-radius: 4px; font-size: 0.85rem;"></textarea>
                         </div>
+                        <script>
+                            const sellerTemplates = {
+                                'Processing': [
+                                    "Item confirmed and being packed.",
+                                    "Preparing for courier pickup.",
+                                    "Processing in our local cellar."
+                                ],
+                                'Shipped': [
+                                    "Handed to courier. Tracking: ",
+                                    "En route to sorting facility.",
+                                    "Dispatched for delivery."
+                                ],
+                                'Canceled': [
+                                    "Out of stock at seller location.",
+                                    "Issue with item quality, order canceled.",
+                                    "Canceled as per seller request."
+                                ]
+                            };
+
+                            function updateNoteTemplatesSeller() {
+                                const status = document.getElementById('status-select-seller').value;
+                                const container = document.getElementById('quick-note-container-seller');
+                                const templatesDiv = document.getElementById('note-templates-seller');
+                                const textarea = document.getElementById('status-notes-seller');
+
+                                templatesDiv.innerHTML = '';
+                                if (sellerTemplates[status]) {
+                                    container.style.display = 'block';
+                                    sellerTemplates[status].forEach(t => {
+                                        const btn = document.createElement('button');
+                                        btn.type = 'button';
+                                        btn.innerText = t;
+                                        btn.style.cssText = 'font-size: 0.7rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #ccc; padding: 4px 8px; border-radius: 4px; cursor: pointer;';
+                                        btn.onclick = () => {
+                                            textarea.value = t;
+                                            textarea.focus();
+                                        };
+                                        templatesDiv.appendChild(btn);
+                                    });
+                                } else {
+                                    container.style.display = 'none';
+                                }
+                            }
+                        </script>
                         <button type="submit" name="update_status" class="btn btn-primary"
                             style="width: 100%; font-size: 0.9rem; padding: 10px;">Update Status</button>
                     </form>
