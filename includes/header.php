@@ -42,8 +42,8 @@ error_reporting(E_ALL);
                 <?php if (isset($_SESSION['user_logged_in']) && $_SESSION['user_logged_in'] === true): ?>
                     <div style="color: white; font-size: 0.9rem;">
                         <span style="color: var(--color-text-muted);">Hello,</span>
-                        <span
-                            style="color: var(--color-accent); font-weight: bold;"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
+                        <a href="profile.php"
+                            style="color: var(--color-accent); font-weight: bold;"><?php echo htmlspecialchars($_SESSION['username']); ?></a>
                     </div>
                     <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'seller'): ?>
                         <a href="#" style="color: white; font-size: 0.9rem;">My Dashboard</a>
