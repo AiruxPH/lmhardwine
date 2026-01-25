@@ -5,9 +5,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $name = $_POST['customer_name'];
     $email = $_POST['customer_email'];
     $address = $_POST['customer_address'];
-    $cart_json = $_POST['cart_data'];
 
-    $cart_items = json_decode($cart_json, true);
+    // Determine source of items
+    $cart_items = [];
+    session_start();
+
+    if (isset($_SESSION['user_id'])) {
+        // LOGGED IN: Fetch from Database
+        $user_id = $_SESSION['user_id'];
+        $stmt_cart = $pdo->prepare("
+            SELECT ci.product_id as id, ci.quantity as qty 
+            FROM cart_items ci
+            JOIN carts c ON ci.cart_id = c.id
+            WHERE c.user_id = ?
+        ");
+        $stmt_cart->execute([$user_id]);
+        $cart_items = $stmt_cart->fetchAll(PDO::FETCH_ASSOC);
+    } else {
+        // GUEST: Use Form Data
+        $cart_json = $_POST['cart_data'];
+        $cart_items = json_decode($cart_json, true);
+    }
 
     if (empty($cart_items)) {
         die("Error: Cart is empty.");
@@ -118,12 +136,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <?php echo $order_id; ?> has been placed.
                 </p>
                 <p>We will contact you shortly.</p>
-                <a href="../index.php" class="btn" onclick="localStorage.removeItem('lm_cart')">Return Home</a>
+                <p>We will contact you shortly.</p>
+                <a href="../index.php" class="btn" onclick="localStorage.removeItem('lm_cart_guest')">Return Home</a>
             </div>
         </body>
 
         </html>
         <?php
+        // 4. Cleanup Cart (Using session we started earlier)
+        if (isset($_SESSION['user_id'])) {
+            // Clear DB Cart
+            $user_id = $_SESSION['user_id'];
+            // Get Cart ID first
+            $stmt_cid = $pdo->prepare("SELECT id FROM carts WHERE user_id = ?");
+            $stmt_cid->execute([$user_id]);
+            $c = $stmt_cid->fetch();
+            if ($c) {
+                // Delete items
+                $stmt_del = $pdo->prepare("DELETE FROM cart_items WHERE cart_id = ?");
+                $stmt_del->execute([$c['id']]);
+            }
+        }
 
     } catch (Exception $e) {
         // If anything goes wrong, undo the database changes

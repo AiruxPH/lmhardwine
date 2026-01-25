@@ -60,15 +60,29 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'seller') {
 <script>
     document.getElementById('checkout-form').addEventListener('submit', function (e) {
         // Validation: Check if cart is empty
-        const cartItems = localStorage.getItem('lm_cart');
-        if (!cartItems || JSON.parse(cartItems).length === 0) {
-            e.preventDefault();
-            alert('Your cart is empty!');
-            return;
+        const isGuest = (typeof CART_USER_KEY !== 'undefined' && CART_USER_KEY === 'guest');
+
+        let cartItems = null;
+
+        if (isGuest) {
+            // Guest Mode: Check LocalStorage
+            const stored = localStorage.getItem('lm_cart_guest');
+            if (!stored || JSON.parse(stored).length === 0) {
+                e.preventDefault();
+                alert('Your cart is empty!');
+                return;
+            }
+            cartItems = stored;
+        } else {
+            // User Mode: We assume backend validation, but we can check UI count as backup
+            // Actually, backend 'place_order.php' will fetch from DB.
+            // We do NOT need to populate hidden input, but we can for legacy fallback or leave empty.
         }
 
-        // Dump Cart to Hidden Input
-        document.getElementById('cart-data').value = cartItems;
+        // Dump Cart to Hidden Input (Only needed for Guest)
+        if (cartItems) {
+            document.getElementById('cart-data').value = cartItems;
+        }
     });
 </script>
 
