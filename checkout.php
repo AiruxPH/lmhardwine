@@ -17,13 +17,15 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'seller') {
 // Pre-fill Logic
 $pre_name = '';
 $pre_email = '';
+$pre_address = '';
 if (isset($_SESSION['user_id'])) {
-    $stmt = $pdo->prepare("SELECT u.email, cp.full_name FROM users u LEFT JOIN customer_profiles cp ON u.id = cp.user_id WHERE u.id = ?");
+    $stmt = $pdo->prepare("SELECT u.email, cp.full_name, cp.default_shipping_address FROM users u LEFT JOIN customer_profiles cp ON u.id = cp.user_id WHERE u.id = ?");
     $stmt->execute([$_SESSION['user_id']]);
     $uData = $stmt->fetch();
     if ($uData) {
         $pre_name = $uData['full_name'] ?? '';
         $pre_email = $uData['email'] ?? '';
+        $pre_address = $uData['default_shipping_address'] ?? '';
     }
 }
 ?>
@@ -62,7 +64,17 @@ if (isset($_SESSION['user_id'])) {
                             </button>
                         </div>
                         <textarea id="customer_address" name="customer_address" required rows="3"
-                            style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px; color: white; border-radius: 4px;"></textarea>
+                            style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px; color: white; border-radius: 4px;"><?php echo htmlspecialchars($pre_address); ?></textarea>
+
+                        <?php if (isset($_SESSION['user_id'])): ?>
+                            <div style="margin-top: 10px; display: flex; align-items: center; gap: 8px;">
+                                <input type="checkbox" name="save_default_address" id="save_default"
+                                    style="cursor: pointer;">
+                                <label for="save_default" style="font-size: 0.85rem; color: #aaa; cursor: pointer;">Save as
+                                    my
+                                    default shipping address</label>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 </div>
 

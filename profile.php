@@ -200,8 +200,15 @@ try {
                 </div>
 
                 <div class="form-group" style="margin-top: 1rem;">
-                    <label>Default Shipping Address</label>
-                    <textarea name="address" class="form-control" rows="3"
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                        <label>Default Shipping Address</label>
+                        <button type="button" onclick="detectLocation()" id="detect-btn"
+                            style="background: none; border: none; color: var(--color-accent); font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                            <span id="detect-icon">📍</span> <span id="detect-text">Use My Current Location</span>
+                        </button>
+                    </div>
+                    <textarea id="address" name="address" class="form-control" rows="3"
                         placeholder="Enter your full shipping address..."><?php echo htmlspecialchars($user['default_shipping_address'] ?? ''); ?></textarea>
                     <p style="font-size: 0.8rem; color: var(--color-text-muted); margin-top: 5px;">
                         This address will be automatically used when you checkout.</p>
@@ -335,7 +342,71 @@ try {
                 closePasswordModal();
             }
         }
+
+        // Geolocation Logic
+        async function detectLocation() {
+            const btn = document.getElementById('detect-btn');
+            const text = document.getElementById('detect-text');
+            const icon = document.getElementById('detect-icon');
+            const addressField = document.getElementById('address');
+
+            if (!navigator.geolocation) {
+                alert("Geolocation is not supported by your browser");
+                return;
+            }
+
+            btn.disabled = true;
+            text.innerText = "Locating...";
+            icon.classList.add('loading-pulse');
+
+            navigator.geolocation.getCurrentPosition(async (position) => {
+                const { latitude, longitude } = position.coords;
+                try {
+                    const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`);
+                    const data = await response.json();
+
+                    if (data.display_name) {
+                        addressField.value = data.display_name;
+                    } else {
+                        addressField.value = `Lat: ${latitude}, Lon: ${longitude}`;
+                    }
+                } catch (error) {
+                    console.error("Geocoding failed:", error);
+                    addressField.value = `Lat: ${latitude}, Lon: ${longitude}`;
+                } finally {
+                    btn.disabled = false;
+                    text.innerText = "Use My Current Location";
+                    icon.classList.remove('loading-pulse');
+                }
+            }, (error) => {
+                console.error("Geolocation error:", error);
+                alert("Unable to retrieve your location. Please check your permissions.");
+                btn.disabled = false;
+                text.innerText = "Use My Current Location";
+                icon.classList.remove('loading-pulse');
+            });
+        }
     </script>
+
+    <style>
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .loading-pulse {
+            animation: pulse 1s infinite ease-in-out;
+        }
+    </style>
 </body>
 
 </html>

@@ -77,6 +77,11 @@ error_reporting(E_ALL);
                         ?>
                         <a href="<?php echo $profileLink; ?>"
                             style="color: var(--color-accent); font-weight: bold;"><?php echo htmlspecialchars($_SESSION['username']); ?></a>
+                        <?php if ($_SESSION['role'] === 'customer'): ?>
+                            <a href="my-orders.php"
+                                style="color: white; font-size: 0.9rem; margin-left: 10px; text-decoration: none; opacity: 0.8;"
+                                onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'">My Orders</a>
+                        <?php endif; ?>
                     </div>
                     <a href="logout.php" style="color: white; font-size: 0.9rem; text-decoration: underline;">Logout</a>
                 <?php elseif (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true): ?>

@@ -72,6 +72,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->execute([$name, $email, $address, $total_amount, $user_id_val]);
         $order_id = $pdo->lastInsertId();
 
+        // Save as Default Address
+        if (isset($_SESSION['user_id']) && isset($_POST['save_default_address'])) {
+            $stmt_update_addr = $pdo->prepare("UPDATE customer_profiles SET default_shipping_address = ? WHERE user_id = ?");
+            $stmt_update_addr->execute([$address, $_SESSION['user_id']]);
+        }
+
 
         // 3. Insert Items & Deduct Stock
         // (We already checked stock, but we must update it now)
