@@ -66,9 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="stylesheet" href="css/style.css">
     <style>
         body {
-            background-color: var(--color-bg);
-            color: var(--color-text);
-            font-family: 'Outfit', sans-serif;
+            /* Inherit global styles */
             display: flex;
             align-items: center;
             justify-content: center;
