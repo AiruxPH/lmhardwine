@@ -26,148 +26,392 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <!DOCTYPE html>
 <html lang="en">
 
-<style>
-    body {
-        padding-top: 80px;
-    }
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Cellar | Seller Dashboard</title>
+    <style>
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.05);
+            --accent-gold: #d4af37;
+            --accent-red: #720e1e;
+            --text-main: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.6);
+        }
 
-    .dashboard-container {
-        max-width: 1200px;
-        margin: 2rem auto;
-        padding: 0 1rem;
-    }
+        body {
+            padding-top: 100px;
+            background-color: #0a0a0a;
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+        }
 
-    .page-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 2rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        padding-bottom: 1rem;
-    }
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            animation: fadeIn 0.6s ease-out;
+        }
 
-    .products-table {
-        width: 100%;
-        border-collapse: collapse;
-        color: var(--color-text-main);
-    }
+        /* Header Section */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 3rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
 
-    .products-table th,
-    .products-table td {
-        text-align: left;
-        padding: 1rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
+        .header-title h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin: 0 0 0.5rem 0;
+            background: linear-gradient(45deg, #fff, #cacaca);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-    .products-table th {
-        color: var(--color-text-muted);
-        text-transform: uppercase;
-        font-size: 0.8rem;
-    }
+        .header-title p {
+            color: #888;
+            margin: 0;
+            font-size: 1rem;
+        }
 
-    .products-table tr:hover {
-        background-color: rgba(255, 255, 255, 0.05);
-    }
+        .btn-add {
+            background: linear-gradient(135deg, var(--accent-gold) 0%, #b4932a 100%);
+            color: #000;
+            padding: 12px 28px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+        }
 
-    .product-thumb {
-        width: 50px;
-        height: 50px;
-        object-fit: cover;
-        border-radius: 4px;
-        background: #333;
-    }
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.3);
+            background: linear-gradient(135deg, #e5bd3c 0%, #c4a02d 100%);
+        }
 
-    .alert {
-        padding: 1rem;
-        margin-bottom: 1rem;
-        border-radius: 4px;
-    }
+        /* Products Grid/Table Card */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
 
-    .alert-success {
-        background: rgba(76, 175, 80, 0.2);
-        color: #4caf50;
-    }
+        /* Custom Table Styling */
+        .styled-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
 
-    .alert-error {
-        background: rgba(244, 67, 54, 0.2);
-        color: #f44336;
-    }
-</style>
+        .styled-table th {
+            text-align: left;
+            padding: 1.5rem;
+            color: #888;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid var(--glass-border);
+            font-weight: 500;
+        }
+
+        .styled-table td {
+            padding: 1.5rem;
+            vertical-align: middle;
+            border-bottom: 1px solid var(--glass-border);
+            transition: background 0.2s;
+        }
+
+        .styled-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .styled-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Product Cell */
+        .product-cell {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .product-img-wrapper {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+            position: relative;
+        }
+
+        .product-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .product-img-wrapper:hover img {
+            transform: scale(1.1);
+        }
+
+        .product-info h3 {
+            margin: 0 0 4px 0;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .product-info span {
+            font-size: 0.85rem;
+            color: #666;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        /* Price */
+        .price-tag {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            color: var(--accent-gold);
+            font-weight: 700;
+        }
+
+        /* Stock Badge */
+        .stock-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .stock-high {
+            background: rgba(76, 175, 80, 0.15);
+            color: #66bb6a;
+            border: 1px solid rgba(76, 175, 80, 0.2);
+        }
+
+        .stock-low {
+            background: rgba(255, 152, 0, 0.15);
+            color: #ffa726;
+            border: 1px solid rgba(255, 152, 0, 0.2);
+        }
+
+        .stock-out {
+            background: rgba(244, 67, 54, 0.15);
+            color: #ef5350;
+            border: 1px solid rgba(244, 67, 54, 0.2);
+        }
+
+        /* Actions */
+        .action-btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            display: inline-block;
+        }
+
+        .btn-edit {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            margin-right: 8px;
+        }
+
+        .btn-edit:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-delete {
+            color: #ef5350;
+            padding: 8px;
+        }
+
+        .btn-delete:hover {
+            background: rgba(244, 67, 54, 0.1);
+            border-radius: 8px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 5rem 2rem;
+        }
+
+        .empty-icon {
+            font-size: 3rem;
+            color: var(--glass-border);
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert-success {
+            background: rgba(76, 175, 80, 0.1);
+            border-left: 4px solid #4caf50;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            border-radius: 4px;
+            color: #a5d6a7;
+        }
+
+        .alert-error {
+            background: rgba(244, 67, 54, 0.1);
+            border-left: 4px solid #f44336;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            border-radius: 4px;
+            color: #ef9a9a;
+        }
+    </style>
+</head>
 
 <body>
 
     <?php include 'includes/header.php'; ?>
 
     <div class="dashboard-container">
+
+        <!-- Animated Header -->
         <div class="page-header">
-            <div>
-                <h1 style="font-family: 'Playfair Display', serif;">My Products</h1>
-                <p style="color: var(--color-text-muted);">Manage your wine collection.</p>
+            <div class="header-title">
+                <h1>My Collection</h1>
+                <p>Curate your portfolio of premium wines.</p>
             </div>
-            <a href="add_product.php" class="btn btn-primary">+ Add New Product</a>
+            <a href="add_product.php" class="btn-add">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Add Bottle
+            </a>
         </div>
 
         <?php if ($success): ?>
-            <div class="alert alert-success">
+            <div class="alert-success">
                 <?php echo $success; ?>
             </div>
         <?php endif; ?>
 
         <?php if ($error): ?>
-            <div class="alert alert-error">
+            <div class="alert-error">
                 <?php echo htmlspecialchars($error); ?>
             </div>
         <?php endif; ?>
 
-        <div class="glass-card">
+        <div class="glass-panel">
             <?php if (empty($products)): ?>
-                <div style="text-align: center; padding: 3rem;">
-                    <p style="color: var(--color-text-muted); margin-bottom: 1rem;">You haven't added any products yet.</p>
-                    <a href="add_product.php" class="btn btn-primary">Add Your First Wine</a>
+                <div class="empty-state">
+                    <span class="empty-icon">🍷</span>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem; color: #fff;">Your cellar is empty</h3>
+                    <p style="color: #888; margin-bottom: 2rem;">Start building your legacy by adding your first vintage.
+                    </p>
+                    <a href="add_product.php" class="btn-add">Add Your First Wine</a>
                 </div>
             <?php else: ?>
-                <table class="products-table">
+                <table class="styled-table">
                     <thead>
                         <tr>
-                            <th>Image</th>
-                            <th>Name</th>
-                            <th>Price</th>
-                            <th>Stock</th>
-                            <th>Category</th>
-                            <th>Actions</th>
+                            <th width="40%">Wine Details</th>
+                            <th width="20%">Price</th>
+                            <th width="20%">Status</th>
+                            <th width="20%" style="text-align: right;">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach ($products as $p): ?>
                             <tr>
                                 <td>
-                                    <?php if ($p['image_path']):
-                                        $display_path = strpos($p['image_path'], 'uploads/') === 0 ? '../' . $p['image_path'] : '../uploads/' . $p['image_path'];
-                                        ?>
-                                        <img src="<?php echo htmlspecialchars($display_path); ?>" class="product-thumb"
-                                            alt="Product">
-                                    <?php else: ?>
-                                        <div class="product-thumb"></div>
-                                    <?php endif; ?>
-                                </td>
-                                <td style="font-weight: 600;">
-                                    <?php echo htmlspecialchars($p['name']); ?>
-                                </td>
-                                <td class="text-accent">$
-                                    <?php echo number_format($p['price'], 2); ?>
+                                    <div class="product-cell">
+                                        <div class="product-img-wrapper">
+                                            <?php
+                                            // Handle image path logic safely
+                                            $imgSrc = '';
+                                            if (!empty($p['image_path'])) {
+                                                if (strpos($p['image_path'], 'uploads/') === 0) {
+                                                    $imgSrc = '../' . htmlspecialchars($p['image_path']);
+                                                } else {
+                                                    $imgSrc = '../uploads/' . htmlspecialchars($p['image_path']);
+                                                }
+                                            }
+                                            ?>
+                                            <?php if ($imgSrc): ?>
+                                                <img src="<?php echo $imgSrc; ?>" alt="<?php echo htmlspecialchars($p['name']); ?>">
+                                            <?php else: ?>
+                                                <div
+                                                    style="width:100%; height:100%; background: #222; display:flex; align-items:center; justify-content:center; color:#444;">
+                                                    No Img</div>
+                                            <?php endif; ?>
+                                        </div>
+                                        <div class="product-info">
+                                            <h3><?php echo htmlspecialchars($p['name']); ?></h3>
+                                            <span><?php echo htmlspecialchars($p['type']); ?></span>
+                                        </div>
+                                    </div>
                                 </td>
                                 <td>
-                                    <?php echo $p['stock_qty']; ?>
+                                    <span class="price-tag">$<?php echo number_format($p['price'], 2); ?></span>
                                 </td>
                                 <td>
-                                    <?php echo htmlspecialchars($p['type']); ?>
+                                    <?php
+                                    $qty = (int) $p['stock_qty'];
+                                    $badgeClass = 'stock-high';
+                                    $statusText = 'In Stock (' . $qty . ')';
+
+                                    if ($qty === 0) {
+                                        $badgeClass = 'stock-out';
+                                        $statusText = 'Sold Out';
+                                    } elseif ($qty < 5) {
+                                        $badgeClass = 'stock-low';
+                                        $statusText = 'Low Stock (' . $qty . ')';
+                                    }
+                                    ?>
+                                    <span class="stock-badge <?php echo $badgeClass; ?>">
+                                        <?php echo $statusText; ?>
+                                    </span>
                                 </td>
-                                <td>
-                                    <!-- Using edit_product.php (need to make sure it handles seller checks) -->
-                                    <a href="edit_product.php?id=<?php echo $p['id']; ?>"
-                                        style="color: white; margin-right: 10px;">Edit</a>
-                                    <a href="?delete=<?php echo $p['id']; ?>" style="color: #f44336;"
-                                        onclick="return confirm('Are you sure you want to remove this product?');">Remove</a>
+                                <td style="text-align: right;">
+                                    <a href="edit_product.php?id=<?php echo $p['id']; ?>" class="action-btn btn-edit">Edit</a>
+                                    <a href="?delete=<?php echo $p['id']; ?>" class="action-btn btn-delete"
+                                        title="Remove Product"
+                                        onclick="return confirm('Are you sure you want to remove this product? This action cannot be undone.');">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2">
+                                            <path d="M3 6h18"></path>
+                                            <path
+                                                d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                                            </path>
+                                        </svg>
+                                    </a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

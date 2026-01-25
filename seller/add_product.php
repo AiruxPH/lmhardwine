@@ -130,7 +130,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
                 <div class="form-group">
                     <label>Name</label>
-                    <input type="text" name="name" class="form-control" required>
+                    <input type="text" name="name" id="product_name" class="form-control" required autocomplete="off">
+                    <small id="name-warning" style="display:none; color: #ffc107; margin-top: 5px;">
+                        ⚠️ Warning: A product with this name already exists.
+                    </small>
                 </div>
                 <div class="form-group">
                     <label>Type</label>
@@ -196,6 +199,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             label.textContent = input.files[0].name;
         }
     }
+
+    // Live Product Name Check
+    const nameInput = document.getElementById('product_name');
+    const warningEl = document.getElementById('name-warning');
+    let debounceTimer;
+
+    nameInput.addEventListener('input', function() {
+        clearTimeout(debounceTimer);
+        const name = this.value.trim();
+
+        if (name.length < 3) {
+            warningEl.style.display = 'none';
+            return;
+        }
+
+        debounceTimer = setTimeout(() => {
+            fetch(`../api/check_product.php?name=${encodeURIComponent(name)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.exists) {
+                        warningEl.style.display = 'block';
+                        // Optional: warningEl.innerText = data.message;
+                    } else {
+                        warningEl.style.display = 'none';
+                    }
+                })
+                .catch(err => console.error('Error checking name:', err));
+        }, 500); // 500ms delay
+    });
 </script>
 
 </html>
