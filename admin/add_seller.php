@@ -39,15 +39,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
 
                 if (in_array($ext, $allowed)) {
-                    $new_name = "brand_" . time() . "." . $ext;
-                    $destination = "../uploads/" . $new_name;
+                    $new_name = "brand_" . uniqid() . "." . $ext;
+                    // Path relative to admin folder for moving file
+                    $upload_path_admin = "../uploads/logos/";
+                    // Path relative to root for database storage
+                    $db_path = "uploads/logos/" . $new_name;
 
-                    if (!is_dir('../uploads'))
-                        mkdir('../uploads', 0777, true);
+                    if (!is_dir($upload_path_admin)) {
+                        mkdir($upload_path_admin, 0777, true);
+                    }
 
-                    if (move_uploaded_file($_FILES['brand_logo']['tmp_name'], $destination)) {
+                    if (move_uploaded_file($_FILES['brand_logo']['tmp_name'], $upload_path_admin . $new_name)) {
+                        // Use lastInsertId for the profile ID safely
                         $stmt_img = $pdo->prepare("UPDATE seller_profiles SET brand_logo_path = ? WHERE id = ?");
-                        $stmt_img->execute([$new_name, $pdo->lastInsertId()]); // Note: lastInsertId here refers to seller_profiles from prev query
+                        $stmt_img->execute([$db_path, $pdo->lastInsertId()]);
                     }
                 }
             }
