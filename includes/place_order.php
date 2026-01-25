@@ -66,9 +66,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         // 2. Insert Order
-        $sql = "INSERT INTO orders (customer_name, customer_email, customer_address, total_amount) VALUES (?, ?, ?, ?)";
+        $user_id_val = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
+        $sql = "INSERT INTO orders (customer_name, customer_email, customer_address, total_amount, user_id) VALUES (?, ?, ?, ?, ?)";
         $stmt = $pdo->prepare($sql);
-        $stmt->execute([$name, $email, $address, $total_amount]);
+        $stmt->execute([$name, $email, $address, $total_amount, $user_id_val]);
         $order_id = $pdo->lastInsertId();
 
 

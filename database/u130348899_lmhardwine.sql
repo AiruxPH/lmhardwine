@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jan 25, 2026 at 08:04 AM
+-- Generation Time: Jan 25, 2026 at 09:49 AM
 -- Server version: 11.8.3-MariaDB-log
 -- PHP Version: 7.2.34
 
@@ -54,6 +54,13 @@ CREATE TABLE `carts` (
   `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `carts`
+--
+
+INSERT INTO `carts` (`id`, `user_id`, `created_at`, `updated_at`) VALUES
+(1, 1, '2026-01-25 09:26:39', '2026-01-25 09:26:39');
+
 -- --------------------------------------------------------
 
 --
@@ -66,6 +73,21 @@ CREATE TABLE `cart_items` (
   `product_id` int(11) NOT NULL,
   `quantity` int(11) DEFAULT 1,
   `added_at` timestamp NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `contact_messages`
+--
+
+CREATE TABLE `contact_messages` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `subject` varchar(100) NOT NULL,
+  `message` text NOT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -217,7 +239,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `email`, `password_hash`, `role`, `created_at`, `updated_at`) VALUES
-(1, 'AiruxPH', 'randythegreat000@gmail.com', 'RandyBOY999999@@@@@@', 'customer', '2026-01-25 05:44:20', '2026-01-25 05:44:20'),
+(1, 'AiruxPH', 'randythegreat000@gmail.com', 'RandyBOY999999@@@', 'customer', '2026-01-25 05:44:20', '2026-01-25 08:18:01'),
 (2, 'Lyndy', 'lyndy@gmail.com', 'NDR0dSy8h5', 'seller', '2026-01-25 06:08:10', '2026-01-25 06:08:10'),
 (3, 'dog', 'john@gmail.com', 'lylyndymae2003@', 'customer', '2026-01-25 08:00:30', '2026-01-25 08:00:30');
 
@@ -246,6 +268,12 @@ ALTER TABLE `cart_items`
   ADD PRIMARY KEY (`id`),
   ADD KEY `cart_id` (`cart_id`),
   ADD KEY `product_id` (`product_id`);
+
+--
+-- Indexes for table `contact_messages`
+--
+ALTER TABLE `contact_messages`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `customer_profiles`
@@ -312,12 +340,18 @@ ALTER TABLE `admins`
 -- AUTO_INCREMENT for table `carts`
 --
 ALTER TABLE `carts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `cart_items`
 --
 ALTER TABLE `cart_items`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `contact_messages`
+--
+ALTER TABLE `contact_messages`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -342,7 +376,7 @@ ALTER TABLE `order_items`
 -- AUTO_INCREMENT for table `password_resets`
 --
 ALTER TABLE `password_resets`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `products`
