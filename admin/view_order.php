@@ -34,7 +34,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $notes = trim($_POST['status_notes']);
         $old_status = $order['status'];
 
-        if ($new_status !== $old_status) {
+        // Define Allowed Transitions (State Machine)
+        $allowed = [
+            'Pending' => ['Processing', 'Canceled'],
+            'Processing' => ['Shipped', 'Canceled'],
+            'Shipped' => ['Delivered']
+        ];
+
+        $is_valid = false;
+        if (isset($allowed[$old_status]) && in_array($new_status, $allowed[$old_status])) {
+            $is_valid = true;
+        }
+
+        if ($new_status === $old_status) {
+            $error = "Status is already $new_status.";
+        } elseif (!$is_valid) {
+            $error = "Invalid status transition from $old_status to $new_status.";
+        } else {
             $pdo->beginTransaction();
             try {
                 // 1. Update Order Status
@@ -237,37 +253,62 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             <div class="details-card glass-card">
                 <h3>Update Order State</h3>
-                <form method="POST" style="margin-top: 1rem;">
-                    <div class="form-group" style="margin-bottom: 1rem;">
-                        <label style="font-size: 0.8rem; color: #888; display: block; margin-bottom: 5px;">Move Status
-                            To:</label>
-                        <select name="status" class="form-control">
-                            <?php
-                            $statuses = ['Pending', 'Processing', 'Shipped', 'Delivered', 'Canceled'];
-                            foreach ($statuses as $s) {
-                                $selected = ($order['status'] == $s) ? 'selected' : '';
-                                echo "<option value='$s' $selected>$s</option>";
-                            }
-                            ?>
-                        </select>
+                <?php
+                $current_status = $order['status'];
+                $is_final = ($current_status === 'Delivered' || $current_status === 'Canceled');
+
+                // Define Allowed Transitions for UI
+                $allowed_map = [
+                    'Pending' => ['Processing', 'Canceled'],
+                    'Processing' => ['Shipped', 'Canceled'],
+                    'Shipped' => ['Delivered'],
+                    'Delivered' => [],
+                    'Canceled' => []
+                ];
+                $next_steps = $allowed_map[$current_status] ?? [];
+                ?>
+
+                <?php if ($is_final): ?>
+                    <div
+                        style="padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 8px; text-align: center; margin-top: 1rem;">
+                        <span style="display: block; font-size: 1.5rem; margin-bottom: 5px;">🛑</span>
+                        <p style="color: var(--color-text-muted); font-size: 0.9rem;">This order is in a <strong>final
+                                state</strong> (<?php echo $current_status; ?>) and cannot be modified further.</p>
                     </div>
-                    <div class="form-group" style="margin-bottom: 1rem;">
-                        <label style="font-size: 0.8rem; color: #888; display: block; margin-bottom: 5px;">Notes / Paper
-                            Trail (visible to customer):</label>
-                        <textarea name="status_notes" class="form-control" rows="2"
-                            placeholder="e.g. Tracking number: 12345..."></textarea>
-                    </div>
-                    <button type="submit" name="update_status" class="btn btn-primary" style="width: 100%;">Commit
-                        Status Change</button>
-                    <p style="font-size: 0.75rem; color: #666; margin-top: 10px; text-align: center;">Changes will be
-                        logged in the public timeline.</p>
-                </form>
+                <?php else: ?>
+                    <form method="POST" style="margin-top: 1rem;">
+                        <?php if (isset($error)): ?>
+                            <div style="color: #f44336; font-size: 0.85rem; margin-bottom: 1rem;"><?php echo $error; ?></div>
+                        <?php endif; ?>
+
+                        <div class="form-group" style="margin-bottom: 1rem;">
+                            <label style="font-size: 0.8rem; color: #888; display: block; margin-bottom: 5px;">Move Status
+                                To:</label>
+                            <select name="status" class="form-control" required>
+                                <option value="" disabled selected>Select next status...</option>
+                                <?php foreach ($next_steps as $s): ?>
+                                    <option value="<?php echo $s; ?>"><?php echo $s; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 1rem;">
+                            <label style="font-size: 0.8rem; color: #888; display: block; margin-bottom: 5px;">Notes / Paper
+                                Trail (visible to customer):</label>
+                            <textarea name="status_notes" class="form-control" rows="2"
+                                placeholder="e.g. Tracking number: 12345..." required></textarea>
+                        </div>
+                        <button type="submit" name="update_status" class="btn btn-primary" style="width: 100%;">Commit
+                            Status Change</button>
+                        <p style="font-size: 0.75rem; color: #666; margin-top: 10px; text-align: center;">Only valid
+                            transitions are shown. Logs are public.</p>
+                    </form>
+                <?php endif; ?>
 
                 <form method="POST"
                     onsubmit="return confirm('Are you sure you want to delete this order? This cannot be undone.');"
                     style="margin-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem;">
                     <button type="submit" name="delete_order" class="btn"
-                        style="width: 100%; border-color: #f44336; color: #f44336; opacity: 0.5;">Delete Order
+                        style="width: 100%; border-color: #f44336; color: #f44336; opacity: 0.3;">Delete Order
                         Record</button>
                 </form>
             </div>
@@ -324,7 +365,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                     <div class="timeline-item" style="opacity: 0.6;">
                         <div class="timeline-date">
-                            <?php echo date('M d, Y - h:i A', strtotime($order['order_date'])); ?></div>
+                            <?php echo date('M d, Y - h:i A', strtotime($order['order_date'])); ?>
+                        </div>
                         <div class="timeline-content">
                             <span class="timeline-status">Order Placed</span>
                         </div>
