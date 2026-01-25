@@ -12,14 +12,14 @@ $stmt = $pdo->prepare("
         o.id as order_id, 
         o.order_date, 
         o.status,
-        u.username as customer_name,
-        SUM(oi.price * oi.quantity) as seller_total
+        COALESCE(u.username, o.customer_name) as customer_name,
+        SUM(oi.price_at_purchase * oi.quantity) as seller_total
     FROM orders o
     JOIN order_items oi ON o.id = oi.order_id
     JOIN products p ON oi.product_id = p.id
     LEFT JOIN users u ON o.user_id = u.id
     WHERE p.seller_id = ? AND o.is_deleted = 0
-    GROUP BY o.id, o.order_date, o.status, u.username
+    GROUP BY o.id, o.order_date, o.status, customer_name
     ORDER BY o.order_date DESC
 ");
 $stmt->execute([$user_id]);
