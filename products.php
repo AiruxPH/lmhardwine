@@ -90,8 +90,10 @@ try {
             box-shadow: 0 2px 10px rgba(0,0,0,0.5);
         ">Sold Out</div>
                             <?php endif; ?>
-                            <?php if (!empty($product['image_path'])): ?>
-                                <img src="uploads/<?php echo htmlspecialchars($product['image_path']); ?>"
+                            <?php if (!empty($product['image_path'])):
+                                $img_src = (strpos($product['image_path'], 'uploads/') === 0) ? $product['image_path'] : 'uploads/' . $product['image_path'];
+                                ?>
+                                <img src="<?php echo htmlspecialchars($img_src); ?>"
                                     alt="<?php echo htmlspecialchars($product['name']); ?>"
                                     style="width: 100%; height: 100%; object-fit: cover;">
                             <?php else: ?>

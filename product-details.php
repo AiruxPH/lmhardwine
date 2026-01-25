@@ -58,8 +58,10 @@ if (!$product) {
                 <div
                     style="height: 500px; background: #1a1a1a; display: flex; align-items: center; justify-content: center; position: relative;">
 
-                    <?php if (!empty($product['image_path'])): ?>
-                        <img src="uploads/<?php echo htmlspecialchars($product['image_path']); ?>"
+                    <?php if (!empty($product['image_path'])):
+                        $img_src = (strpos($product['image_path'], 'uploads/') === 0) ? $product['image_path'] : 'uploads/' . $product['image_path'];
+                        ?>
+                        <img src="<?php echo htmlspecialchars($img_src); ?>"
                             alt="<?php echo htmlspecialchars($product['name']); ?>"
                             style="width: 100%; height: 100%; object-fit: cover;">
                     <?php else: ?>

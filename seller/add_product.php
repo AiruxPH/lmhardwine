@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $destination = $upload_dir . $new_name;
 
             if (move_uploaded_file($_FILES['product_image']['tmp_name'], $destination)) {
-                $image_path = "uploads/" . $new_name; // Store relative path from root
+                $image_path = $new_name; // Store only filename
             } else {
                 $error = "Failed to upload image.";
             }
@@ -205,7 +205,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     const warningEl = document.getElementById('name-warning');
     let debounceTimer;
 
-    nameInput.addEventListener('input', function() {
+    nameInput.addEventListener('input', function () {
         clearTimeout(debounceTimer);
         const name = this.value.trim();
 

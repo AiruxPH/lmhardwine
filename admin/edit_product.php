@@ -206,7 +206,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <label>Product Image</label>
                 <div style="text-align: center; margin-bottom: 1rem;">
                     <?php if ($product['image_path']): ?>
-                        <img id="image-preview" src="../uploads/<?php echo $product['image_path']; ?>"
+                        <?php
+                        $img_src = (strpos($product['image_path'], 'uploads/') === 0) ? $product['image_path'] : 'uploads/' . $product['image_path'];
+                        ?>
+                        <img id="image-preview" src="../<?php echo htmlspecialchars($img_src); ?>"
                             class="current-img-preview" style="display: inline-block;">
                     <?php else: ?>
                         <img id="image-preview" src="#" class="current-img-preview" style="display: none;">

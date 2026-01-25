@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $destination = $upload_dir . $new_name;
 
             if (move_uploaded_file($_FILES['product_image']['tmp_name'], $destination)) {
-                $image_path = "uploads/" . $new_name; // Relative path from root
+                $image_path = $new_name; // Store only filename
             } else {
                 $error = "Failed to upload image.";
             }
