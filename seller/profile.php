@@ -198,10 +198,47 @@ try {
                                 rows="5"><?php echo htmlspecialchars($seller['brand_description'] ?? ''); ?></textarea>
                         </div>
 
-                        <div style="text-align: right; margin-top: 1rem;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-top: 2rem;">
+                            <button type="button" class="btn" onclick="openPasswordModal()"
+                                style="background: rgba(255, 255, 255, 0.05); color: white; border: 1px solid rgba(255,255,255,0.1); padding: 8px 16px;">Change
+                                Password</button>
                             <button type="submit" class="btn btn-primary">Save Changes</button>
                         </div>
                     </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Password Modal -->
+    <div id="passwordModal"
+        style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.8); backdrop-filter: blur(5px);">
+        <div class="glass-card"
+            style="margin: 10% auto; padding: 2rem; width: 90%; max-width: 400px; position: relative;">
+            <h3 style="margin-bottom: 1.5rem; text-align: center;">Change Password</h3>
+
+            <div id="pwd-msg"
+                style="display: none; padding: 10px; margin-bottom: 10px; border-radius: 4px; text-align: center;">
+            </div>
+
+            <form id="passwordForm" onsubmit="submitPasswordChange(event)">
+                <div class="form-group">
+                    <label>Current Password</label>
+                    <input type="password" id="current_password" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>New Password</label>
+                    <input type="password" id="new_password" class="form-control" required minlength="6">
+                </div>
+                <div class="form-group">
+                    <label>Confirm New Password</label>
+                    <input type="password" id="confirm_password" class="form-control" required minlength="6">
+                </div>
+                <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                    <button type="button" onclick="closePasswordModal()" class="btn"
+                        style="flex: 1; background: transparent; border: 1px solid #444; color: #ccc;">Cancel</button>
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">Update</button>
                 </div>
             </form>
         </div>
@@ -211,7 +248,6 @@ try {
 <script>
     function previewImage(input) {
         var preview = document.getElementById('image-preview');
-        // We might have a placeholder that needs hiding
         var placeholder = document.getElementById('no-logo-placeholder');
 
         if (input.files && input.files[0]) {
@@ -224,6 +260,78 @@ try {
             }
 
             reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // Modal Logic
+    const modal = document.getElementById('passwordModal');
+    const msgBox = document.getElementById('pwd-msg');
+
+    function openPasswordModal() {
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+        msgBox.style.display = 'none';
+    }
+
+    function closePasswordModal() {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+        document.getElementById('passwordForm').reset();
+    }
+
+    async function submitPasswordChange(e) {
+        e.preventDefault();
+        const current = document.getElementById('current_password').value;
+        const newPwd = document.getElementById('new_password').value;
+        const confirmPwd = document.getElementById('confirm_password').value;
+
+        if (newPwd !== confirmPwd) {
+            showMsg('Passwords do not match.', 'error');
+            return;
+        }
+
+        try {
+            const res = await fetch('../api/change_password.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    current_password: current,
+                    new_password: newPwd,
+                    confirm_password: confirmPwd
+                })
+            });
+
+            const data = await res.json();
+
+            if (data.success) {
+                showMsg('Password updated successfully!', 'success');
+                setTimeout(() => {
+                    closePasswordModal();
+                }, 1500);
+            } else {
+                showMsg(data.error || 'Failed to update password.', 'error');
+            }
+        } catch (err) {
+            showMsg('An error occurred.', 'error');
+        }
+    }
+
+    function showMsg(text, type) {
+        msgBox.style.display = 'block';
+        msgBox.innerText = text;
+        if (type === 'success') {
+            msgBox.style.background = 'rgba(76, 175, 80, 0.2)';
+            msgBox.style.color = '#4caf50';
+        } else {
+            msgBox.style.background = 'rgba(244, 67, 54, 0.2)';
+            msgBox.style.color = '#f44336';
+        }
+    }
+
+    // Close on click outside
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            closePasswordModal();
         }
     }
 </script>
