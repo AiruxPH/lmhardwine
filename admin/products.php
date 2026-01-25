@@ -93,8 +93,12 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <tr>
                                 <td>
                                     <?php if ($p['image_path']): ?>
-                                        <img src="../uploads/<?php echo htmlspecialchars($p['image_path']); ?>"
-                                            class="product-thumb">
+                                        <?php
+                                        $img = $p['image_path'];
+                                        $display_path = (strpos($img, 'uploads/') === 0) ? '../' . $img : '../uploads/' . $img;
+                                        ?>
+                                                    <img src="<?php echo htmlspecialchars($display_path); ?>"
+                                        class="product-thumb">
                                     <?php else: ?>
                                         <div class="product-thumb" style="background: <?php echo $p['color_style']; ?>"></div>
                                     <?php endif; ?>
