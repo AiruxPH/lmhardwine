@@ -137,26 +137,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                     <div class="form-group">
                         <label>Username</label>
-                        <input type="text" name="username" class="form-control" required>
+                        <input type="text" name="username" class="form-control" required autocomplete="off">
                     </div>
 
                     <div class="form-group">
                         <label>Email Address</label>
-                        <input type="email" name="email" class="form-control" required>
+                        <input type="email" name="email" class="form-control" requireds autocomplete="off">
                     </div>
 
                     <div class="form-group">
                         <label>Phone Number</label>
-                        <input type="tel" name="phone" class="form-control">
+                        <input type="tel" name="phone" class="form-control" autocomplete="off">
                     </div>
 
                     <div class="form-group">
                         <label>Password</label>
-                        <input type="password" name="password" class="form-control" required autocomplete="new-password>
+                        <input type="password" name="password" class="form-control" required autocomplete="new-password">
                     </div>
 
-                    <button type=" submit" class="btn btn-primary"
-                            style="width: 100%; border: none; padding: 12px; font-size: 1rem;">Register</button>
+                    <button type="submit" class="btn btn-primary"
+                        style="width: 100%; border: none; padding: 12px; font-size: 1rem;">Register</button>
                 </form>
             <?php endif; ?>
 
