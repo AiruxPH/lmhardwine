@@ -95,11 +95,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $pdo->commit();
 
-        // 3. Show Success Page (HTML mode)
-        ?>
-        <!DOCTYPE html>
+        // 3. Show Success Page
+        echo "<!DOCTYPE html>
         <html lang='en'>
-
         <head>
             <meta charset='UTF-8'>
             <meta name='viewport' content='width=device-width, initial-scale=1.0'>
@@ -115,7 +113,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     height: 100vh;
                     text-align: center;
                 }
-
                 .btn {
                     padding: 10px 20px;
                     background: #720e1e;
@@ -127,36 +124,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
             </style>
         </head>
-
         <body>
             <div>
                 <h1 style='color: #d4af37;'>Order Confirmed!</h1>
-                <p>Thank you,
-                    <?php echo htmlspecialchars($name, ENT_QUOTES, 'UTF-8'); ?>. Your order #
-                    <?php echo $order_id; ?> has been placed.
-                </p>
+                <p>Thank you, " . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . ". Your order #" . $order_id . " has been placed.</p>
                 <p>We will contact you shortly.</p>
-                <p>We will contact you shortly.</p>
-                <a href="../index.php" class="btn" onclick="localStorage.removeItem('lm_cart_guest')">Return Home</a>
+                <a href=\"../index.php\" class=\"btn\" onclick=\"localStorage.removeItem('lm_cart_guest')\">Return Home</a>
             </div>
         </body>
+        </html>";
 
-        </html>
-                <?php
-                // 4. Cleanup Cart (Using session we started earlier)
-                if (isset($_SESSION['user_id'])) {
-                    // Clear DB Cart
-                    $user_id = $_SESSION['user_id'];
-                    // Get Cart ID first
-                    $stmt_cid = $pdo->prepare("SELECT id FROM carts WHERE user_id = ?");
-                    $stmt_cid->execute([$user_id]);
-                    $c = $stmt_cid->fetch();
-                    if ($c) {
-                        // Delete items
-                        $stmt_del = $pdo->prepare("DELETE FROM cart_items WHERE cart_id = ?");
-                        $stmt_del->execute([$c['id']]);
-                    }
-                }
+        // 4. Cleanup Cart
+        if (isset($_SESSION['user_id'])) {
+            $user_id = $_SESSION['user_id'];
+            $stmt_cid = $pdo->prepare("SELECT id FROM carts WHERE user_id = ?");
+            $stmt_cid->execute([$user_id]);
+            $c = $stmt_cid->fetch();
+            if ($c) {
+                $stmt_del = $pdo->prepare("DELETE FROM cart_items WHERE cart_id = ?");
+                $stmt_del->execute([$c['id']]);
+            }
+        }
 
     } catch (Exception $e) {
         // If anything goes wrong, undo the database changes

@@ -95,7 +95,14 @@ if (!$product) {
                     </p>
                 </div>
 
-                <?php if (!isset($_SESSION['admin_logged_in']) && (!isset($_SESSION['role']) || $_SESSION['role'] !== 'seller')): ?>
+                <?php
+                $hidePurchase = false;
+                if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true)
+                    $hidePurchase = true;
+                if (isset($_SESSION['role']) && $_SESSION['role'] === 'seller')
+                    $hidePurchase = true;
+
+                if (!$hidePurchase): ?>
                     <?php if ($product['stock_qty'] > 0): ?>
                         <div style="display: flex; align-items: center; gap: 2rem; margin-bottom: 2rem;">
                             <span style="font-size: 2.5rem; font-weight: 700;">$

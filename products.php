@@ -134,7 +134,14 @@ try {
                         <a href="product-details.php?id=<?php echo $product['id']; ?>" class="btn"
                             style="flex: 1; text-align: center; font-size: 0.8rem; padding: 10px 0;">Details</a>
 
-                        <?php if (!isset($_SESSION['admin_logged_in']) || !$_SESSION['admin_logged_in']): ?>
+                        <?php
+                        $hidePurchase = false;
+                        if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true)
+                            $hidePurchase = true;
+                        if (isset($_SESSION['role']) && $_SESSION['role'] === 'seller')
+                            $hidePurchase = true;
+
+                        if (!$hidePurchase): ?>
                             <?php if ($product['stock_qty'] > 0): ?>
                                 <button
                                     onclick="Cart.add(<?php echo $product['id']; ?>, '<?php echo addslashes($product['name']); ?>', <?php echo $product['price']; ?>, '<?php echo $product['type']; ?>')"
