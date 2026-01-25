@@ -16,8 +16,16 @@ $stmt->execute([$user_id]);
 $product_count = $stmt->fetch()['count'];
 
 // 3. Orders (Placeholder logic until orders link properly)
-// For now, we just show 0 or static to start
-$order_count = 0;
+// 3. Pending Orders Count (Orders containing seller's products that are Pending)
+$stmt = $pdo->prepare("
+    SELECT COUNT(DISTINCT o.id) as count 
+    FROM orders o
+    JOIN order_items oi ON o.id = oi.order_id
+    JOIN products p ON oi.product_id = p.id
+    WHERE p.seller_id = ? AND o.status = 'Pending' AND o.is_deleted = 0
+");
+$stmt->execute([$user_id]);
+$order_count = $stmt->fetch()['count'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
