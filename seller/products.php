@@ -19,7 +19,7 @@ if (isset($_GET['delete'])) {
 }
 
 // Fetch Seller's Products
-$stmt = $pdo->prepare("SELECT * FROM products WHERE seller_id = ? AND is_deleted = 0 ORDER BY created_at DESC");
+$stmt = $pdo->prepare("SELECT * FROM products WHERE seller_id = ? AND is_deleted = 0 ORDER BY id DESC");
 $stmt->execute([$user_id]);
 $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -141,8 +141,10 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <?php foreach ($products as $p): ?>
                             <tr>
                                 <td>
-                                    <?php if ($p['image_url']): ?>
-                                        <img src="../<?php echo htmlspecialchars($p['image_url']); ?>" class="product-thumb"
+                                    <?php if ($p['image_path']):
+                                        $display_path = strpos($p['image_path'], 'uploads/') === 0 ? '../' . $p['image_path'] : '../uploads/' . $p['image_path'];
+                                        ?>
+                                        <img src="<?php echo htmlspecialchars($display_path); ?>" class="product-thumb"
                                             alt="Product">
                                     <?php else: ?>
                                         <div class="product-thumb"></div>
@@ -155,10 +157,10 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     <?php echo number_format($p['price'], 2); ?>
                                 </td>
                                 <td>
-                                    <?php echo $p['stock_quantity']; ?>
+                                    <?php echo $p['stock_qty']; ?>
                                 </td>
                                 <td>
-                                    <?php echo htmlspecialchars($p['category']); ?>
+                                    <?php echo htmlspecialchars($p['type']); ?>
                                 </td>
                                 <td>
                                     <!-- Using edit_product.php (need to make sure it handles seller checks) -->
