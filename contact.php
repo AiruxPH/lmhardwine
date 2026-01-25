@@ -1,4 +1,45 @@
-<?php include 'includes/header.php'; ?>
+<?php
+include 'includes/header.php';
+include 'includes/db.php';
+
+$success_msg = '';
+$error_msg = '';
+
+// Create table if not exists (Self-healing)
+try {
+    $pdo->exec("CREATE TABLE IF NOT EXISTS contact_messages (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        email VARCHAR(255) NOT NULL,
+        subject VARCHAR(100) NOT NULL,
+        message TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
+} catch (PDOException $e) {
+    // Silently fail or log
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $name = trim($_POST['name'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $subject = trim($_POST['subject'] ?? '');
+    $message = trim($_POST['message'] ?? '');
+
+    if (empty($name) || empty($email) || empty($subject) || empty($message)) {
+        $error_msg = "Please fill in all fields.";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error_msg = "Please enter a valid email address.";
+    } else {
+        try {
+            $stmt = $pdo->prepare("INSERT INTO contact_messages (name, email, subject, message) VALUES (?, ?, ?, ?)");
+            $stmt->execute([$name, $email, $subject, $message]);
+            $success_msg = "Thank you! Your message has been sent. We will get back to you shortly.";
+        } catch (PDOException $e) {
+            $error_msg = "Something went wrong. Please try again later.";
+        }
+    }
+}
+?>
 
 <main style="padding-top: 100px; padding-bottom: var(--spacing-xl);">
     <div class="container">
@@ -36,32 +77,47 @@
             <!-- Contact Form -->
             <div class="glass-card fade-in" style="transition-delay: 0.2s;">
                 <h2 style="margin-bottom: 1.5rem;">Send a Message</h2>
-                <form action="#" method="POST" style="display: flex; flex-direction: column; gap: 1rem;">
+
+                <?php if ($success_msg): ?>
+                    <div
+                        style="background: rgba(76, 175, 80, 0.2); color: #4caf50; padding: 15px; border-radius: 4px; margin-bottom: 1.5rem; text-align: center; border: 1px solid rgba(76, 175, 80, 0.3);">
+                        <?php echo $success_msg; ?>
+                    </div>
+                <?php endif; ?>
+
+                <?php if ($error_msg): ?>
+                    <div
+                        style="background: rgba(244, 67, 54, 0.2); color: #f44336; padding: 15px; border-radius: 4px; margin-bottom: 1.5rem; text-align: center; border: 1px solid rgba(244, 67, 54, 0.3);">
+                        <?php echo $error_msg; ?>
+                    </div>
+                <?php endif; ?>
+
+                <form action="contact.php" method="POST" style="display: flex; flex-direction: column; gap: 1rem;">
                     <div style="display: flex; flex-direction: column; gap: 0.5rem;">
                         <label style="font-size: 0.9rem; color: var(--color-text-muted);">Name</label>
-                        <input type="text" class="form-control"
+                        <input type="text" name="name" class="form-control" required
                             style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px; color: white; border-radius: 4px;">
                     </div>
 
                     <div style="display: flex; flex-direction: column; gap: 0.5rem;">
                         <label style="font-size: 0.9rem; color: var(--color-text-muted);">Email</label>
-                        <input type="email" class="form-control"
+                        <input type="email" name="email" class="form-control" required
                             style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px; color: white; border-radius: 4px;">
                     </div>
 
                     <div style="display: flex; flex-direction: column; gap: 0.5rem;">
                         <label style="font-size: 0.9rem; color: var(--color-text-muted);">Subject</label>
-                        <select class="form-control"
+                        <select name="subject" class="form-control"
                             style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px; color: white; border-radius: 4px;">
-                            <option style="background: #141414;">Private Tasting</option>
-                            <option style="background: #141414;">Trade Inquiry</option>
-                            <option style="background: #141414;">General Question</option>
+                            <option value="Private Tasting" style="background: #141414;">Private Tasting</option>
+                            <option value="Trade Inquiry" style="background: #141414;">Trade Inquiry</option>
+                            <option value="General Question" style="background: #141414;">General Question</option>
                         </select>
                     </div>
 
                     <div style="display: flex; flex-direction: column; gap: 0.5rem;">
                         <label style="font-size: 0.9rem; color: var(--color-text-muted);">Message</label>
-                        <textarea rows="5" class="form-control"
+                        <textarea name="message" rows="5" class="form-control" required
                             style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px; color: white; border-radius: 4px; resize: vertical;"></textarea>
                     </div>
 

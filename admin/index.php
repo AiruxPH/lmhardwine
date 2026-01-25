@@ -129,6 +129,8 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
             <h2>Recent Orders</h2>
             <div>
+                <a href="messages.php" class="btn btn-sm"
+                    style="margin-right: 10px; border-color: #4caf50; color: #4caf50;">View Messages</a>
                 <a href="add_seller.php" class="btn btn-sm"
                     style="margin-right: 10px; border-color: #d4af37; color: #d4af37;">Add New Seller</a>
                 <a href="products.php" class="btn btn-sm"
