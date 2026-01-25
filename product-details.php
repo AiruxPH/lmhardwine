@@ -9,17 +9,20 @@ $product = null;
 if ($id > 0) {
     try {
         $stmt = $pdo->prepare("SELECT 
-                                    id, 
-                                    name, 
-                                    type, 
-                                    varietal, 
-                                    price, 
-                                    stock_qty,
-                                    vintage_year as year, 
-                                    description as `desc`, 
-                                    color_style as color,
-                                    image_path 
-                               FROM products WHERE id = ? AND is_deleted = 0");
+                                    p.id, 
+                                    p.name, 
+                                    p.type, 
+                                    p.varietal, 
+                                    p.price, 
+                                    p.stock_qty,
+                                    p.vintage_year as year, 
+                                    p.description as `desc`, 
+                                    p.color_style as color,
+                                    p.image_path,
+                                    sp.brand_name
+                               FROM products p 
+                               LEFT JOIN seller_profiles sp ON p.seller_id = sp.user_id 
+                               WHERE p.id = ? AND p.is_deleted = 0");
         $stmt->execute([$id]);
         $product = $stmt->fetch();
     } catch (PDOException $e) {
@@ -78,6 +81,10 @@ if (!$product) {
                 <h1 style="font-size: 3.5rem; margin-bottom: 0.5rem; line-height: 1.1;">
                     <?php echo $product['name']; ?>
                 </h1>
+                <p style="font-size: 1rem; color: #888; margin-bottom: 1rem;">
+                    Sold by: <span
+                        style="color: var(--color-accent); font-weight: bold;"><?php echo htmlspecialchars($product['brand_name'] ?? 'LM Hard Wine (Official)'); ?></span>
+                </p>
                 <p style="font-size: 1.5rem; color: var(--color-text-muted); margin-bottom: 2rem;">
                     <?php echo $product['varietal']; ?>
                 </p>

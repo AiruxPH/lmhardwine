@@ -1,4 +1,7 @@
-<?php include 'includes/header.php'; ?>
+<?php 
+include 'includes/header.php'; 
+include 'includes/db.php';
+?>
 
 <main>
     <!-- Hero Section -->
@@ -48,6 +51,7 @@
     </section>
 
     <!-- Collection Preview -->
+    <!-- Collection Preview -->
     <section id="collection" style="padding: var(--spacing-xl) 0;">
         <div class="container">
             <div class="text-center animate-on-scroll"
@@ -58,87 +62,57 @@
 
             <div
                 style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--spacing-md);">
-                <!-- Product Card 1 -->
-                <div class="glass-card animate-on-scroll"
-                    style=" transition-delay: 0.1s;">
-                    <a href="product-details.php?id=1" style="text-decoration: none; color: inherit;">
+                
+                <?php
+                // Fetch Latest 3 Products
+                $stmt = $pdo->query("SELECT p.*, sp.brand_name 
+                                    FROM products p 
+                                    LEFT JOIN seller_profiles sp ON p.seller_id = sp.user_id 
+                                    WHERE p.is_deleted = 0 
+                                    ORDER BY p.id DESC LIMIT 3");
+                $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                
+                foreach ($products as $p):
+                ?>
+                <div class="glass-card animate-on-scroll" style=" transition-delay: 0.1s;">
+                    <a href="product-details.php?id=<?php echo $p['id']; ?>" style="text-decoration: none; color: inherit;">
                         <div
                             style="height: 300px; background: #1a1a1a; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: center; border-radius: 4px; position: relative; overflow: hidden;">
-                            <span style="font-size: 4rem; opacity: 0.1; font-weight: 700;">RED</span>
-                            <div
-                                style="position: absolute; inset: 0; background: linear-gradient(45deg, rgba(114, 14, 30, 0.1), transparent);">
-                            </div>
+                            <?php if ($p['stock_qty'] <= 0): ?>
+                                <div style="position: absolute; top: 10px; right: 10px; background: #ff4444; color: white; padding: 5px 10px; font-weight: bold; z-index: 10; border-radius: 4px; font-size: 0.8rem;">SOLD OUT</div>
+                            <?php endif; ?>
+                            
+                            <?php if ($p['image_path']): ?>
+                                <img src="uploads/<?php echo htmlspecialchars($p['image_path']); ?>" style="width: 100%; height: 100%; object-fit: cover;">
+                            <?php else: ?>
+                                <span style="font-size: 4rem; opacity: 0.1; font-weight: 700; text-transform: uppercase;"><?php echo $p['type']; ?></span>
+                                <div style="position: absolute; inset: 0; background: <?php echo $p['color_style']; ?>;"></div>
+                            <?php endif; ?>
                         </div>
                         <div
-                            style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+                            style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
                             <div>
-                                <h3 style="font-size: 1.5rem; margin-bottom: 0.25rem;">Crimson Impact</h3>
-                                <p style="color: var(--color-accent); font-size: 0.9rem;">Cabernet Sauvignon • 2024</p>
+                                <h3 style="font-size: 1.5rem; margin-bottom: 0.25rem;"><?php echo htmlspecialchars($p['name']); ?></h3>
+                                <p style="color: var(--color-accent); font-size: 0.9rem;">
+                                    <?php echo htmlspecialchars($p['varietal']); ?> • <?php echo $p['vintage_year']; ?>
+                                </p>
                             </div>
-                            <span style="font-size: 1.25rem; font-weight: 600;">$89</span>
+                            <span style="font-size: 1.25rem; font-weight: 600;">$<?php echo number_format($p['price'], 2); ?></span>
                         </div>
+                        
+                        <!-- Seller Info -->
+                        <p style="font-size: 0.8rem; color: #888; margin-bottom: 1rem;">
+                            Sold by: <span style="color: #ccc;"><?php echo htmlspecialchars($p['brand_name'] ?? 'LM Hard Wine (Official)'); ?></span>
+                        </p>
                     </a>
-                    <p style="color: var(--color-text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
-                        A full-bodied giant with notes of dark cherry, leather, and smoked oak. Not for the faint of
-                        heart.
+                    <p style="color: var(--color-text-muted); font-size: 0.9rem; margin-bottom: 1.5rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                        <?php echo htmlspecialchars($p['description']); ?>
                     </p>
-                    <a href="product-details.php?id=1" class="btn" style="width: 100%; text-align: center;">View
+                    <a href="product-details.php?id=<?php echo $p['id']; ?>" class="btn" style="width: 100%; text-align: center;">View
                         Details</a>
                 </div>
-
-                <!-- Product Card 2 -->
-                <div class="glass-card animate-on-scroll"
-                    style=" transition-delay: 0.2s;">
-                    <a href="product-details.php?id=2" style="text-decoration: none; color: inherit;">
-                        <div
-                            style="height: 300px; background: #1a1a1a; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: center; border-radius: 4px; position: relative; overflow: hidden;">
-                            <span style="font-size: 4rem; opacity: 0.1; font-weight: 700;">ONYX</span>
-                            <div
-                                style="position: absolute; inset: 0; background: linear-gradient(45deg, rgba(80, 80, 80, 0.1), transparent);">
-                            </div>
-                        </div>
-                        <div
-                            style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
-                            <div>
-                                <h3 style="font-size: 1.5rem; margin-bottom: 0.25rem;">Midnight Reserve</h3>
-                                <p style="color: var(--color-accent); font-size: 0.9rem;">Syrah Blend • 2022</p>
-                            </div>
-                            <span style="font-size: 1.25rem; font-weight: 600;">$120</span>
-                        </div>
-                    </a>
-                    <p style="color: var(--color-text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
-                        Velvety texture meets intense spice. Aged in charred barrels for a finish that lingers forever.
-                    </p>
-                    <a href="product-details.php?id=2" class="btn" style="width: 100%; text-align: center;">View
-                        Details</a>
-                </div>
-
-                <!-- Product Card 3 -->
-                <div class="glass-card animate-on-scroll"
-                    style=" transition-delay: 0.3s;">
-                    <a href="product-details.php?id=3" style="text-decoration: none; color: inherit;">
-                        <div
-                            style="height: 300px; background: #1a1a1a; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: center; border-radius: 4px; position: relative; overflow: hidden;">
-                            <span style="font-size: 4rem; opacity: 0.1; font-weight: 700;">GOLD</span>
-                            <div
-                                style="position: absolute; inset: 0; background: linear-gradient(45deg, rgba(212, 175, 55, 0.1), transparent);">
-                            </div>
-                        </div>
-                        <div
-                            style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
-                            <div>
-                                <h3 style="font-size: 1.5rem; margin-bottom: 0.25rem;">Liquid Gold</h3>
-                                <p style="color: var(--color-accent); font-size: 0.9rem;">Chardonnay • 2023</p>
-                            </div>
-                            <span style="font-size: 1.25rem; font-weight: 600;">$95</span>
-                        </div>
-                    </a>
-                    <p style="color: var(--color-text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
-                        Unexpectedly crisp with a steel backbone. Notes of granite, lemon zest, and white flowers.
-                    </p>
-                    <a href="product-details.php?id=3" class="btn" style="width: 100%; text-align: center;">View
-                        Details</a>
-                </div>
+                <?php endforeach; ?>
+                
             </div>
 
             <div style="text-align: center; margin-top: var(--spacing-lg);">

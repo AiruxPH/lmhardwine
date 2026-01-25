@@ -7,17 +7,20 @@ $filtered_products = [];
 
 try {
     $sql = "SELECT 
-                id, 
-                name, 
-                type, 
-                varietal, 
-                price, 
-                stock_qty, 
-                vintage_year as year, 
-                description as `desc`, 
-                color_style as color,
-                image_path 
-            FROM products WHERE is_deleted = 0";
+                p.id, 
+                p.name, 
+                p.type, 
+                p.varietal, 
+                p.price, 
+                p.stock_qty, 
+                p.vintage_year as year, 
+                p.description as `desc`, 
+                p.color_style as color,
+                p.image_path,
+                sp.brand_name
+            FROM products p
+            LEFT JOIN seller_profiles sp ON p.seller_id = sp.user_id 
+            WHERE p.is_deleted = 0";
 
     if ($filter != 'All') {
         $sql .= " AND type = :type";
@@ -110,6 +113,11 @@ try {
                                 <?php echo $product['price']; ?>
                             </span>
                         </div>
+
+                        <p style="font-size: 0.8rem; color: #888; margin-bottom: 0.5rem; margin-top: -0.5rem;">
+                            Sold by: <span
+                                style="color: #ccc;"><?php echo htmlspecialchars($product['brand_name'] ?? 'LM Hard Wine (Official)'); ?></span>
+                        </p>
                     </a>
 
                     <p style="color: var(--color-text-muted); font-size: 0.9rem; margin-bottom: 1.5rem; min-height: 3em;">
