@@ -137,7 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 <div class="form-group">
                     <label>Password</label>
-                    <input type="password" name="password" class="form-control" required autocomplete="off"
+                    <input type="password" name="password" class="form-control" required autocomplete="new-password"
                         placeholder="Enter your password">
                 </div>
 
