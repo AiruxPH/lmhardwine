@@ -142,21 +142,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </body>
 
         </html>
-        <?php
-        // 4. Cleanup Cart (Using session we started earlier)
-        if (isset($_SESSION['user_id'])) {
-            // Clear DB Cart
-            $user_id = $_SESSION['user_id'];
-            // Get Cart ID first
-            $stmt_cid = $pdo->prepare("SELECT id FROM carts WHERE user_id = ?");
-            $stmt_cid->execute([$user_id]);
-            $c = $stmt_cid->fetch();
-            if ($c) {
-                // Delete items
-                $stmt_del = $pdo->prepare("DELETE FROM cart_items WHERE cart_id = ?");
-                $stmt_del->execute([$c['id']]);
-            }
-        }
+                <?php
+                // 4. Cleanup Cart (Using session we started earlier)
+                if (isset($_SESSION['user_id'])) {
+                    // Clear DB Cart
+                    $user_id = $_SESSION['user_id'];
+                    // Get Cart ID first
+                    $stmt_cid = $pdo->prepare("SELECT id FROM carts WHERE user_id = ?");
+                    $stmt_cid->execute([$user_id]);
+                    $c = $stmt_cid->fetch();
+                    if ($c) {
+                        // Delete items
+                        $stmt_del = $pdo->prepare("DELETE FROM cart_items WHERE cart_id = ?");
+                        $stmt_del->execute([$c['id']]);
+                    }
+                }
 
     } catch (Exception $e) {
         // If anything goes wrong, undo the database changes
