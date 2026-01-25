@@ -37,7 +37,61 @@ $items = $stmtItems->fetchAll(PDO::FETCH_ASSOC);
 // Calculate Seller's Total for this order
 $seller_total = 0;
 foreach ($items as $item) {
-    $seller_total += $item['price'] * $item['quantity'];
+    $seller_total += $item['price_at_purchase'] * $item['quantity'];
+}
+
+// 3. Fetch Status History
+$stmt_hist = $pdo->prepare("SELECT * FROM order_history WHERE order_id = ? ORDER BY changed_at DESC");
+$stmt_hist->execute([$order_id]);
+$history = $stmt_hist->fetchAll(PDO::FETCH_ASSOC);
+
+// 4. Handle Actions
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
+    $new_status = $_POST['status'];
+    $notes = trim($_POST['status_notes']);
+    $old_status = $order['status'];
+
+    // State Machine
+    $allowed = [
+        'Pending' => ['Processing', 'Canceled'],
+        'Processing' => ['Shipped', 'Canceled'],
+        'Shipped' => ['Delivered']
+    ];
+
+    $is_valid = (isset($allowed[$old_status]) && in_array($new_status, $allowed[$old_status]));
+
+    if ($new_status === $old_status) {
+        $error = "Status is already $new_status.";
+    } elseif (!$is_valid) {
+        $error = "Invalid status transition.";
+    } else {
+        $pdo->beginTransaction();
+        try {
+            // Update Order Status
+            $stmt = $pdo->prepare("UPDATE orders SET status = ? WHERE id = ?");
+            $stmt->execute([$new_status, $order_id]);
+
+            // Log to History (Seller Action)
+            $log_notes = "[Seller Note] " . $notes;
+            $stmt_log = $pdo->prepare("INSERT INTO order_history (order_id, status_from, status_to, notes) VALUES (?, ?, ?, ?)");
+            $stmt_log->execute([$order_id, $old_status, $new_status, $log_notes]);
+
+            // Stock Reversion if Canceled (Only for this seller's items)
+            if ($new_status === 'Canceled') {
+                foreach ($items as $item) {
+                    $stmt_stock = $pdo->prepare("UPDATE products SET stock_qty = stock_qty + ? WHERE id = ?");
+                    $stmt_stock->execute([$item['quantity'], $item['product_id']]);
+                }
+            }
+
+            $pdo->commit();
+            header("Location: view_order.php?id=$order_id&success=1");
+            exit;
+        } catch (Exception $e) {
+            $pdo->rollBack();
+            $error = "Update failed: " . $e->getMessage();
+        }
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -155,6 +209,12 @@ foreach ($items as $item) {
                     </span>
                 </div>
                 <div class="detail-row">
+                    <span>Shipping Address:</span>
+                    <span>
+                        <?php echo htmlspecialchars($order['customer_address']); ?>
+                    </span>
+                </div>
+                <div class="detail-row">
                     <span>Phone:</span>
                     <span>
                         <?php echo htmlspecialchars($order['phone_number'] ?? 'N/A'); ?>
@@ -163,75 +223,137 @@ foreach ($items as $item) {
             </div>
 
             <div class="info-card">
-                <div class="info-title">Order Status</div>
+                <div class="info-title">Order Status & Fulfillment</div>
+                <?php
+                $current_status = $order['status'];
+                $is_final = ($current_status === 'Delivered' || $current_status === 'Canceled');
+
+                $allowed_map = [
+                    'Pending' => ['Processing', 'Canceled'],
+                    'Processing' => ['Shipped', 'Canceled'],
+                    'Shipped' => ['Delivered'],
+                    'Delivered' => [],
+                    'Canceled' => []
+                ];
+                $next_steps = $allowed_map[$current_status] ?? [];
+                ?>
+
                 <div class="detail-row">
                     <span>Global Status:</span>
-                    <strong style="color: var(--color-accent);">
-                        <?php echo htmlspecialchars($order['status']); ?>
-                    </strong>
+                    <strong
+                        style="color: var(--color-accent);"><?php echo htmlspecialchars($current_status); ?></strong>
                 </div>
-                <div class="detail-row">
-                    <span>Payment Method:</span>
-                    <span>
-                        <?php echo htmlspecialchars($order['payment_method'] ?? 'COD'); ?>
-                    </span>
-                </div>
-                <div class="detail-row">
-                    <span>Shipping Address:</span>
-                    <span>
-                        <?php echo htmlspecialchars($order['shipping_address']); ?>
-                    </span>
-                </div>
+
+                <?php if ($is_final): ?>
+                    <p style="margin-top: 1rem; font-size: 0.85rem; color: #666; text-align: center;">Order is in a final
+                        state.</p>
+                <?php else: ?>
+                    <form method="POST" style="margin-top: 1.5rem;">
+                        <?php if (isset($error)): ?>
+                            <div style="color: #f44336; font-size: 0.8rem; margin-bottom: 0.5rem;"><?php echo $error; ?></div>
+                        <?php endif; ?>
+
+                        <div style="margin-bottom: 0.8rem;">
+                            <label style="font-size: 0.75rem; color: #888; display: block; margin-bottom: 4px;">Transition
+                                To:</label>
+                            <select name="status" required
+                                style="width: 100%; background: #1a1a1a; border: 1px solid #444; color: #fff; padding: 8px; border-radius: 4px;">
+                                <option value="" disabled selected>Select status...</option>
+                                <?php foreach ($next_steps as $s): ?>
+                                    <option value="<?php echo $s; ?>"><?php echo $s; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <label style="font-size: 0.75rem; color: #888; display: block; margin-bottom: 4px;">Audit Note
+                                (Public):</label>
+                            <textarea name="status_notes" required rows="2" placeholder="e.g. Packing complete..."
+                                style="width: 100%; background: #1a1a1a; border: 1px solid #444; color: #fff; padding: 8px; border-radius: 4px; font-size: 0.85rem;"></textarea>
+                        </div>
+                        <button type="submit" name="update_status" class="btn btn-primary"
+                            style="width: 100%; font-size: 0.9rem; padding: 10px;">Update Status</button>
+                    </form>
+                <?php endif; ?>
             </div>
         </div>
 
-        <div class="glass-card">
-            <h3 style="margin-bottom: 1rem;">Items to Fulfill</h3>
-            <table class="items-table">
-                <thead>
-                    <tr>
-                        <th>Product</th>
-                        <th>Price</th>
-                        <th>Quantity</th>
-                        <th>Subtotal</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($items as $item): ?>
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+            <div class="glass-card" style="margin-bottom: 0;">
+                <h3 style="margin-bottom: 1rem;">Items to Fulfill</h3>
+                <table class="items-table">
+                    <thead>
                         <tr>
-                            <td>
-                                <?php
-                                $img = $item['image_path'];
-                                // Fix path logic if needed
-                                $display_path = strpos($img, 'uploads/') === 0 ? '../' . $img : '../uploads/' . $img;
-                                ?>
-                                <img src="<?php echo htmlspecialchars($display_path); ?>" class="product-thumb">
-                                <?php echo htmlspecialchars($item['product_name']); ?>
-                            </td>
-                            <td>₱
-                                <?php echo number_format($item['price'], 2); ?>
-                            </td>
-                            <td>
-                                <?php echo $item['quantity']; ?>
-                            </td>
-                            <td class="text-accent">₱
-                                <?php echo number_format($item['price'] * $item['quantity'], 2); ?>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($items as $item): ?>
+                            <tr>
+                                <td>
+                                    <?php
+                                    $img = $item['image_path'] ?? '';
+                                    $display_path = (strpos($img, 'uploads/') === 0) ? '../' . $img : '../uploads/' . $img;
+                                    ?>
+                                    <img src="<?php echo htmlspecialchars($display_path); ?>" class="product-thumb">
+                                    <?php echo htmlspecialchars($item['product_name']); ?>
+                                </td>
+                                <td>₱<?php echo number_format($item['price_at_purchase'], 2); ?></td>
+                                <td><?php echo $item['quantity']; ?></td>
+                                <td class="text-accent">
+                                    ₱<?php echo number_format($item['price_at_purchase'] * $item['quantity'], 2); ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3" style="text-align: right; font-weight: bold; padding-top: 1.5rem;">Your
+                                Share Total:</td>
+                            <td
+                                style="font-weight: bold; padding-top: 1.5rem; font-size: 1.2rem; color: var(--color-accent);">
+                                ₱<?php echo number_format($seller_total, 2); ?>
                             </td>
                         </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <div class="glass-card">
+                <h3 style="margin-bottom: 1rem;">Order Timeline</h3>
+                <div style="position: relative; padding-left: 20px; border-left: 2px solid rgba(255,255,255,0.05);">
+                    <?php foreach ($history as $h): ?>
+                        <div style="position: relative; margin-bottom: 1.5rem;">
+                            <div
+                                style="position: absolute; left: -26px; top: 5px; width: 10px; height: 10px; border-radius: 50%; background: var(--color-accent); border: 2px solid #1a1a1a;">
+                            </div>
+                            <p
+                                style="margin: 0; font-size: 0.85rem; font-weight: bold; color: #fff; text-transform: uppercase;">
+                                <?php echo htmlspecialchars($h['status_to']); ?>
+                            </p>
+                            <p style="margin: 2px 0 5px 0; font-size: 0.7rem; color: #666;">
+                                <?php echo date('M d, Y - h:i A', strtotime($h['changed_at'])); ?>
+                            </p>
+                            <?php if (!empty($h['notes'])): ?>
+                                <div
+                                    style="font-size: 0.8rem; color: #aaa; background: rgba(255,255,255,0.02); padding: 8px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.03);">
+                                    <?php echo nl2br(htmlspecialchars($h['notes'])); ?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
                     <?php endforeach; ?>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="3" style="text-align: right; font-weight: bold; padding-top: 1.5rem;">Your Share
-                            Total:</td>
-                        <td
-                            style="font-weight: bold; padding-top: 1.5rem; font-size: 1.2rem; color: var(--color-accent);">
-                            ₱
-                            <?php echo number_format($seller_total, 2); ?>
-                        </td>
-                    </tr>
-                </tfoot>
-            </table>
+                    <div style="position: relative;">
+                        <div
+                            style="position: absolute; left: -26px; top: 5px; width: 10px; height: 10px; border-radius: 50%; background: #444; border: 2px solid #1a1a1a;">
+                        </div>
+                        <p style="margin: 0; font-size: 0.85rem; color: #888; font-weight: bold;">ORDER PLACED</p>
+                        <p style="margin: 2px 0 0 0; font-size: 0.7rem; color: #555;">
+                            <?php echo date('M d, Y - h:i A', strtotime($order['order_date'])); ?>
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
