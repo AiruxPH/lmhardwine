@@ -416,7 +416,7 @@ img {
     background: rgba(255, 255, 255, 0.1);
 }
 
-/* Fix for browser autofill white background */
+/* Fix for browser autofill white backgroundd */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
