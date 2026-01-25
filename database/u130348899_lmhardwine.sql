@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jan 25, 2026 at 09:49 AM
+-- Generation Time: Jan 25, 2026 at 11:00 AM
 -- Server version: 11.8.3-MariaDB-log
 -- PHP Version: 7.2.34
 
@@ -109,7 +109,7 @@ CREATE TABLE `customer_profiles` (
 --
 
 INSERT INTO `customer_profiles` (`id`, `user_id`, `full_name`, `phone_number`, `default_shipping_address`) VALUES
-(1, 1, 'Anecito Randy E. Calunod Jr.', '09168811468', NULL),
+(1, 1, 'Anecito Randy E. Calunod Jr.', '09168811468', 'Bañadero, Ozamiz, Misamis Occidental, Northern Mindanao, 7200, Philippines'),
 (2, 3, 'john', '', NULL);
 
 -- --------------------------------------------------------
@@ -130,6 +130,28 @@ CREATE TABLE `orders` (
   `user_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`id`, `customer_name`, `customer_email`, `customer_address`, `total_amount`, `order_date`, `status`, `is_deleted`, `user_id`) VALUES
+(1, 'Anecito Randy E. Calunod Jr.', 'randythegreat000@gmail.com', 'Bañadero, Ozamiz, Misamis Occidental, Northern Mindanao, 7200, Philippines', 750.00, '2026-01-25 10:26:53', 'Delivered', 0, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `order_history`
+--
+
+CREATE TABLE `order_history` (
+  `id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `status_from` varchar(50) DEFAULT NULL,
+  `status_to` varchar(50) NOT NULL,
+  `notes` text DEFAULT NULL,
+  `changed_at` timestamp NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- --------------------------------------------------------
 
 --
@@ -145,6 +167,13 @@ CREATE TABLE `order_items` (
   `quantity` int(11) NOT NULL,
   `is_deleted` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `order_items`
+--
+
+INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `product_name`, `price_at_purchase`, `quantity`, `is_deleted`) VALUES
+(1, 1, 8, 'whiskey', 750.00, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -193,7 +222,7 @@ INSERT INTO `products` (`id`, `name`, `type`, `varietal`, `price`, `vintage_year
 (5, 'Volcanic Ash', 'Red', 'Pinot Noir', 110.00, 2021, 'Grown in volcanic soil, earthy and complex with a smokey finish.', 'linear-gradient(45deg, rgba(100, 30, 22, 0.1), transparent)', NULL, 0, 10, NULL),
 (6, 'Frost Bite', 'White', 'Ice Wine', 150.00, 2023, 'Sweetness with a sharp edge. Harvested at the first deep freeze.', 'linear-gradient(45deg, rgba(200, 240, 255, 0.1), transparent)', NULL, 0, 10, NULL),
 (7, 'Smirnoff', 'Red', 'Smirnoff Red, White & Merry is a limited edition, seasonal flavored vodka with festive notes of cran', 500.00, 2023, 'Smirnoff is the world\'s No. 1 vodka, triple distilled and ten times filtered for a smooth, versatile and gold award-winning taste.', 'linear-gradient(45deg, rgba(114, 14, 30, 0.1), transparent)', 'wine_1768923022.webp', 0, 10, 2),
-(8, 'whiskey', 'White', 'Whiskey varieties are defined by origin, grain type, and production method, with major types includi', 750.00, 2024, 'Whiskey (or whisky) is a spirit distilled from fermented grain mash (like barley, corn, rye, wheat) and matured in wooden barrels, typically oak, giving it complex flavors from sweet (vanilla, caramel) to spicy (cinnamon) or earthy (peat).', 'linear-gradient(45deg, rgba(212, 175, 55, 0.1), transparent)', 'uploads/wine_6975ccfc83197.jpg', 0, 10, 2),
+(8, 'whiskey', 'White', 'Whiskey varieties are defined by origin, grain type, and production method, with major types includi', 750.00, 2024, 'Whiskey (or whisky) is a spirit distilled from fermented grain mash (like barley, corn, rye, wheat) and matured in wooden barrels, typically oak, giving it complex flavors from sweet (vanilla, caramel) to spicy (cinnamon) or earthy (peat).', 'linear-gradient(45deg, rgba(212, 175, 55, 0.1), transparent)', 'uploads/wine_6975ccfc83197.jpg', 0, 9, 2),
 (9, 'Smirnoff', 'Red', 'Smirnoff Red, White & Merry is a limited edition, seasonal flavored vodka with festive notes of cran', 500.00, 2026, '', 'linear-gradient(45deg, rgba(114, 14, 30, 0.1), transparent)', NULL, 1, 10, 2);
 
 -- --------------------------------------------------------
@@ -290,6 +319,13 @@ ALTER TABLE `orders`
   ADD KEY `fk_order_customer` (`user_id`);
 
 --
+-- Indexes for table `order_history`
+--
+ALTER TABLE `order_history`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `order_id` (`order_id`);
+
+--
 -- Indexes for table `order_items`
 --
 ALTER TABLE `order_items`
@@ -346,7 +382,7 @@ ALTER TABLE `carts`
 -- AUTO_INCREMENT for table `cart_items`
 --
 ALTER TABLE `cart_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `contact_messages`
@@ -364,13 +400,19 @@ ALTER TABLE `customer_profiles`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `order_history`
+--
+ALTER TABLE `order_history`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `password_resets`
@@ -424,6 +466,12 @@ ALTER TABLE `customer_profiles`
 --
 ALTER TABLE `orders`
   ADD CONSTRAINT `fk_order_customer` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `order_history`
+--
+ALTER TABLE `order_history`
+  ADD CONSTRAINT `order_history_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `order_items`

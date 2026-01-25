@@ -1,0 +1,9 @@
+CREATE TABLE order_history (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT NOT NULL,
+    status_from VARCHAR(50),
+    status_to VARCHAR(50) NOT NULL,
+    notes TEXT,
+    changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
+);

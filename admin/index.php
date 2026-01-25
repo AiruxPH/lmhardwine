@@ -165,7 +165,7 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <td>
                                     <?php echo htmlspecialchars($order['customer_name']); ?>
                                 </td>
-                                <td>$
+                                <td>₱
                                     <?php echo number_format($order['total_amount'], 2); ?>
                                 </td>
                                 <td>
