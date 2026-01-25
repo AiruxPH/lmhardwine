@@ -132,7 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <form method="POST" autocomplete="off">
                     <div class="form-group">
                         <label>Full Name</label>
-                        <input type="text" name="full_name" class="form-control" required>
+                        <input type="text" name="full_name" class="form-control" required autocomplete="off">
                     </div>
 
                     <div class="form-group">
@@ -142,7 +142,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                     <div class="form-group">
                         <label>Email Address</label>
-                        <input type="email" name="email" class="form-control" requireds autocomplete="off">
+                        <input type="email" name="email" class="form-control" required autocomplete="off">
                     </div>
 
                     <div class="form-group">
