@@ -62,8 +62,16 @@ error_reporting(E_ALL);
                     <span class="bar"></span>
                 </button>
 
-                <!-- Cart Icon (Hidden for Admins) -->
-                <?php if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true): ?>
+                <!-- Cart Icon (Hidden for Admins and Sellers) -->
+                <?php
+                $hideCart = false;
+                if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true)
+                    $hideCart = true;
+                if (isset($_SESSION['role']) && $_SESSION['role'] === 'seller')
+                    $hideCart = true;
+
+                if (!$hideCart):
+                    ?>
                     <a href="#" id="cart-toggle"
                         style="position: relative; display: flex; align-items: center; color: white;">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

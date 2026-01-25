@@ -95,7 +95,7 @@ if (!$product) {
                     </p>
                 </div>
 
-                <?php if (!isset($_SESSION['admin_logged_in']) || !$_SESSION['admin_logged_in']): ?>
+                <?php if (!isset($_SESSION['admin_logged_in']) && (!isset($_SESSION['role']) || $_SESSION['role'] !== 'seller')): ?>
                     <?php if ($product['stock_qty'] > 0): ?>
                         <div style="display: flex; align-items: center; gap: 2rem; margin-bottom: 2rem;">
                             <span style="font-size: 2.5rem; font-weight: 700;">$
@@ -128,6 +128,15 @@ if (!$product) {
                         <button disabled class="btn"
                             style="width: 100%; border-color: #666; color: #666; cursor: not-allowed;">Sold Out</button>
                     <?php endif; ?>
+                <?php elseif (isset($_SESSION['role']) && $_SESSION['role'] === 'seller'): ?>
+                    <div style="margin-bottom: 2rem;">
+                        <span style="font-size: 2.5rem; font-weight: 700;">$<?php echo $product['price']; ?></span>
+                    </div>
+                    <div class="alert-error" style="display:inline-block; margin-bottom: 0;">
+                        You are viewing this product as a Seller.
+                    </div>
+                    <br><br>
+                    <a href="seller/index.php" class="btn" style="border: 1px solid #666;">Back to Dashboard</a>
                 <?php endif; ?>
 
                 <div style="margin-top: 3rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">

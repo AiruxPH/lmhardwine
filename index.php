@@ -1,6 +1,12 @@
 <?php 
 include 'includes/header.php'; 
 include 'includes/db.php';
+
+// Gatekeeping: Redirect Sellers to their Dashboard
+if (isset($_SESSION['role']) && $_SESSION['role'] === 'seller') {
+    header('Location: seller/index.php');
+    exit;
+}
 ?>
 
 <main>
