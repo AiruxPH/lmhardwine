@@ -23,6 +23,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $year = $_POST['year'];
     $description = $_POST['description'];
 
+    // Seller Assignment Logic
+    $seller_id = !empty($_POST['seller_id']) ? $_POST['seller_id'] : null;
+
     // Logic: Do not overwrite color_style if it exists, unless we want to regenerate it. 
     // For now, let's keep the original color style generator logic just in case type changes.
     $color_style = $product['color_style'];
@@ -63,9 +66,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     if (!$error) {
-        $sql = "UPDATE products SET name=?, type=?, varietal=?, price=?, stock_qty=?, vintage_year=?, description=?, color_style=?, image_path=? WHERE id=?";
+        $sql = "UPDATE products SET name=?, type=?, varietal=?, price=?, stock_qty=?, vintage_year=?, description=?, color_style=?, image_path=?, seller_id=? WHERE id=?";
         $stmt = $pdo->prepare($sql);
-        $stmt->execute([$name, $type, $varietal, $price, $stock_qty, $year, $description, $color_style, $image_path, $id]);
+        $stmt->execute([$name, $type, $varietal, $price, $stock_qty, $year, $description, $color_style, $image_path, $seller_id, $id]);
 
         $success = "Product updated!";
         // Refresh data
@@ -141,6 +144,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <label>Name</label>
                 <input type="text" name="name" class="form-control"
                     value="<?php echo htmlspecialchars($product['name']); ?>" required>
+            </div>
+
+            <?php
+            // Fetch Sellers for Dropdown
+            $stmt_sellers = $pdo->query("SELECT u.id, sp.brand_name FROM users u JOIN seller_profiles sp ON u.id = sp.user_id WHERE u.role = 'seller' ORDER BY sp.brand_name");
+            $sellers = $stmt_sellers->fetchAll();
+            ?>
+            <div class="form-group">
+                <label>Assign to Seller (Optional)</label>
+                <select name="seller_id" class="form-control">
+                    <option value="">-- Admin (No specific seller) --</option>
+                    <?php foreach ($sellers as $seller): ?>
+                        <option value="<?php echo $seller['id']; ?>" <?php echo ($product['seller_id'] == $seller['id']) ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars($seller['brand_name']); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
             </div>
 
             <div class="form-group">
