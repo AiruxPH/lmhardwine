@@ -2,6 +2,12 @@
 include 'includes/header.php';
 include 'includes/db.php';
 
+// Gatekeeping: Redirect Sellers
+if (isset($_SESSION['role']) && $_SESSION['role'] === 'seller') {
+    header('Location: seller/index.php');
+    exit;
+}
+
 $filter = isset($_GET['type']) ? $_GET['type'] : 'All';
 $filtered_products = [];
 
