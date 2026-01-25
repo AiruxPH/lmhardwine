@@ -42,12 +42,12 @@ error_reporting(E_ALL);
                 <?php if (isset($_SESSION['user_logged_in']) && $_SESSION['user_logged_in'] === true): ?>
                     <div style="color: white; font-size: 0.9rem;">
                         <span style="color: var(--color-text-muted);">Hello,</span>
-                        <a href="profile.php"
+                        <?php
+                        $profileLink = ($_SESSION['role'] === 'seller') ? 'seller_profile.php' : 'profile.php';
+                        ?>
+                        <a href="<?php echo $profileLink; ?>"
                             style="color: var(--color-accent); font-weight: bold;"><?php echo htmlspecialchars($_SESSION['username']); ?></a>
                     </div>
-                    <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'seller'): ?>
-                        <a href="#" style="color: white; font-size: 0.9rem;">My Dashboard</a>
-                    <?php endif; ?>
                     <a href="logout.php" style="color: white; font-size: 0.9rem; text-decoration: underline;">Logout</a>
                 <?php elseif (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true): ?>
                     <a href="admin/index.php" style="color: var(--color-accent); font-weight: bold;">Admin Panel</a>
