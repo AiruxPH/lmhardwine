@@ -16,7 +16,11 @@ $total_orders = $stmt->fetch()['count'];
 $stmt = $pdo->query("SELECT COUNT(*) as count FROM orders WHERE status = 'Pending' AND is_deleted = 0");
 $pending_orders = $stmt->fetch()['count'];
 
-// 4. Fetch Recent Orders (Existing code)
+// 4. Total Users Count
+$stmt = $pdo->query("SELECT COUNT(*) as count FROM users");
+$total_users = $stmt->fetch()['count'];
+
+// 5. Fetch Recent Orders (Existing code)
 $stmt = $pdo->query("SELECT * FROM orders WHERE is_deleted = 0 ORDER BY order_date DESC");
 $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -124,6 +128,13 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </div>
                 <div class="stat-label">Orders Pending</div>
             </div>
+
+            <div class="glass-card stat-card" style="border-left: 3px solid #2196f3;">
+                <div class="stat-value" style="color: #2196f3;">
+                    <?php echo $total_users; ?>
+                </div>
+                <div class="stat-label">Registered Users</div>
+            </div>
         </div>
 
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
@@ -131,6 +142,8 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <div>
                 <a href="messages.php" class="btn btn-sm"
                     style="margin-right: 10px; border-color: #4caf50; color: #4caf50;">View Messages</a>
+                <a href="users.php" class="btn btn-sm"
+                    style="margin-right: 10px; border-color: #2196f3; color: #2196f3;">Manage Users</a>
                 <a href="add_seller.php" class="btn btn-sm"
                     style="margin-right: 10px; border-color: #d4af37; color: #d4af37;">Add New Seller</a>
                 <a href="products.php" class="btn btn-sm"
