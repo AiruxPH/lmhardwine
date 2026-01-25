@@ -14,6 +14,25 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'seller') {
     exit;
 }
 
+// 2. Stock Validation Guard (Pre-check)
+$stock_errors = [];
+if (isset($_SESSION['user_id'])) {
+    $stmt = $pdo->prepare("
+        SELECT ci.quantity as cart_qty, p.name, p.stock_qty, p.id
+        FROM cart_items ci
+        JOIN products p ON ci.product_id = p.id
+        WHERE ci.cart_id = (SELECT id FROM carts WHERE user_id = ?)
+    ");
+    $stmt->execute([$_SESSION['user_id']]);
+    $items = $stmt->fetchAll();
+
+    foreach ($items as $item) {
+        if ($item['cart_qty'] > $item['stock_qty']) {
+            $stock_errors[] = "Only {$item['stock_qty']} left of '{$item['name']}' (you have {$item['cart_qty']} in cart).";
+        }
+    }
+}
+
 // Pre-fill Logic
 $pre_name = '';
 $pre_email = '';
@@ -35,6 +54,20 @@ if (isset($_SESSION['user_id'])) {
         <h1 class="text-center" style="margin-bottom: 2rem;">Checkout</h1>
 
         <div class="glass-card">
+            <?php if (!empty($stock_errors)): ?>
+                <div class="alert-error"
+                    style="background: rgba(114, 14, 30, 0.4); border: 1px solid #720e1e; padding: 1rem; border-radius: 8px; margin-bottom: 2rem;">
+                    <h4 style="margin: 0 0 0.5rem 0; color: #ffbcbc;">Stock Issues Detected</h4>
+                    <ul style="margin: 0; padding-left: 1.2rem; font-size: 0.9rem; color: #eee;">
+                        <?php foreach ($stock_errors as $err): ?>
+                            <li><?php echo htmlspecialchars($err); ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                    <p style="margin-top: 10px; font-size: 0.8rem; color: #aaa;">Please adjust your cart before placing the
+                        order.</p>
+                </div>
+            <?php endif; ?>
+
             <form action="includes/place_order.php" method="POST" id="checkout-form">
 
                 <h3 style="margin-bottom: 1.5rem; color: var(--color-accent);">Shipping Details</h3>

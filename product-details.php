@@ -115,7 +115,8 @@ if (!$product) {
                                 style="display: flex; align-items: center; background: rgba(255,255,255,0.05); border-radius: 4px;">
                                 <button onclick="document.getElementById('qty-input').stepDown()"
                                     style="background: none; border: none; color: white; padding: 10px 15px; cursor: pointer; font-size: 1.2rem;">-</button>
-                                <input type="number" id="qty-input" value="1" min="1"
+                                <input type="number" id="qty-input" value="1" min="1" max="<?php echo $product['stock_qty']; ?>"
+                                    onchange="if(this.value > <?php echo $product['stock_qty']; ?>) this.value = <?php echo $product['stock_qty']; ?>; if(this.value < 1) this.value = 1;"
                                     style="background: none; border: none; color: white; width: 40px; text-align: center; font-size: 1rem;">
                                 <button onclick="document.getElementById('qty-input').stepUp()"
                                     style="background: none; border: none; color: white; padding: 10px 15px; cursor: pointer; font-size: 1.2rem;">+</button>

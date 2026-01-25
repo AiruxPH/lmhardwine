@@ -58,14 +58,39 @@ try {
             $product_id = $input['id'];
             $qty = (int) $input['qty'];
 
+            // Fetch Product Stock
+            $stmt_stock = $pdo->prepare("SELECT name, stock_qty FROM products WHERE id = ?");
+            $stmt_stock->execute([$product_id]);
+            $product = $stmt_stock->fetch();
+
+            if (!$product) {
+                http_response_code(404);
+                echo json_encode(['error' => 'Product not found']);
+                exit;
+            }
+
+            // Check current cart qty
             $stmt = $pdo->prepare("SELECT id, quantity FROM cart_items WHERE cart_id = ? AND product_id = ?");
             $stmt->execute([$cart_id, $product_id]);
             $existing = $stmt->fetch();
 
+            $currentInCart = $existing ? (int) $existing['quantity'] : 0;
+            $totalRequested = $currentInCart + $qty;
+
+            if ($totalRequested > $product['stock_qty']) {
+                $available = max(0, $product['stock_qty'] - $currentInCart);
+                http_response_code(400);
+                if ($available > 0) {
+                    echo json_encode(['error' => "Only $available more available in stock."]);
+                } else {
+                    echo json_encode(['error' => "Sorry, this item is now out of stock."]);
+                }
+                exit;
+            }
+
             if ($existing) {
-                $newQty = $existing['quantity'] + $qty;
                 $stmt = $pdo->prepare("UPDATE cart_items SET quantity = ? WHERE id = ?");
-                $stmt->execute([$newQty, $existing['id']]);
+                $stmt->execute([$totalRequested, $existing['id']]);
             } else {
                 $stmt = $pdo->prepare("INSERT INTO cart_items (cart_id, product_id, quantity) VALUES (?, ?, ?)");
                 $stmt->execute([$cart_id, $product_id, $qty]);
@@ -82,17 +107,28 @@ try {
                 $product_id = $item['id'];
                 $qty = (int) $item['qty'];
 
+                // Validate Stock during migration
+                $stmt_stock = $pdo->prepare("SELECT stock_qty FROM products WHERE id = ?");
+                $stmt_stock->execute([$product_id]);
+                $p = $stmt_stock->fetch();
+                if (!$p)
+                    continue;
+
                 $stmt = $pdo->prepare("SELECT id, quantity FROM cart_items WHERE cart_id = ? AND product_id = ?");
                 $stmt->execute([$cart_id, $product_id]);
                 $existing = $stmt->fetch();
 
+                $currentInCart = $existing ? (int) $existing['quantity'] : 0;
+                $newQty = min($p['stock_qty'], $currentInCart + $qty); // Cap at stock
+
                 if ($existing) {
-                    $newQty = $existing['quantity'] + $qty;
                     $stmt = $pdo->prepare("UPDATE cart_items SET quantity = ? WHERE id = ?");
                     $stmt->execute([$newQty, $existing['id']]);
                 } else {
-                    $stmt = $pdo->prepare("INSERT INTO cart_items (cart_id, product_id, quantity) VALUES (?, ?, ?)");
-                    $stmt->execute([$cart_id, $product_id, $qty]);
+                    if ($newQty > 0) {
+                        $stmt = $pdo->prepare("INSERT INTO cart_items (cart_id, product_id, quantity) VALUES (?, ?, ?)");
+                        $stmt->execute([$cart_id, $product_id, $newQty]);
+                    }
                 }
             }
             echo json_encode(['success' => true]);

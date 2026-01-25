@@ -82,14 +82,22 @@ const Cart = {
 
         if (this.mode === 'user') {
             // API Call
-            const res = await fetch('api/cart.php?action=add', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id, qty })
-            });
-            if (res.ok) {
-                await this.syncFromDB();
-                this.openPanel();
+            try {
+                const res = await fetch('api/cart.php?action=add', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id, qty })
+                });
+
+                if (res.ok) {
+                    await this.syncFromDB();
+                    this.openPanel();
+                } else {
+                    const data = await res.json();
+                    alert(data.error || 'Failed to add to cart. Stock might be limited.');
+                }
+            } catch (e) {
+                console.error('Cart add failed', e);
             }
         } else {
             // LocalStorage Logic
