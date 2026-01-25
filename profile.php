@@ -136,17 +136,17 @@ try {
                 <p style="color: var(--color-text-muted);">Manage your account details and shipping address.</p>
             </div>
 
-            <?php if ($success): ?>
+            <?php if (!empty($success)) { ?>
                 <div class="alert alert-success">
                     <?php echo $success; ?>
                 </div>
-            <?php endif; ?>
+            <?php } ?>
 
-            <?php if ($error): ?>
+            <?php if (!empty($error)) { ?>
                 <div class="alert alert-error">
                     <?php echo htmlspecialchars($error); ?>
                 </div>
-            <?php endif; ?>
+            <?php } ?>
 
             <form method="POST" autocomplete="off">
                 <div class="info-grid">
@@ -175,12 +175,12 @@ try {
                         <div class="form-group">
                             <label>Full Name</label>
                             <input type="text" name="full_name" class="form-control"
-                                value="<?php echo htmlspecialchars($user['full_name']); ?>" required>
+                                value="<?php echo htmlspecialchars($user['full_name'] ?? ''); ?>" required>
                         </div>
                         <div class="form-group">
                             <label>Phone Number</label>
                             <input type="tel" name="phone" class="form-control"
-                                value="<?php echo htmlspecialchars($user['phone_number']); ?>">
+                                value="<?php echo htmlspecialchars($user['phone_number'] ?? ''); ?>">
                         </div>
                     </div>
                 </div>
@@ -188,7 +188,7 @@ try {
                 <div class="form-group" style="margin-top: 1rem;">
                     <label>Default Shipping Address</label>
                     <textarea name="address" class="form-control" rows="3"
-                        placeholder="Enter your full shipping address..."><?php echo htmlspecialchars($user['default_shipping_address']); ?></textarea>
+                        placeholder="Enter your full shipping address..."><?php echo htmlspecialchars($user['default_shipping_address'] ?? ''); ?></textarea>
                     <p style="font-size: 0.8rem; color: var(--color-text-muted); margin-top: 5px;">
                         This address will be automatically used when you checkout.</p>
                 </div>
