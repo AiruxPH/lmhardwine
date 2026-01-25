@@ -1,5 +1,6 @@
 <?php
 include 'includes/header.php';
+include 'includes/db.php';
 
 // Gatekeeping: Block Admins
 if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true) {
@@ -11,6 +12,19 @@ if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true
 if (isset($_SESSION['role']) && $_SESSION['role'] === 'seller') {
     header('Location: seller/index.php');
     exit;
+}
+
+// Pre-fill Logic
+$pre_name = '';
+$pre_email = '';
+if (isset($_SESSION['user_id'])) {
+    $stmt = $pdo->prepare("SELECT u.email, cp.full_name FROM users u LEFT JOIN customer_profiles cp ON u.id = cp.user_id WHERE u.id = ?");
+    $stmt->execute([$_SESSION['user_id']]);
+    $uData = $stmt->fetch();
+    if ($uData) {
+        $pre_name = $uData['full_name'] ?? '';
+        $pre_email = $uData['email'] ?? '';
+    }
 }
 ?>
 
@@ -27,18 +41,27 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'seller') {
                     <div>
                         <label style="color: var(--color-text-muted);">Full Name</label>
                         <input type="text" name="customer_name" required
+                            value="<?php echo htmlspecialchars($pre_name); ?>"
                             style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px; color: white; border-radius: 4px;">
                     </div>
 
                     <div>
                         <label style="color: var(--color-text-muted);">Email Address</label>
                         <input type="email" name="customer_email" required
+                            value="<?php echo htmlspecialchars($pre_email); ?>"
                             style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px; color: white; border-radius: 4px;">
                     </div>
 
-                    <div>
-                        <label style="color: var(--color-text-muted);">Shipping Address</label>
-                        <textarea name="customer_address" required rows="3"
+                    <div style="position: relative;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                            <label style="color: var(--color-text-muted);">Shipping Address</label>
+                            <button type="button" onclick="detectLocation()" id="detect-btn"
+                                style="background: none; border: none; color: var(--color-accent); font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                                <span id="detect-icon">📍</span> <span id="detect-text">Use My Current Location</span>
+                            </button>
+                        </div>
+                        <textarea id="customer_address" name="customer_address" required rows="3"
                             style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px; color: white; border-radius: 4px;"></textarea>
                     </div>
                 </div>
@@ -58,6 +81,50 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'seller') {
 </main>
 
 <script>
+    async function detectLocation() {
+        const btn = document.getElementById('detect-btn');
+        const text = document.getElementById('detect-text');
+        const icon = document.getElementById('detect-icon');
+        const addressField = document.getElementById('customer_address');
+
+        if (!navigator.geolocation) {
+            alert("Geolocation is not supported by your browser");
+            return;
+        }
+
+        btn.disabled = true;
+        text.innerText = "Locating...";
+        icon.classList.add('loading-pulse');
+
+        navigator.geolocation.getCurrentPosition(async (position) => {
+            const { latitude, longitude } = position.coords;
+            try {
+                // Using Nominatim (OpenStreetMap) for reverse geocoding
+                const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`);
+                const data = await response.json();
+
+                if (data.display_name) {
+                    addressField.value = data.display_name;
+                } else {
+                    addressField.value = `Lat: ${latitude}, Lon: ${longitude}`;
+                }
+            } catch (error) {
+                console.error("Geocoding failed:", error);
+                addressField.value = `Lat: ${latitude}, Lon: ${longitude}`;
+            } finally {
+                btn.disabled = false;
+                text.innerText = "Use My Current Location";
+                icon.classList.remove('loading-pulse');
+            }
+        }, (error) => {
+            console.error("Geolocation error:", error);
+            alert("Unable to retrieve your location. Please check your permissions.");
+            btn.disabled = false;
+            text.innerText = "Use My Current Location";
+            icon.classList.remove('loading-pulse');
+        });
+    }
+
     document.getElementById('checkout-form').addEventListener('submit', function (e) {
         // Validation: Check if cart is empty
         const isGuest = (typeof CART_USER_KEY !== 'undefined' && CART_USER_KEY === 'guest');
@@ -73,10 +140,6 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'seller') {
                 return;
             }
             cartItems = stored;
-        } else {
-            // User Mode: We assume backend validation, but we can check UI count as backup
-            // Actually, backend 'place_order.php' will fetch from DB.
-            // We do NOT need to populate hidden input, but we can for legacy fallback or leave empty.
         }
 
         // Dump Cart to Hidden Input (Only needed for Guest)
@@ -85,5 +148,25 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'seller') {
         }
     });
 </script>
+
+<style>
+    @keyframes pulse {
+        0% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.3;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+
+    .loading-pulse {
+        animation: pulse 1s infinite ease-in-out;
+    }
+</style>
 
 <?php include 'includes/footer.php'; ?>
