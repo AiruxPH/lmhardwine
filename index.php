@@ -44,8 +44,8 @@ include 'includes/db.php';
                 bottle.
             </p>
             <div class="fade-in">
-                <a href="#collection" class="btn btn-primary" style="margin-right: 1rem;">Explore Collection</a>
-                <a href="#about" class="btn">Our Philosophy</a>
+                <a href="products.php" class="btn btn-primary" style="margin-right: 1rem;">Explore Collection</a>
+                <a href="about.php" class="btn">Our Philosophy</a>
             </div>
         </div>
     </section>
@@ -152,72 +152,10 @@ include 'includes/db.php';
                         extraordinary concentration and complexity. We don't interfere. We simply bottle the intensity.
                     </p>
 
-                    <div style="display: flex; gap: 2rem;">
-                        <div>
-                            <h3 style="font-size: 2.5rem; color: var(--color-primary); margin-bottom: 0;">1885</h3>
-                            <span style="font-size: 0.9rem; color: var(--color-text-muted);">Est. Date</span>
-                        </div>
-                        <div>
-                            <h3 style="font-size: 2.5rem; color: var(--color-primary); margin-bottom: 0;">2,400ft</h3>
-                            <span style="font-size: 0.9rem; color: var(--color-text-muted);">Elevation</span>
-                        </div>
-                    </div>
+
+
+                    <a href="about.php" class="btn" style="border: 1px solid var(--color-primary); color: var(--color-primary); background: transparent;">Read Full Story</a>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" style="padding: var(--spacing-xl) 0; position: relative; overflow: hidden;">
-        <!-- Background Decor -->
-        <div
-            style="position: absolute; top: 0; right: 0; width: 40vw; height: 40vw; background: radial-gradient(circle, rgba(114, 14, 30, 0.1) 0%, transparent 70%); filter: blur(60px); opacity: 0.5;">
-        </div>
-
-        <div class="container" style="position: relative; z-index: 1;">
-            <div class="text-center" style="margin-bottom: var(--spacing-lg);">
-                <h2>Taste the Intensity</h2>
-                <p style="color: var(--color-text-muted);">Book a private tasting or inquire about trade partnerships.
-                </p>
-            </div>
-
-            <div class="glass-card animate-on-scroll"
-                style="max-width: 800px; margin: 0 auto; ">
-                <form action="#" method="POST"
-                    style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-md);">
-                    <div style="grid-column: 1 / -1; display: flex; flex-direction: column; gap: 0.5rem;">
-                        <label style="font-size: 0.9rem; color: var(--color-text-muted);">Name</label>
-                        <input type="text"
-                            style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px; color: white; border-radius: 4px; font-family: inherit;">
-                    </div>
-
-                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                        <label style="font-size: 0.9rem; color: var(--color-text-muted);">Email</label>
-                        <input type="email"
-                            style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px; color: white; border-radius: 4px; font-family: inherit;">
-                    </div>
-
-                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                        <label style="font-size: 0.9rem; color: var(--color-text-muted);">Subject</label>
-                        <select
-                            style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px; color: white; border-radius: 4px; font-family: inherit;">
-                            <option style="background: #141414;">Private Tasting</option>
-                            <option style="background: #141414;">Trade Inquiry</option>
-                            <option style="background: #141414;">General Question</option>
-                        </select>
-                    </div>
-
-                    <div style="grid-column: 1 / -1; display: flex; flex-direction: column; gap: 0.5rem;">
-                        <label style="font-size: 0.9rem; color: var(--color-text-muted);">Message</label>
-                        <textarea rows="4"
-                            style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px; color: white; border-radius: 4px; font-family: inherit; resize: vertical;"></textarea>
-                    </div>
-
-                    <div style="grid-column: 1 / -1; margin-top: 1rem;">
-                        <button type="submit" class="btn btn-primary" style="width: 100%; border: none;">Send
-                            Enquiry</button>
-                    </div>
-                </form>
             </div>
         </div>
     </section>

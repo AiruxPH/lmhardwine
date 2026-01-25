@@ -33,8 +33,8 @@ error_reporting(E_ALL);
                 <ul class="nav-links">
                     <li><a href="index.php">Home</a></li>
                     <li><a href="products.php">Collection</a></li>
-                    <li><a href="index.php#about">Our Story</a></li>
-                    <li><a href="index.php#contact">Contact</a></li>
+                    <li><a href="about.php">Our Story</a></li>
+                    <li><a href="contact.php">Contact</a></li>
                 </ul>
             </nav>
             <div class="header-actions" style="display: flex; align-items: center; gap: 1.5rem;">
