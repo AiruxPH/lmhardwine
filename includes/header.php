@@ -22,7 +22,7 @@ error_reporting(E_ALL);
         rel="stylesheet">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="css/style.css?v=1.1">
+    <link rel="stylesheet" href="css/style.css?v=1.5">
 </head>
 
 <body>

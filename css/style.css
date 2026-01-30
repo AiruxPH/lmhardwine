@@ -451,7 +451,7 @@ img {
 
 /* Mobile Nav Visibility Helpers */
 .mobile-only-nav {
-    display: none;
+    display: none !important;
 }
 
 @media (max-width: 768px) {
@@ -460,7 +460,7 @@ img {
     }
 
     .mobile-only-nav {
-        display: block;
+        display: block !important;
         width: 100%;
         text-align: center;
         border-top: 1px solid rgba(255, 255, 255, 0.05);
@@ -500,7 +500,7 @@ img {
     }
 }
 
-/* Fix for browser autofill white backgroundd */
+/* Fix for browser autofill white background */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
