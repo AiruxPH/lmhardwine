@@ -20,6 +20,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt = $pdo->prepare("INSERT INTO contact_messages (name, email, subject, message) VALUES (?, ?, ?, ?)");
             $stmt->execute([$name, $email, $subject, $message]);
             $success_msg = "Thank you! Your message has been sent. We will get back to you shortly.";
+
+            // Auto-Responder
+            $auto_subject = "We received your message: $subject";
+            $auto_body = "Hi $name,\n\nThank you for contacting LM Hard Wine. We have received your inquiry and will get back to you as soon as possible.\n\nBest regards,\nThe LM Hard Wine Team\n\n---\nDisclaimer: If you did not send this message, please ignore this email. Someone may have entered your email address by mistake.";
+            $headers = "From: no-reply@lmhardwine.com\r\n";
+            $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
+
+            // Send silently (don't show error to user if mail fails)
+            @mail($email, $auto_subject, $auto_body, $headers);
+
         } catch (PDOException $e) {
             $error_msg = "Something went wrong. Please try again later.";
         }
