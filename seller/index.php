@@ -28,7 +28,7 @@ $stmt->execute([$user_id]);
 $order_count = $stmt->fetch()['count'];
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<?php include 'includes/header.php'; ?>
 
 <style>
     body {
@@ -89,56 +89,52 @@ $order_count = $stmt->fetch()['count'];
     }
 </style>
 
-<body>
-
-    <?php include 'includes/header.php'; ?>
-
-    <div class="dashboard-container">
-        <div class="welcome-banner">
-            <div>
-                <h1 style="font-family: 'Playfair Display', serif;">Welcome, <span class="text-accent">
-                        <?php echo htmlspecialchars($brand_name); ?>
-                    </span></h1>
-                <p style="color: var(--color-text-muted);">Here is what's happening with your store today.</p>
-            </div>
-            <div>
-                <a href="add_product.php" class="btn btn-primary">+ Add New Product</a>
-            </div>
+<div class="dashboard-container">
+    <div class="welcome-banner">
+        <div>
+            <h1 style="font-family: 'Playfair Display', serif;">Welcome, <span class="text-accent">
+                    <?php echo htmlspecialchars($brand_name); ?>
+                </span></h1>
+            <p style="color: var(--color-text-muted);">Here is what's happening with your store today.</p>
         </div>
-
-        <div class="stats-grid">
-            <!-- Products -->
-            <div class="glass-card stat-card">
-                <div class="stat-value text-accent">
-                    <?php echo $product_count; ?>
-                </div>
-                <div class="stat-label">Active Products</div>
-            </div>
-
-            <!-- Orders (Placeholder) -->
-            <div class="glass-card stat-card">
-                <div class="stat-value">
-                    <?php echo $order_count; ?>
-                </div>
-                <div class="stat-label">Pending Orders</div>
-            </div>
-
-            <!-- Quick Actions -->
-            <a href="profile.php" class="glass-card stat-card action-card" style="text-decoration: none;">
-                <div class="stat-value" style="font-size: 1.5rem; color: white;">Edit Profile</div>
-                <div class="stat-label">Manage Brand Info</div>
-            </a>
-        </div>
-
-        <div class="glass-card">
-            <h2 style="margin-bottom: 1rem;">Quick Start Guide</h2>
-            <ul style="color: var(--color-text-muted); line-height: 1.6; padding-left: 1.2rem;">
-                <li>Go to <strong>My Products</strong> to list your wines.</li>
-                <li>Check <strong>Orders</strong> to fulfil new purchases.</li>
-                <li>Update your <strong>Brand Profile</strong> with a custom logo and description.</li>
-            </ul>
+        <div>
+            <a href="add_product.php" class="btn btn-primary">+ Add New Product</a>
         </div>
     </div>
+
+    <div class="stats-grid">
+        <!-- Products -->
+        <div class="glass-card stat-card">
+            <div class="stat-value text-accent">
+                <?php echo $product_count; ?>
+            </div>
+            <div class="stat-label">Active Products</div>
+        </div>
+
+        <!-- Orders (Placeholder) -->
+        <div class="glass-card stat-card">
+            <div class="stat-value">
+                <?php echo $order_count; ?>
+            </div>
+            <div class="stat-label">Pending Orders</div>
+        </div>
+
+        <!-- Quick Actions -->
+        <a href="profile.php" class="glass-card stat-card action-card" style="text-decoration: none;">
+            <div class="stat-value" style="font-size: 1.5rem; color: white;">Edit Profile</div>
+            <div class="stat-label">Manage Brand Info</div>
+        </a>
+    </div>
+
+    <div class="glass-card">
+        <h2 style="margin-bottom: 1rem;">Quick Start Guide</h2>
+        <ul style="color: var(--color-text-muted); line-height: 1.6; padding-left: 1.2rem;">
+            <li>Go to <strong>My Products</strong> to list your wines.</li>
+            <li>Check <strong>Orders</strong> to fulfil new purchases.</li>
+            <li>Update your <strong>Brand Profile</strong> with a custom logo and description.</li>
+        </ul>
+    </div>
+</div>
 
 </body>
 

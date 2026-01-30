@@ -19,7 +19,7 @@ if (session_status() === PHP_SESSION_NONE) {
         rel="stylesheet">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/style.css?v=1.3">
     <style>
         .seller-nav-active {
             color: var(--color-accent) !important;

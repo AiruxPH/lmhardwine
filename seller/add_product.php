@@ -69,129 +69,119 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<?php include 'includes/header.php'; ?>
+<!-- Header includes HTML start, Head, Body start, and Navbar -->
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Product - Seller</title>
-    <link rel="stylesheet" href="../css/style.css">
-    <style>
-        body {
-            padding-top: 80px;
-        }
+<style>
+    body {
+        padding-top: 80px;
+    }
 
-        .admin-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
+    .admin-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
 
-        .alert {
-            padding: 10px;
-            margin-bottom: 1rem;
-            border-radius: 4px;
-        }
+    .alert {
+        padding: 10px;
+        margin-bottom: 1rem;
+        border-radius: 4px;
+    }
 
-        .alert-success {
-            background: rgba(76, 175, 80, 0.2);
-            color: #4caf50;
-        }
+    .alert-success {
+        background: rgba(76, 175, 80, 0.2);
+        color: #4caf50;
+    }
 
-        .alert-error {
-            background: rgba(244, 67, 54, 0.2);
-            color: #f44336;
-        }
-    </style>
-</head>
+    .alert-error {
+        background: rgba(244, 67, 54, 0.2);
+        color: #f44336;
+    }
+</style>
 
-<body>
+<div class="admin-container">
+    <header style="margin-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem;">
+        <h1>Add New Wine</h1>
+        <a href="products.php" style="color: var(--color-text-muted);">← Back to My Products</a>
+    </header>
 
-    <?php include 'includes/header.php'; ?>
+    <?php if ($success): ?>
+        <div class="alert alert-success">
+            <?php echo htmlspecialchars($success); ?>
+        </div>
+    <?php endif; ?>
+    <?php if ($error): ?>
+        <div class="alert alert-error">
+            <?php echo htmlspecialchars($error); ?>
+        </div>
+    <?php endif; ?>
 
-    <div class="admin-container">
-        <header style="margin-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem;">
-            <h1>Add New Wine</h1>
-            <a href="products.php" style="color: var(--color-text-muted);">← Back to My Products</a>
-        </header>
-
-        <?php if ($success): ?>
-            <div class="alert alert-success">
-                <?php echo htmlspecialchars($success); ?>
-            </div>
-        <?php endif; ?>
-        <?php if ($error): ?>
-            <div class="alert alert-error">
-                <?php echo htmlspecialchars($error); ?>
-            </div>
-        <?php endif; ?>
-
-        <form method="POST" enctype="multipart/form-data" class="glass-card">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-                <div class="form-group">
-                    <label>Name <span class="tooltip-icon"
-                            data-tooltip="The commercial name of the wine bottle.">?</span></label>
-                    <input type="text" name="name" id="product_name" class="form-control" required autocomplete="off">
-                    <small id="name-warning" style="display:none; color: #ffc107; margin-top: 5px;">
-                        ⚠️ Warning: A product with this name already exists.
-                    </small>
-                </div>
-                <div class="form-group">
-                    <label>Type <span class="tooltip-icon"
-                            data-tooltip="General classification: Red, White, or Rose.">?</span></label>
-                    <select name="type" class="form-control">
-                        <option value="Red">Red</option>
-                        <option value="White">White</option>
-                        <option value="Rose">Rose</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Varietal <span class="tooltip-icon"
-                            data-tooltip="The specific grape variety, e.g., Merlot, Chardonnay.">?</span></label>
-                    <input type="text" name="varietal" class="form-control" placeholder="e.g. Cabernet Sauvignon"
-                        required>
-                </div>
-                <div class="form-group">
-                    <label>Price (₱) <span class="tooltip-icon"
-                            data-tooltip="Selling price per bottle in PHP.">?</span></label>
-                    <input type="number" step="0.01" name="price" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label>Stock Quantity <span class="tooltip-icon"
-                            data-tooltip="Number of bottles currently available in inventory.">?</span></label>
-                    <input type="number" name="stock_qty" class="form-control" value="10" min="0" required>
-                </div>
-                <div class="form-group">
-                    <label>Vintage Year <span class="tooltip-icon"
-                            data-tooltip="The year the grapes were harvested.">?</span></label>
-                    <input type="number" name="year" class="form-control" value="<?php echo date('Y'); ?>" required>
-                </div>
-            </div>
-
-            <div class="form-group" style="margin-top: 1.5rem;">
-                <label>Description <span class="tooltip-icon"
-                        data-tooltip="Tasting notes, origin details, and pairing suggestions.">?</span></label>
-                <textarea name="description" class="form-control" rows="4"></textarea>
-            </div>
-
+    <form method="POST" enctype="multipart/form-data" class="glass-card">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
             <div class="form-group">
-                <label>Product Image <span class="tooltip-icon"
-                        data-tooltip="High-quality photo of the bottle.">?</span></label>
-                <div class="file-upload-wrapper" style="text-align: center;">
-                    <img id="image-preview" src="#" alt="Preview"
-                        style="display: none; max-width: 100%; max-height: 300px; margin-bottom: 1rem; border-radius: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
-
-                    <div id="upload-content">
-                        <div class="file-upload-icon">📷</div>
-                        <span id="file-label">Click or Drag Image Here</span>
-                    </div>
-                    <input type="file" name="product_image" accept="image/*" onchange="previewImage(this)">
-                </div>
+                <label>Name <span class="tooltip-icon"
+                        data-tooltip="The commercial name of the wine bottle.">?</span></label>
+                <input type="text" name="name" id="product_name" class="form-control" required autocomplete="off">
+                <small id="name-warning" style="display:none; color: #ffc107; margin-top: 5px;">
+                    ⚠️ Warning: A product with this name already exists.
+                </small>
             </div>
+            <div class="form-group">
+                <label>Type <span class="tooltip-icon"
+                        data-tooltip="General classification: Red, White, or Rose.">?</span></label>
+                <select name="type" class="form-control">
+                    <option value="Red">Red</option>
+                    <option value="White">White</option>
+                    <option value="Rose">Rose</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Varietal <span class="tooltip-icon"
+                        data-tooltip="The specific grape variety, e.g., Merlot, Chardonnay.">?</span></label>
+                <input type="text" name="varietal" class="form-control" placeholder="e.g. Cabernet Sauvignon" required>
+            </div>
+            <div class="form-group">
+                <label>Price (₱) <span class="tooltip-icon"
+                        data-tooltip="Selling price per bottle in PHP.">?</span></label>
+                <input type="number" step="0.01" name="price" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Stock Quantity <span class="tooltip-icon"
+                        data-tooltip="Number of bottles currently available in inventory.">?</span></label>
+                <input type="number" name="stock_qty" class="form-control" value="10" min="0" required>
+            </div>
+            <div class="form-group">
+                <label>Vintage Year <span class="tooltip-icon"
+                        data-tooltip="The year the grapes were harvested.">?</span></label>
+                <input type="number" name="year" class="form-control" value="<?php echo date('Y'); ?>" required>
+            </div>
+        </div>
 
-            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Add Product</button>
-        </form>
-    </div>
+        <div class="form-group" style="margin-top: 1.5rem;">
+            <label>Description <span class="tooltip-icon"
+                    data-tooltip="Tasting notes, origin details, and pairing suggestions.">?</span></label>
+            <textarea name="description" class="form-control" rows="4"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Product Image <span class="tooltip-icon"
+                    data-tooltip="High-quality photo of the bottle.">?</span></label>
+            <div class="file-upload-wrapper" style="text-align: center;">
+                <img id="image-preview" src="#" alt="Preview"
+                    style="display: none; max-width: 100%; max-height: 300px; margin-bottom: 1rem; border-radius: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+
+                <div id="upload-content">
+                    <div class="file-upload-icon">📷</div>
+                    <span id="file-label">Click or Drag Image Here</span>
+                </div>
+                <input type="file" name="product_image" accept="image/*" onchange="previewImage(this)">
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Add Product</button>
+    </form>
+</div>
 </body>
 <script>
     function previewImage(input) {
