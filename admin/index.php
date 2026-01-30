@@ -271,6 +271,14 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <div style="font-size: 0.75rem; color: #666;">Customer inquiries</div>
                         </div>
                     </a>
+
+                    <a href="database.php" class="action-card glass-card">
+                        <div class="action-icon">🗄️</div>
+                        <div>
+                            <div style="font-weight: 600;">Database Explorer</div>
+                            <div style="font-size: 0.75rem; color: #666;">View & search raw tables</div>
+                        </div>
+                    </a>
                 </div>
             </div>
         </div>
