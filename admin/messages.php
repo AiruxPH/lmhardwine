@@ -11,18 +11,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $to_email = $_POST['to_email'];
     $reply_body = trim($_POST['reply_body']);
     $original_subject = $_POST['original_subject'];
+    $original_message = $_POST['original_message'] ?? '';
 
     if ($msg_id && $to_email && $reply_body) {
         $subject = "Re: " . $original_subject;
         
         // Formal Email Template
         $formatted_body = "Dear Customer,\n\n";
+        $formatted_body .= "This is a reply to your inquiry regarding \"$original_subject\".\n\n";
         $formatted_body .= $reply_body . "\n\n";
         $formatted_body .= "Best regards,\n";
         $formatted_body .= "The LM Hard Wine Team\n";
-        $formatted_body .= "https://lmhardwine.ccsblock2.com\n";
+        $formatted_body .= "https://lmhardwine.ccsblock2.com\n\n";
+        $formatted_body .= "DISCLAIMER: If you did not send the original message regarding this inquiry, please ignore this email. Someone may have used your email address by mistake.\n";
         $formatted_body .= "--------------------------------------------------\n";
-        $formatted_body .= "Original Message:\n> " . $original_subject;
+        $formatted_body .= "On " . date('M d, Y') . ", you wrote:\n\n";
+        $formatted_body .= "> " . str_replace("\n", "\n> ", $original_message);
 
         $headers = "From: info@lmhardwine.com\r\n";
         $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
@@ -292,6 +296,7 @@ $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <input type="hidden" name="message_id" id="replyMsgId">
                     <input type="hidden" name="to_email" id="replyEmail">
                     <input type="hidden" name="original_subject" id="replySubject">
+                    <input type="hidden" name="original_message" id="replyOriginalMessage">
                     
                     <textarea name="reply_body" rows="4" class="form-control" placeholder="Type your reply here..." required
                         style="width: 100%; background: #111; border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 10px; margin-bottom: 1rem;"></textarea>
@@ -317,6 +322,7 @@ $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
             document.getElementById('replyMsgId').value = msg.id;
             document.getElementById('replyEmail').value = msg.email;
             document.getElementById('replySubject').value = msg.subject;
+            document.getElementById('replyOriginalMessage').value = msg.message;
 
             // Show/Hide Reply section based on status
             if (msg.status === 'replied') {
