@@ -58,17 +58,26 @@ if (!$product) {
                 <div
                     style="height: 500px; background: #1a1a1a; display: flex; align-items: center; justify-content: center; position: relative;">
 
-                    <?php if (!empty($product['image_path'])):
-                        $img_src = (strpos($product['image_path'], 'uploads/') === 0) ? $product['image_path'] : 'uploads/' . $product['image_path'];
-                        ?>
-                        <img src="<?php echo htmlspecialchars($img_src); ?>"
-                            alt="<?php echo htmlspecialchars($product['name']); ?>"
-                            style="width: 100%; height: 100%; object-fit: cover;">
-                    <?php else: ?>
-                        <span style="font-size: 6rem; opacity: 0.1; font-weight: 700; text-transform: uppercase;">
-                            <?php echo $product['type']; ?>
-                        </span>
-                        <div style="position: absolute; inset: 0; background: <?php echo $product['color']; ?>;"></div>
+                    <?php 
+                        $img_src = '';
+                        $is_default = false;
+                        if (!empty($product['image_path'])) {
+                            $img_src = (strpos($product['image_path'], 'uploads/') === 0) ? $product['image_path'] : 'uploads/' . $product['image_path'];
+                        } else {
+                            $is_default = true;
+                            $type = strtolower($product['type']);
+                            if (strpos($type, 'red') !== false) $img_src = 'assets/images/defaults/red_default.png';
+                            elseif (strpos($type, 'white') !== false) $img_src = 'assets/images/defaults/white_default.png';
+                            elseif (strpos($type, 'rose') !== false) $img_src = 'assets/images/defaults/rose_default.png';
+                            elseif (strpos($type, 'sparkling') !== false) $img_src = 'assets/images/defaults/sparkling_default.png';
+                            else $img_src = 'assets/images/defaults/red_default.png';
+                        }
+                    ?>
+                    <img src="<?php echo htmlspecialchars($img_src); ?>"
+                         alt="<?php echo htmlspecialchars($product['name']); ?>"
+                         style="width: 100%; height: 100%; object-fit: cover;">
+                    <?php if ($is_default): ?>
+                        <div class="default-badge">House Placeholder Image</div>
                     <?php endif; ?>
 
                 </div>

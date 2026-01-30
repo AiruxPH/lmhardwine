@@ -354,22 +354,31 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     <div class="product-cell">
                                         <div class="product-img-wrapper">
                                             <?php
-                                            // Handle image path logic safely
-                                            $imgSrc = '';
+                                            $img_src = '';
+                                            $is_default = false;
                                             if (!empty($p['image_path'])) {
-                                                if (strpos($p['image_path'], 'uploads/') === 0) {
-                                                    $imgSrc = '../' . htmlspecialchars($p['image_path']);
-                                                } else {
-                                                    $imgSrc = '../uploads/' . htmlspecialchars($p['image_path']);
-                                                }
+                                                $img_src = (strpos($p['image_path'], 'uploads/') === 0) ? '../' . $p['image_path'] : '../uploads/' . $p['image_path'];
+                                            } else {
+                                                $is_default = true;
+                                                $type = strtolower($p['type']);
+                                                if (strpos($type, 'red') !== false)
+                                                    $img_src = '../assets/images/defaults/red_default.png';
+                                                elseif (strpos($type, 'white') !== false)
+                                                    $img_src = '../assets/images/defaults/white_default.png';
+                                                elseif (strpos($type, 'rose') !== false)
+                                                    $img_src = '../assets/images/defaults/rose_default.png';
+                                                elseif (strpos($type, 'sparkling') !== false)
+                                                    $img_src = '../assets/images/defaults/sparkling_default.png';
+                                                else
+                                                    $img_src = '../assets/images/defaults/red_default.png';
                                             }
                                             ?>
-                                            <?php if ($imgSrc): ?>
-                                                <img src="<?php echo $imgSrc; ?>" alt="<?php echo htmlspecialchars($p['name']); ?>">
-                                            <?php else: ?>
-                                                <div
-                                                    style="width:100%; height:100%; background: #222; display:flex; align-items:center; justify-content:center; color:#444;">
-                                                    No Img</div>
+                                            <img src="<?php echo htmlspecialchars($img_src); ?>"
+                                                alt="<?php echo htmlspecialchars($p['name']); ?>"
+                                                style="width: 100%; height: 100%; object-fit: cover;">
+                                            <?php if ($is_default): ?>
+                                                <div class="default-badge"
+                                                    style="font-size: 0.4rem; padding: 2px 4px; bottom: 5px;">House</div>
                                             <?php endif; ?>
                                         </div>
                                         <div class="product-info">

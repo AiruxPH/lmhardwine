@@ -93,13 +93,24 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'seller') {
                                 <div style="position: absolute; top: 10px; right: 10px; background: #ff4444; color: white; padding: 5px 10px; font-weight: bold; z-index: 10; border-radius: 4px; font-size: 0.8rem;">SOLD OUT</div>
                             <?php endif; ?>
                             
-                            <?php if ($p['image_path']): 
-                                $img_src = (strpos($p['image_path'], 'uploads/') === 0) ? $p['image_path'] : 'uploads/' . $p['image_path'];
+                            <?php 
+                                $img_src = '';
+                                $is_default = false;
+                                if ($p['image_path']) {
+                                    $img_src = (strpos($p['image_path'], 'uploads/') === 0) ? $p['image_path'] : 'uploads/' . $p['image_path'];
+                                } else {
+                                    $is_default = true;
+                                    $type = strtolower($p['type']);
+                                    if (strpos($type, 'red') !== false) $img_src = 'assets/images/defaults/red_default.png';
+                                    elseif (strpos($type, 'white') !== false) $img_src = 'assets/images/defaults/white_default.png';
+                                    elseif (strpos($type, 'rose') !== false) $img_src = 'assets/images/defaults/rose_default.png';
+                                    elseif (strpos($type, 'sparkling') !== false) $img_src = 'assets/images/defaults/sparkling_default.png';
+                                    else $img_src = 'assets/images/defaults/red_default.png';
+                                }
                             ?>
-                                <img src="<?php echo htmlspecialchars($img_src); ?>" style="width: 100%; height: 100%; object-fit: cover;">
-                            <?php else: ?>
-                                <span style="font-size: 4rem; opacity: 0.1; font-weight: 700; text-transform: uppercase;"><?php echo $p['type']; ?></span>
-                                <div style="position: absolute; inset: 0; background: <?php echo $p['color_style']; ?>;"></div>
+                            <img src="<?php echo htmlspecialchars($img_src); ?>" style="width: 100%; height: 100%; object-fit: cover;">
+                            <?php if ($is_default): ?>
+                                <div class="default-badge">House Placeholder</div>
                             <?php endif; ?>
                         </div>
                         <div

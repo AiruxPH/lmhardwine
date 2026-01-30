@@ -317,17 +317,33 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <td>
                                     <div class="product-cell">
                                         <div class="product-img-wrapper">
-                                            <?php if ($p['image_path']): ?>
-                                                <?php
+                                            <?php
+                                            $img_src = '';
+                                            $is_default = false;
+                                            if ($p['image_path']) {
                                                 $img = $p['image_path'];
-                                                $display_path = (strpos($img, 'uploads/') === 0) ? '../' . $img : '../uploads/' . $img;
-                                                ?>
-                                                <img src="<?php echo htmlspecialchars($display_path); ?>"
-                                                    alt="<?php echo htmlspecialchars($p['name']); ?>">
-                                            <?php else: ?>
-                                                <div
-                                                    style="width: 100%; height: 100%; background: <?php echo $p['color_style'] ?? '#1a1a1a'; ?>; opacity: 0.5;">
-                                                </div>
+                                                $img_src = (strpos($img, 'uploads/') === 0) ? '../' . $img : '../uploads/' . $img;
+                                            } else {
+                                                $is_default = true;
+                                                $type = strtolower($p['type']);
+                                                // Root-relative for JS/CSS usually, but here we are in /admin/
+                                                if (strpos($type, 'red') !== false)
+                                                    $img_src = '../assets/images/defaults/red_default.png';
+                                                elseif (strpos($type, 'white') !== false)
+                                                    $img_src = '../assets/images/defaults/white_default.png';
+                                                elseif (strpos($type, 'rose') !== false)
+                                                    $img_src = '../assets/images/defaults/rose_default.png';
+                                                elseif (strpos($type, 'sparkling') !== false)
+                                                    $img_src = '../assets/images/defaults/sparkling_default.png';
+                                                else
+                                                    $img_src = '../assets/images/defaults/red_default.png';
+                                            }
+                                            ?>
+                                            <img src="<?php echo htmlspecialchars($img_src); ?>"
+                                                alt="<?php echo htmlspecialchars($p['name']); ?>">
+                                            <?php if ($is_default): ?>
+                                                <div class="default-badge"
+                                                    style="font-size: 0.4rem; padding: 2px 4px; bottom: 5px;">House</div>
                                             <?php endif; ?>
                                         </div>
                                         <div class="product-info">
@@ -482,14 +498,20 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 let img = data.image_path;
                 let src = (img.startsWith('uploads/')) ? '../' + img : '../uploads/' + img;
                 imgEl.src = src;
-                imgEl.style.display = 'block';
                 phEl.style.display = 'none';
             } else {
-                imgEl.style.display = 'none';
+                let type = (data.type || '').toLowerCase();
+                let src = '../assets/images/defaults/red_default.png';
+                if (type.includes('red')) src = '../assets/images/defaults/red_default.png';
+                else if (type.includes('white')) src = '../assets/images/defaults/white_default.png';
+                else if (type.includes('rose')) src = '../assets/images/defaults/rose_default.png';
+                else if (type.includes('sparkling')) src = '../assets/images/defaults/sparkling_default.png';
+
+                imgEl.src = src;
                 phEl.style.display = 'flex';
-                typePh.innerText = data.type;
-                colorPh.style.background = data.color_style || 'rgba(100,0,0,0.5)';
+                phEl.innerHTML = '<div class="default-badge" style="bottom: 20px; font-size: 0.9rem; padding: 6px 20px;">House Placeholder</div>';
             }
+            imgEl.style.display = 'block';
 
             modal.style.display = 'block';
             document.body.style.overflow = 'hidden';

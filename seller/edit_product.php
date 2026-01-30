@@ -194,15 +194,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <div class="form-group">
                 <label>Product Image</label>
                 <div style="text-align: center; margin-bottom: 1rem;">
-                    <?php if ($product['image_path']): ?>
-                        <?php
-                        $display_path = strpos($product['image_path'], 'uploads/') === 0 ? '../' . $product['image_path'] : '../uploads/' . $product['image_path'];
-                        ?>
-                        <img id="image-preview" src="<?php echo $display_path; ?>" class="current-img-preview"
-                            style="display: inline-block;">
-                    <?php else: ?>
-                        <img id="image-preview" src="#" class="current-img-preview" style="display: none;">
-                    <?php endif; ?>
+                    <?php
+                    $img_src = '';
+                    $is_default = false;
+                    if ($product['image_path']) {
+                        $img = $product['image_path'];
+                        $img_src = (strpos($img, 'uploads/') === 0) ? '../' . $img : '../uploads/' . $img;
+                    } else {
+                        $is_default = true;
+                        $type = strtolower($product['type']);
+                        if (strpos($type, 'red') !== false)
+                            $img_src = '../assets/images/defaults/red_default.png';
+                        elseif (strpos($type, 'white') !== false)
+                            $img_src = '../assets/images/defaults/white_default.png';
+                        elseif (strpos($type, 'rose') !== false)
+                            $img_src = '../assets/images/defaults/rose_default.png';
+                        elseif (strpos($type, 'sparkling') !== false)
+                            $img_src = '../assets/images/defaults/sparkling_default.png';
+                        else
+                            $img_src = '../assets/images/defaults/red_default.png';
+                    }
+                    ?>
+                    <div style="position: relative; display: inline-block;">
+                        <img id="image-preview" src="<?php echo htmlspecialchars($img_src); ?>"
+                            class="current-img-preview" style="display: inline-block;">
+                        <?php if ($is_default): ?>
+                            <div class="default-badge" style="font-size: 0.4rem; padding: 2px 8px; bottom: 5px;">Placeholder
+                            </div>
+                        <?php endif; ?>
+                    </div>
                 </div>
 
                 <div class="file-upload-wrapper">
