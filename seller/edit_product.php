@@ -218,10 +218,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <div style="position: relative; display: inline-block;">
                         <img id="image-preview" src="<?php echo htmlspecialchars($img_src); ?>"
                             class="current-img-preview" style="display: inline-block;">
-                        <?php if ($is_default): ?>
-                            <div class="default-badge" style="font-size: 0.4rem; padding: 2px 8px; bottom: 5px;">Placeholder
-                            </div>
-                        <?php endif; ?>
                     </div>
                 </div>
 

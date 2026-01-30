@@ -376,10 +376,6 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                             <img src="<?php echo htmlspecialchars($img_src); ?>"
                                                 alt="<?php echo htmlspecialchars($p['name']); ?>"
                                                 style="width: 100%; height: 100%; object-fit: cover;">
-                                            <?php if ($is_default): ?>
-                                                <div class="default-badge"
-                                                    style="font-size: 0.4rem; padding: 2px 4px; bottom: 5px;">House</div>
-                                            <?php endif; ?>
                                         </div>
                                         <div class="product-info">
                                             <h3><?php echo htmlspecialchars($p['name']); ?></h3>
@@ -521,10 +517,8 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 imgEl.style.display = 'block';
                 phEl.style.display = 'none';
             } else {
-                imgEl.style.display = 'none';
-                phEl.style.display = 'flex';
-                typePh.innerText = data.type;
-                colorPh.style.background = data.color_style || 'rgba(100,0,0,0.5)';
+                imgEl.src = src;
+                phEl.style.display = 'none';
             }
 
             modal.style.display = 'block';

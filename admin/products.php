@@ -341,10 +341,6 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                             ?>
                                             <img src="<?php echo htmlspecialchars($img_src); ?>"
                                                 alt="<?php echo htmlspecialchars($p['name']); ?>">
-                                            <?php if ($is_default): ?>
-                                                <div class="default-badge"
-                                                    style="font-size: 0.4rem; padding: 2px 4px; bottom: 5px;">House</div>
-                                            <?php endif; ?>
                                         </div>
                                         <div class="product-info">
                                             <h3><?php echo htmlspecialchars($p['name']); ?></h3>
@@ -508,8 +504,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 else if (type.includes('sparkling')) src = '../assets/images/defaults/sparkling_default.png';
 
                 imgEl.src = src;
-                phEl.style.display = 'flex';
-                phEl.innerHTML = '<div class="default-badge" style="bottom: 20px; font-size: 0.9rem; padding: 6px 20px;">House Placeholder</div>';
+                phEl.style.display = 'none';
             }
             imgEl.style.display = 'block';
 

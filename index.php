@@ -109,9 +109,6 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'seller') {
                                 }
                             ?>
                             <img src="<?php echo htmlspecialchars($img_src); ?>" style="width: 100%; height: 100%; object-fit: cover;">
-                            <?php if ($is_default): ?>
-                                <div class="default-badge">House Placeholder</div>
-                            <?php endif; ?>
                         </div>
                         <div
                             style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">

@@ -80,9 +80,6 @@ if (!$product) {
                     <img src="<?php echo htmlspecialchars($img_src); ?>"
                         alt="<?php echo htmlspecialchars($product['name']); ?>"
                         style="width: 100%; height: 100%; object-fit: cover;">
-                    <?php if ($is_default): ?>
-                        <div class="default-badge">House Placeholder Image</div>
-                    <?php endif; ?>
 
                 </div>
             </div>
