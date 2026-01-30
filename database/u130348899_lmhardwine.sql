@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jan 25, 2026 at 11:00 AM
+-- Generation Time: Jan 30, 2026 at 10:08 AM
 -- Server version: 11.8.3-MariaDB-log
 -- PHP Version: 7.2.34
 
@@ -31,6 +31,7 @@ CREATE TABLE `admins` (
   `id` int(11) NOT NULL,
   `username` varchar(50) NOT NULL,
   `password_hash` varchar(255) NOT NULL,
+  `role` varchar(20) DEFAULT 'admin',
   `created_at` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -38,8 +39,8 @@ CREATE TABLE `admins` (
 -- Dumping data for table `admins`
 --
 
-INSERT INTO `admins` (`id`, `username`, `password_hash`, `created_at`) VALUES
-(1, 'admin', '$2y$10$bv/10uJDsxjFRk9w1RYO5ObrrXUukeVmVxprOyooVPlKGNIzUEoa2', '2026-01-20 15:53:25');
+INSERT INTO `admins` (`id`, `username`, `password_hash`, `role`, `created_at`) VALUES
+(1, 'admin', '$2y$10$bv/10uJDsxjFRk9w1RYO5ObrrXUukeVmVxprOyooVPlKGNIzUEoa2', 'super_admin', '2026-01-20 15:53:25');
 
 -- --------------------------------------------------------
 
@@ -151,6 +152,16 @@ CREATE TABLE `order_history` (
   `notes` text DEFAULT NULL,
   `changed_at` timestamp NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `order_history`
+--
+
+INSERT INTO `order_history` (`id`, `order_id`, `status_from`, `status_to`, `notes`, `changed_at`) VALUES
+(1, 1, 'Shipped', 'Pending', 'Pending', '2026-01-25 11:02:33'),
+(2, 1, 'Pending', 'Processing', 'The item has been processed.', '2026-01-25 11:22:03'),
+(3, 1, 'Processing', 'Shipped', 'The item had left the stock room.', '2026-01-25 11:22:43'),
+(4, 1, 'Shipped', 'Delivered', 'The item has been delivered.', '2026-01-25 11:23:04');
 
 -- --------------------------------------------------------
 
@@ -406,7 +417,7 @@ ALTER TABLE `orders`
 -- AUTO_INCREMENT for table `order_history`
 --
 ALTER TABLE `order_history`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `order_items`
