@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jan 30, 2026 at 11:35 AM
+-- Generation Time: Jan 30, 2026 at 12:34 PM
 -- Server version: 11.8.3-MariaDB-log
 -- PHP Version: 7.2.34
 
@@ -90,7 +90,8 @@ CREATE TABLE `carts` (
 --
 
 INSERT INTO `carts` (`id`, `user_id`, `created_at`, `updated_at`) VALUES
-(1, 1, '2026-01-25 09:26:39', '2026-01-25 09:26:39');
+(1, 1, '2026-01-25 09:26:39', '2026-01-25 09:26:39'),
+(2, 3, '2026-01-30 11:38:03', '2026-01-30 11:38:03');
 
 -- --------------------------------------------------------
 
@@ -118,8 +119,17 @@ CREATE TABLE `contact_messages` (
   `email` varchar(255) NOT NULL,
   `subject` varchar(100) NOT NULL,
   `message` text NOT NULL,
-  `created_at` timestamp NULL DEFAULT current_timestamp()
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `status` enum('new','read','replied') DEFAULT 'new'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `contact_messages`
+--
+
+INSERT INTO `contact_messages` (`id`, `name`, `email`, `subject`, `message`, `created_at`, `status`) VALUES
+(1, 'Randy', 'randythegreat000@gmail.com', 'General Question', 'Hi', '2026-01-30 12:24:27', 'new'),
+(2, 'ar', 'randythegreat000@gmail.com', 'Private Tasting', '[SCAMMER ALERT]\r\n\r\nEVERYONE here in the group, be aware sa dalawang to na scammer. Yung Konsehala Carol Rodriguez nayan nagpapanggap na midwoman at kasama yang Ahmer Fajardo nayan. \r\n\r\nPreviously nascam nila friend ko and nakuha nila ang account worth 30k at nakabudol pa ng 1k pesos for insurance payment \'daw\' at nung dumating na yung payment they both blocked my friend and infairness may gc pa sila, and they both left. It\'s an inconvenience kasi nafactory reset pa yung phones ng friend ko kasi the scammer have the gmail account na kaya he have the ability to factory reset any other phone na nakalog in sa gmail account. This way we can\'t do the recovery method sa ML na gumagamit ng trusted device for confirmation. Naghahanap pa kami ng paraan pano maretrieve yung account and i hope merong makatulong sa amin.\r\n\r\nKaya be AWARE everyone, please keep this in mind na wag magpapascam kasi nakapaclever na ng mga scammer ngayon at gumagawa na ng counter measures para di maretrieve ng owner yung account.\r\n\r\nThank you for reading and please be aware from these scammers.', '2026-01-30 12:28:13', 'new');
 
 -- --------------------------------------------------------
 
@@ -419,7 +429,7 @@ ALTER TABLE `admins`
 -- AUTO_INCREMENT for table `carts`
 --
 ALTER TABLE `carts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `cart_items`
@@ -431,7 +441,7 @@ ALTER TABLE `cart_items`
 -- AUTO_INCREMENT for table `contact_messages`
 --
 ALTER TABLE `contact_messages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `customer_profiles`
