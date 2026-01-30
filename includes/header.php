@@ -22,7 +22,7 @@ error_reporting(E_ALL);
         rel="stylesheet">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="css/style.css?v=1.4">
+    <link rel="stylesheet" href="css/style.css?v=1.1">
 </head>
 
 <body>
@@ -132,6 +132,10 @@ error_reporting(E_ALL);
                         <span id="cart-count" class="cart-badge">0</span>
                     </a>
                 <?php endif; ?>
+
+                <a href="products.php" class="btn btn-primary desktop-auth"
+                    style="padding: 8px 20px; font-size: 0.8rem;">Shop
+                    Now</a>
             </div>
         </div>
     </header>

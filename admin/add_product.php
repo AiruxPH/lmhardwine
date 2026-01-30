@@ -68,50 +68,77 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 ?>
-<?php include 'includes/header.php'; ?>
+<!DOCTYPE html>
+<html lang="en">
 
-<div class="admin-container">
-    <header style="margin-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem;">
-        <h1>Add New Wine</h1>
-        <a href="index.php" style="color: var(--color-text-muted);">← Back to Dashboard</a>
-    </header>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product - Admin</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .admin-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
 
-    <?php if ($success): ?>
-        <div class="alert alert-success"><?php echo htmlspecialchars($success); ?></div>
-    <?php endif; ?>
-    <?php if ($error): ?>
-        <div class="alert alert-error"><?php echo htmlspecialchars($error); ?></div>
-    <?php endif; ?>
+        .alert {
+            padding: 10px;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+        }
 
-    <form method="POST" enctype="multipart/form-data" class="glass-card">
-        <div class="form-group">
-            <label>Name <span class="tooltip-icon"
-                    data-tooltip="The commercial name of the wine bottle.">?</span></label>
-            <input type="text" name="name" class="form-control" required placeholder="e.g. Reserve Cabernet"
-                autocomplete="off">
-        </div>
+        .alert-success {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+        }
 
-        <?php
-        // Fetch Sellers for Dropdown
-        $stmt_sellers = $pdo->query("SELECT u.id, sp.brand_name FROM users u JOIN seller_profiles sp ON u.id = sp.user_id WHERE u.role = 'seller' ORDER BY sp.brand_name");
-        $sellers = $stmt_sellers->fetchAll();
-        ?>
-        <div class="form-group">
-            <label>Assign to Seller (Optional) <span class="tooltip-icon"
-                    data-tooltip="Assign this product to a specific seller's inventory. Leave blank for House/Admin product.">?</span></label>
-            <select name="seller_id" class="form-control">
-                <option value="">-- Admin (No specific seller) --</option>
-                <?php foreach ($sellers as $seller): ?>
-                    <option value="<?php echo $seller['id']; ?>"><?php echo htmlspecialchars($seller['brand_name']); ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-        </div>
+        .alert-error {
+            background: rgba(244, 67, 54, 0.2);
+            color: #f44336;
+        }
+    </style>
+</head>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+<body>
+    <div class="admin-container">
+        <header style="margin-bottom: 2rem; border-bottom: 1px solid #333; padding-bottom: 1rem;">
+            <h1>Add New Wine</h1>
+            <a href="index.php" style="color: var(--color-text-muted);">← Back to Dashboard</a>
+        </header>
+
+        <?php if ($success): ?>
+            <div class="alert alert-success"><?php echo htmlspecialchars($success); ?></div>
+        <?php endif; ?>
+        <?php if ($error): ?>
+            <div class="alert alert-error"><?php echo htmlspecialchars($error); ?></div>
+        <?php endif; ?>
+
+        <form method="POST" enctype="multipart/form-data" class="glass-card">
             <div class="form-group">
-                <label>Type <span class="tooltip-icon"
-                        data-tooltip="General classification: Red, White, or Rose.">?</span></label>
+                <label>Name</label>
+                <input type="text" name="name" class="form-control" required>
+            </div>
+
+            <?php
+            // Fetch Sellers for Dropdown
+            $stmt_sellers = $pdo->query("SELECT u.id, sp.brand_name FROM users u JOIN seller_profiles sp ON u.id = sp.user_id WHERE u.role = 'seller' ORDER BY sp.brand_name");
+            $sellers = $stmt_sellers->fetchAll();
+            ?>
+            <div class="form-group">
+                <label>Assign to Seller (Optional)</label>
+                <select name="seller_id" class="form-control">
+                    <option value="">-- Admin (No specific seller) --</option>
+                    <?php foreach ($sellers as $seller): ?>
+                        <option value="<?php echo $seller['id']; ?>"><?php echo htmlspecialchars($seller['brand_name']); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+                <small style="color: #888;">Select a seller to add this product to their inventory.</small>
+            </div>
+            <div class="form-group">
+                <label>Type</label>
                 <select name="type" class="form-control">
                     <option value="Red">Red</option>
                     <option value="White">White</option>
@@ -119,69 +146,58 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </select>
             </div>
             <div class="form-group">
-                <label>Varietal <span class="tooltip-icon"
-                        data-tooltip="The specific grape variety, e.g., Merlot, Chardonnay.">?</span></label>
+                <label>Varietal</label>
                 <input type="text" name="varietal" class="form-control" placeholder="e.g. Cabernet Sauvignon" required>
             </div>
             <div class="form-group">
-                <label>Price (₱) <span class="tooltip-icon"
-                        data-tooltip="Selling price per bottle in PHP.">?</span></label>
+                <label>Price (₱)</label>
                 <input type="number" step="0.01" name="price" class="form-control" required>
             </div>
             <div class="form-group">
-                <label>Stock Quantity <span class="tooltip-icon"
-                        data-tooltip="Number of bottles currently available in inventory.">?</span></label>
+                <label>Stock Quantity</label>
                 <input type="number" name="stock_qty" class="form-control" value="10" min="0" required>
             </div>
             <div class="form-group">
-                <label>Vintage Year <span class="tooltip-icon"
-                        data-tooltip="The year the grapes were harvested.">?</span></label>
+                <label>Vintage Year</label>
                 <input type="number" name="year" class="form-control" value="2024" required>
             </div>
-        </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea name="description" class="form-control" rows="4"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Product Image</label>
+                <div class="file-upload-wrapper" style="text-align: center;">
+                    <img id="image-preview" src="#" alt="Preview"
+                        style="display: none; max-width: 100%; max-height: 200px; margin-bottom: 1rem; border-radius: 4px; border: 1px solid #444;">
 
-        <div class="form-group">
-            <label>Description <span class="tooltip-icon"
-                    data-tooltip="Tasting notes, origin details, and pairing suggestions.">?</span></label>
-            <textarea name="description" class="form-control" rows="4"></textarea>
-        </div>
-        <div class="form-group">
-            <label>Product Image <span class="tooltip-icon"
-                    data-tooltip="High-quality photo of the bottle.">?</span></label>
-            <div class="file-upload-wrapper" style="text-align: center;">
-                <img id="image-preview" src="#" alt="Preview"
-                    style="display: none; max-width: 100%; max-height: 300px; margin-bottom: 1rem; border-radius: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
-
-                <div id="upload-content">
                     <div class="file-upload-icon">📷</div>
                     <span id="file-label">Click or Drag Image Here</span>
+                    <input type="file" name="product_image" accept="image/*" onchange="previewImage(this)">
                 </div>
-                <input type="file" name="product_image" accept="image/*" onchange="previewImage(this)">
             </div>
-        </div>
-        <button type="submit" class="btn btn-primary" style="width: 100%;">Add Product</button>
-    </form>
-</div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Add Product</button>
+        </form>
+    </div>
 
-<script>
-    function previewImage(input) {
-        var preview = document.getElementById('image-preview');
-        var uploadContent = document.getElementById('upload-content');
+    <script>
+        function previewImage(input) {
+            var preview = document.getElementById('image-preview');
+            var label = document.getElementById('file-label');
 
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
 
-            reader.onload = function (e) {
-                preview.src = e.target.result;
-                preview.style.display = 'inline-block';
-                uploadContent.style.display = 'none'; // Hide text/icon
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'inline-block';
+                }
+
+                reader.readAsDataURL(input.files[0]);
+                label.textContent = input.files[0].name;
             }
-
-            reader.readAsDataURL(input.files[0]);
         }
-    }
-</script>
-
+    </script>
 </body>
 
 </html>
