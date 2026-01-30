@@ -22,7 +22,7 @@ if (isset($_GET['action']) && isset($_GET['id'])) {
     exit;
 }
 
-// Base Query - Include is_deleted
+// Base Query - Include is_deleted and deletion_requested
 $sql = "SELECT u.*, cp.full_name, sp.brand_name 
         FROM users u 
         LEFT JOIN customer_profiles cp ON u.id = cp.user_id 
@@ -41,7 +41,7 @@ if ($role_filter) {
     $params[] = $role_filter;
 }
 
-$sql .= " ORDER BY u.is_deleted ASC, u.created_at DESC";
+$sql .= " ORDER BY u.deletion_requested DESC, u.is_deleted ASC, u.created_at DESC";
 
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
@@ -182,7 +182,8 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     <?php echo $u['id']; ?>
                                 </td>
                                 <td>
-                                    <div style="font-weight: bold; <?php echo $u['is_deleted'] ? 'color: #777; text-decoration: line-through;' : ''; ?>">
+                                    <div
+                                        style="font-weight: bold; <?php echo $u['is_deleted'] ? 'color: #777; text-decoration: line-through;' : ''; ?>">
                                         <?php echo htmlspecialchars($u['username']); ?>
                                     </div>
                                     <div style="font-size: 0.8rem; color: #666;">
@@ -197,7 +198,8 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                         <?php echo $u['role']; ?>
                                     </span>
                                     <?php if ($u['is_deleted']): ?>
-                                        <span style="font-size: 0.7rem; color: #f44336; margin-left: 5px; font-weight: bold;">[ARCHIVED]</span>
+                                        <span
+                                            style="font-size: 0.7rem; color: #f44336; margin-left: 5px; font-weight: bold;">[ARCHIVED]</span>
                                     <?php endif; ?>
                                 </td>
                                 <td>
@@ -213,19 +215,18 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     <?php echo date('M d, Y', strtotime($u['created_at'])); ?>
                                 </td>
                                 <td>
-                                    <a href="view_user.php?id=<?php echo $u['id']; ?>" class="btn btn-sm" style="margin-right: 5px;">View</a>
-                                    
+                                    <a href="view_user.php?id=<?php echo $u['id']; ?>" class="btn btn-sm"
+                                        style="margin-right: 5px;">View</a>
+
                                     <?php if ($u['is_deleted']): ?>
-                                        <a href="?action=restore&id=<?php echo $u['id']; ?>" 
-                                           class="btn btn-sm" 
-                                           style="background: rgba(76, 175, 80, 0.1); color: #4caf50; border: 1px solid rgba(76, 175, 80, 0.3);">
+                                        <a href="?action=restore&id=<?php echo $u['id']; ?>" class="btn btn-sm"
+                                            style="background: rgba(76, 175, 80, 0.1); color: #4caf50; border: 1px solid rgba(76, 175, 80, 0.3);">
                                             Restore
                                         </a>
                                     <?php else: ?>
-                                        <a href="?action=archive&id=<?php echo $u['id']; ?>" 
-                                           class="btn btn-sm" 
-                                           onclick="return confirm('Are you sure you want to archive this user? They will not be able to login.');"
-                                           style="background: rgba(244, 67, 54, 0.1); color: #f44336; border: 1px solid rgba(244, 67, 54, 0.3);">
+                                        <a href="?action=archive&id=<?php echo $u['id']; ?>" class="btn btn-sm"
+                                            onclick="return confirm('Are you sure you want to archive this user? They will not be able to login.');"
+                                            style="background: rgba(244, 67, 54, 0.1); color: #f44336; border: 1px solid rgba(244, 67, 54, 0.3);">
                                             Archive
                                         </a>
                                     <?php endif; ?>

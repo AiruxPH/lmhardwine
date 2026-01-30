@@ -26,7 +26,9 @@ try {
                 sp.brand_name
             FROM products p
             LEFT JOIN seller_profiles sp ON p.seller_id = sp.user_id 
-            WHERE p.is_deleted = 0";
+            LEFT JOIN users u ON p.seller_id = u.id
+            WHERE p.is_deleted = 0 
+            AND (p.seller_id IS NULL OR u.is_deleted = 0)";
 
     if ($filter != 'All') {
         $sql .= " AND type = :type";

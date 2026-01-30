@@ -58,10 +58,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
+// Handle Deletion Request
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] === 'request_deletion') {
+    try {
+        $stmt = $pdo->prepare("UPDATE users SET deletion_requested = 1 WHERE id = ?");
+        $stmt->execute([$user_id]);
+        $success = "Account deletion requested. An admin will review your request shortly.";
+    } catch (PDOException $e) {
+        $error = "Failed to request deletion: " . $e->getMessage();
+    }
+}
+
 // Fetch Current Data
 try {
     $stmt = $pdo->prepare("
-        SELECT u.username, sp.brand_name, sp.brand_description, sp.contact_email, sp.brand_logo_path 
+        SELECT u.username, u.deletion_requested, sp.brand_name, sp.brand_description, sp.contact_email, sp.brand_logo_path 
         FROM users u 
         JOIN seller_profiles sp ON u.id = sp.user_id 
         WHERE u.id = ?
@@ -198,6 +209,20 @@ try {
                                 rows="5"><?php echo htmlspecialchars($seller['brand_description'] ?? ''); ?></textarea>
                         </div>
 
+                        <?php if ($seller['deletion_requested']): ?>
+                            <div class="alert alert-error" style="margin-top: 1rem; font-size: 0.9rem;">
+                                <strong>Deletion Requested:</strong> Your account is pending removal.
+                            </div>
+                        <?php else: ?>
+                            <div style="margin-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem;">
+                                <h4 style="color: #f44336; font-size: 0.9rem; margin-bottom: 0.5rem;">Danger Zone</h4>
+                                <button type="button" class="btn" onclick="confirmRequestDeletion()"
+                                    style="background: rgba(244, 67, 54, 0.1); color: #f44336; border: 1px solid rgba(244, 67, 54, 0.3); width: 100%;">
+                                    Request Account Deletion
+                                </button>
+                            </div>
+                        <?php endif; ?>
+
                         <div
                             style="display: flex; justify-content: space-between; align-items: center; margin-top: 2rem;">
                             <button type="button" class="btn" onclick="openPasswordModal()"
@@ -205,6 +230,10 @@ try {
                                 Password</button>
                             <button type="submit" class="btn btn-primary">Save Changes</button>
                         </div>
+
+                        <form id="delete-request-form" method="POST" style="display: none;">
+                            <input type="hidden" name="action" value="request_deletion">
+                        </form>
                     </div>
                 </div>
             </form>
@@ -336,6 +365,13 @@ try {
     window.onclick = function (event) {
         if (event.target == modal) {
             closePasswordModal();
+        }
+    }
+    }
+
+    function confirmRequestDeletion() {
+        if (confirm("Are you sure you want to request account deletion? You will need admin approval.")) {
+            document.getElementById('delete-request-form').submit();
         }
     }
 </script>
