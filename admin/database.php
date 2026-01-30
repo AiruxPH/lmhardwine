@@ -2,12 +2,55 @@
 include 'auth.php';
 include '../includes/db.php';
 
+// Only Super Admins should ideally have full DB access, but for now we follow general admin access.
+// Optimization: You might want to restrict this page to Super Admins only in the future.
+
+// Handle Actions (Delete)
+if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['table']) && isset($_GET['pk']) && isset($_GET['val'])) {
+    $table = $_GET['table'];
+    $pk = $_GET['pk'];
+    $val = $_GET['val'];
+
+    try {
+        $stmt = $pdo->prepare("DELETE FROM `$table` WHERE `$pk` = ?");
+        $stmt->execute([$val]);
+        $msg = "Row deleted successfully.";
+        $msg_type = "success";
+    } catch (PDOException $e) {
+        $msg = "Error deleting row: " . $e->getMessage();
+        $msg_type = "error";
+    }
+}
+
+// Handle SQL Execution
+$sql_result = null;
+$sql_error = null;
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['sql_query'])) {
+    $sql = $_POST['sql_query'];
+    try {
+        if (stripos(trim($sql), 'SELECT') === 0 || stripos(trim($sql), 'SHOW') === 0 || stripos(trim($sql), 'DESCRIBE') === 0) {
+            $stmt = $pdo->query($sql);
+            $sql_result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $msg = "Query executed successfully. " . count($sql_result) . " rows returned.";
+            $msg_type = "success";
+        } else {
+            $pdo->exec($sql);
+            $msg = "Query executed successfully.";
+            $msg_type = "success";
+        }
+    } catch (PDOException $e) {
+        $sql_error = $e->getMessage();
+        $msg = "SQL Error: " . $e->getMessage();
+        $msg_type = "error";
+    }
+}
+
 // Get all tables
 $stmt = $pdo->query("SHOW TABLES");
 $tables = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
 $selected_table = $_GET['table'] ?? ($tables[0] ?? null);
-$view = $_GET['view'] ?? 'browse'; // 'browse' or 'structure'
+$view = $_GET['view'] ?? 'browse'; // 'browse', 'structure', 'sql'
 $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 $limit = 20;
 $offset = ($page - 1) * $limit;
@@ -16,13 +59,26 @@ $search = $_GET['search'] ?? '';
 $data = [];
 $columns_info = [];
 $columns = [];
+$primary_key = null;
 $total_rows = 0;
 
-if ($selected_table) {
+if ($selected_table && $view !== 'sql') {
     // Get full column information
     $stmt = $pdo->query("DESCRIBE `$selected_table`");
     $columns_info = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $columns = array_column($columns_info, 'Field');
+
+    // Find Primary Key
+    foreach ($columns_info as $col) {
+        if ($col['Key'] === 'PRI') {
+            $primary_key = $col['Field'];
+            break;
+        }
+    }
+    // Fallback if no PRI key (use first column)
+    if (!$primary_key && !empty($columns)) {
+        $primary_key = $columns[0];
+    }
 
     if ($view === 'browse') {
         // Build query for browsing data
@@ -45,6 +101,10 @@ if ($selected_table) {
         $total_rows = $stmt->fetchColumn();
 
         // Fetch data
+        // Explicitly order by PK descending if usually logical, but default is fine
+        if ($primary_key) {
+            $query .= " ORDER BY `$primary_key` DESC";
+        }
         $query .= " LIMIT $limit OFFSET $offset";
         $stmt = $pdo->prepare($query);
         $stmt->execute($params);
@@ -52,7 +112,7 @@ if ($selected_table) {
     }
 }
 
-$total_pages = ceil($total_rows / $limit);
+$total_pages = $limit > 0 ? ceil($total_rows / $limit) : 1;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -220,6 +280,37 @@ $total_pages = ceil($total_rows / $limit);
             background: rgba(33, 150, 243, 0.2);
             color: #2196f3;
         }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        .alert-success {
+            background: rgba(76, 175, 80, 0.2);
+            color: #81c784;
+            border: 1px solid rgba(76, 175, 80, 0.3);
+        }
+
+        .alert-error {
+            background: rgba(244, 67, 54, 0.2);
+            color: #e57373;
+            border: 1px solid rgba(244, 67, 54, 0.3);
+        }
+
+        .sql-editor {
+            width: 100%;
+            height: 200px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid #444;
+            color: #0f0;
+            font-family: 'Consolas', monospace;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            resize: vertical;
+        }
     </style>
 </head>
 
@@ -230,7 +321,7 @@ $total_pages = ceil($total_rows / $limit);
                 style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; color: #666; margin-bottom: 1.5rem; padding-left: 0.5rem;">
                 Tables</h3>
             <?php foreach ($tables as $table): ?>
-                <a href="?table=<?php echo urlencode($table); ?>&view=<?php echo $view; ?>"
+                <a href="?table=<?php echo urlencode($table); ?>&view=browse"
                     class="table-item <?php echo $selected_table === $table ? 'active' : ''; ?>">
                     📦 <?php echo htmlspecialchars($table); ?>
                 </a>
@@ -252,11 +343,19 @@ $total_pages = ceil($total_rows / $limit);
                     Back to Dashboard</a>
             </header>
 
+            <?php if (isset($msg)): ?>
+                <div class="alert alert-<?php echo $msg_type; ?>">
+                    <?php echo htmlspecialchars($msg); ?>
+                </div>
+            <?php endif; ?>
+
             <div class="view-tabs">
                 <a href="?table=<?php echo urlencode($selected_table); ?>&view=browse"
                     class="tab-btn <?php echo $view === 'browse' ? 'active' : ''; ?>">Browse</a>
                 <a href="?table=<?php echo urlencode($selected_table); ?>&view=structure"
                     class="tab-btn <?php echo $view === 'structure' ? 'active' : ''; ?>">Structure</a>
+                <a href="?table=<?php echo urlencode($selected_table); ?>&view=sql"
+                    class="tab-btn <?php echo $view === 'sql' ? 'active' : ''; ?>">SQL Query</a>
             </div>
 
             <?php if ($view === 'browse'): ?>
@@ -279,19 +378,29 @@ $total_pages = ceil($total_rows / $limit);
                                 <?php foreach ($columns as $column): ?>
                                     <th><?php echo htmlspecialchars($column); ?></th>
                                 <?php endforeach; ?>
+                                <th style="text-align: right;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php if (empty($data)): ?>
                                 <tr>
-                                    <td colspan="<?php echo count($columns); ?>" class="no-data">No records found.</td>
+                                    <td colspan="<?php echo count($columns) + 1; ?>" class="no-data">No records found.</td>
                                 </tr>
                             <?php else: ?>
                                 <?php foreach ($data as $row): ?>
                                     <tr>
-                                        <?php foreach ($row as $val): ?>
+                                        <?php foreach ($row as $key => $val): ?>
                                             <td><?php echo htmlspecialchars($val ?? 'NULL'); ?></td>
                                         <?php endforeach; ?>
+                                        <td style="text-align: right;">
+                                            <?php if ($primary_key && isset($row[$primary_key])): ?>
+                                                <a href="?table=<?php echo urlencode($selected_table); ?>&view=browse&action=delete&pk=<?php echo $primary_key; ?>&val=<?php echo urlencode($row[$primary_key]); ?>"
+                                                    onclick="return confirm('Are you sure you want to delete this row?');"
+                                                    style="color: #f44336; text-decoration: none; font-weight: bold; font-size: 0.8rem;">
+                                                    DELETE
+                                                </a>
+                                            <?php endif; ?>
+                                        </td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php endif; ?>
@@ -309,6 +418,46 @@ $total_pages = ceil($total_rows / $limit);
                         <?php endfor; ?>
                     </div>
                 <?php endif; ?>
+
+            <?php elseif ($view === 'sql'): ?>
+                <!-- SQL View -->
+                <div class="glass-card">
+                    <h3 style="margin-top: 0;">Execute SQL Query</h3>
+                    <p style="color: #888; margin-bottom: 1rem;">Enter your custom SQL query below. Use carefully.</p>
+                    <form method="POST">
+                        <textarea name="sql_query" class="sql-editor" placeholder="SELECT * FROM products WHERE ..."
+                            required><?php echo htmlspecialchars($_POST['sql_query'] ?? ''); ?></textarea>
+                        <button type="submit" class="btn btn-primary">Execute Query</button>
+                    </form>
+
+                    <?php if ($sql_result): ?>
+                        <div style="margin-top: 2rem;">
+                            <h4>Query Results:</h4>
+                            <div class="table-wrapper">
+                                <table class="db-table">
+                                    <thead>
+                                        <tr>
+                                            <?php if (!empty($sql_result)): ?>
+                                                <?php foreach (array_keys($sql_result[0]) as $col): ?>
+                                                    <th><?php echo htmlspecialchars($col); ?></th>
+                                                <?php endforeach; ?>
+                                            <?php endif; ?>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($sql_result as $row): ?>
+                                            <tr>
+                                                <?php foreach ($row as $val): ?>
+                                                    <td><?php echo htmlspecialchars($val ?? 'NULL'); ?></td>
+                                                <?php endforeach; ?>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                </div>
 
             <?php else: ?>
                 <!-- Structure View -->
