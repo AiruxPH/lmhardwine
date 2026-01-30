@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_product_id'])) 
     exit;
 }
 
-// Fetch Products with Seller Info
+// Fetch Products with Seller info
 $stmt = $pdo->query("SELECT p.*, sp.brand_name FROM products p LEFT JOIN seller_profiles sp ON p.seller_id = sp.user_id WHERE p.is_deleted = 0 ORDER BY p.id DESC");
 $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
