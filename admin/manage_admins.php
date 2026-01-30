@@ -8,13 +8,21 @@ restrictToSuperAdmin();
 $message = '';
 $error = '';
 
-// Handle Add Admin
-if (isset($_POST['add_admin'])) {
-    $username = trim($_POST['username']);
-    $password = $_POST['password'];
-    $role = $_POST['role'];
+// Check if a Super Admin already exists to restrict UI
+$stmt = $pdo->query("SELECT COUNT(*) FROM admins WHERE role = 'super_admin'");
+$super_admin_exists = $stmt->fetchColumn() >= 1;
 
-    if (empty($username) || empty($password)) {
+// Handle Add Admin
+if (isset($_POST['add_admin_action'])) {
+    // Using slightly randomized names to thwart simple autofill agents
+    $username = trim($_POST['adm_user_field'] ?? '');
+    $password = $_POST['adm_pass_field'] ?? '';
+    $role = $_POST['adm_role_field'] ?? 'admin';
+
+    // Enforcement: Only one super admin allowed
+    if ($role === 'super_admin' && $super_admin_exists) {
+        $error = "Only one Super Admin is allowed.";
+    } elseif (empty($username) || empty($password)) {
         $error = "Please fill in all fields.";
     } else {
         $password_hash = password_hash($password, PASSWORD_DEFAULT);
@@ -22,6 +30,9 @@ if (isset($_POST['add_admin'])) {
             $stmt = $pdo->prepare("INSERT INTO admins (username, password_hash, role) VALUES (?, ?, ?)");
             $stmt->execute([$username, $password_hash, $role]);
             $message = "Admin account created successfully!";
+            // Update flag
+            $stmt = $pdo->query("SELECT COUNT(*) FROM admins WHERE role = 'super_admin'");
+            $super_admin_exists = $stmt->fetchColumn() >= 1;
         } catch (PDOException $e) {
             $error = "Failed to create account: " . $e->getMessage();
         }
@@ -31,8 +42,16 @@ if (isset($_POST['add_admin'])) {
 // Handle Delete Admin
 if (isset($_GET['delete'])) {
     $id = (int) $_GET['delete'];
+
+    // Check if target is Super Admin (extra check besides DB triggers)
+    $stmt = $pdo->prepare("SELECT role FROM admins WHERE id = ?");
+    $stmt->execute([$id]);
+    $target_role = $stmt->fetchColumn();
+
     if ($id == $_SESSION['admin_id']) {
         $error = "You cannot delete your own account.";
+    } elseif ($target_role === 'super_admin') {
+        $error = "The Super Admin account cannot be deleted.";
     } else {
         try {
             $stmt = $pdo->prepare("DELETE FROM admins WHERE id = ?");
@@ -72,6 +91,7 @@ $admins = $stmt->fetchAll();
 
         .form-group {
             margin-bottom: 1.5rem;
+            position: relative;
         }
 
         .form-group label {
@@ -88,6 +108,16 @@ $admins = $stmt->fetchAll();
             border: 1px solid rgba(255, 255, 255, 0.1);
             color: #fff;
             border-radius: 4px;
+        }
+
+        .pass-toggle {
+            position: absolute;
+            right: 10px;
+            top: 35px;
+            cursor: pointer;
+            color: #666;
+            font-size: 0.8rem;
+            user-select: none;
         }
 
         .admin-table {
@@ -162,38 +192,45 @@ $admins = $stmt->fetchAll();
         </header>
 
         <?php if ($message): ?>
-            <div class="alert alert-success">
-                <?php echo $message; ?>
-            </div>
+            <div class="alert alert-success"><?php echo $message; ?></div>
         <?php endif; ?>
         <?php if ($error): ?>
-            <div class="alert alert-error">
-                <?php echo $error; ?>
-            </div>
+            <div class="alert alert-error"><?php echo $error; ?></div>
         <?php endif; ?>
 
         <div class="admin-grid">
             <!-- Add Admin Form -->
             <div class="glass-card" style="padding: 1.5rem;">
                 <h2 style="font-size: 1.2rem; margin-bottom: 1.5rem;">Add New Account</h2>
-                <form method="POST">
+                <form method="POST" autocomplete="off">
+                    <!-- Fake inputs to further confuse autofill -->
+                    <input type="text" style="display:none" name="fake_user">
+                    <input type="password" style="display:none" name="fake_pass">
+
                     <div class="form-group">
                         <label>Username</label>
-                        <input type="text" name="username" class="form-control" required placeholder="Pick a username">
+                        <input type="text" name="adm_user_field" class="form-control" required
+                            placeholder="Pick a username" autocomplete="off">
                     </div>
                     <div class="form-group">
                         <label>Password</label>
-                        <input type="password" name="password" class="form-control" required
-                            placeholder="Minimum 8 characters">
+                        <input type="password" name="adm_pass_field" id="admin_password" class="form-control" required
+                            placeholder="Minimum 8 characters" autocomplete="new-password">
+                        <span class="pass-toggle" onclick="togglePass()">Show</span>
                     </div>
                     <div class="form-group">
                         <label>Role</label>
-                        <select name="role" class="form-control">
+                        <select name="adm_role_field" class="form-control">
                             <option value="admin">Regular Admin</option>
-                            <option value="super_admin">Super Admin (Full Control)</option>
+                            <?php if (!$super_admin_exists): ?>
+                                <option value="super_admin">Super Admin (Full Control)</option>
+                            <?php endif; ?>
                         </select>
+                        <?php if ($super_admin_exists): ?>
+                            <p style="font-size: 0.7rem; color: #666; mt-1">Note: Only one Super Admin is allowed.</p>
+                        <?php endif; ?>
                     </div>
-                    <button type="submit" name="add_admin" class="btn btn-primary" style="width: 100%;">Create
+                    <button type="submit" name="add_admin_action" class="btn btn-primary" style="width: 100%;">Create
                         Account</button>
                 </form>
             </div>
@@ -212,9 +249,7 @@ $admins = $stmt->fetchAll();
                     <tbody>
                         <?php foreach ($admins as $admin): ?>
                             <tr>
-                                <td style="font-weight: 600;">
-                                    <?php echo htmlspecialchars($admin['username']); ?>
-                                </td>
+                                <td style="font-weight: 600;"><?php echo htmlspecialchars($admin['username']); ?></td>
                                 <td>
                                     <span
                                         class="badge <?php echo $admin['role'] === 'super_admin' ? 'badge-super' : 'badge-admin'; ?>">
@@ -223,9 +258,13 @@ $admins = $stmt->fetchAll();
                                 </td>
                                 <td>
                                     <?php if ($admin['id'] != $_SESSION['admin_id']): ?>
-                                        <a href="?delete=<?php echo $admin['id']; ?>"
-                                            onclick="return confirm('Are you sure you want to remove this administrator?')"
-                                            style="color: #f44336; text-decoration: none; font-size: 0.8rem;">Delete</a>
+                                        <?php if ($admin['role'] !== 'super_admin'): ?>
+                                            <a href="?delete=<?php echo $admin['id']; ?>"
+                                                onclick="return confirm('Are you sure you want to remove this administrator?')"
+                                                style="color: #f44336; text-decoration: none; font-size: 0.8rem;">Delete</a>
+                                        <?php else: ?>
+                                            <span style="color: #444; font-size: 0.8rem;">Protected</span>
+                                        <?php endif; ?>
                                     <?php else: ?>
                                         <span style="color: #666; font-size: 0.8rem;">Its You</span>
                                     <?php endif; ?>
@@ -237,6 +276,20 @@ $admins = $stmt->fetchAll();
             </div>
         </div>
     </div>
+
+    <script>
+        function togglePass() {
+            const passInput = document.getElementById('admin_password');
+            const toggleBtn = event.target;
+            if (passInput.type === 'password') {
+                passInput.type = 'text';
+                toggleBtn.textContent = 'Hide';
+            } else {
+                passInput.type = 'password';
+                toggleBtn.textContent = 'Show';
+            }
+        }
+    </script>
 </body>
 
 </html>
