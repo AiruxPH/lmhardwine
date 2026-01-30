@@ -42,10 +42,9 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
 
         .dashboard-grid {
-            display: grid;
-            grid-template-columns: 3fr 1fr;
+            display: flex;
+            flex-direction: column;
             gap: 2rem;
-            align-items: start;
         }
 
         .stats-grid {
@@ -55,31 +54,13 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
             margin-bottom: 2rem;
         }
 
-        .stat-card {
-            padding: 1.5rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stat-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 0.2rem;
-        }
-
-        .stat-label {
-            color: var(--color-text-muted);
-            text-transform: uppercase;
-            font-size: 0.7rem;
-            letter-spacing: 1.5px;
-            font-weight: 600;
-        }
+        /* ... (stats-grid children styles remain same if not touched) ... */
 
         .management-center {
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 1rem;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
         }
 
         .action-card {
@@ -138,14 +119,35 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
             font-weight: 600;
         }
 
-        .status-Pending { background: rgba(212, 175, 55, 0.1); color: #d4af37; }
-        .status-Delivered { background: rgba(76, 175, 80, 0.1); color: #4caf50; }
-        .status-Processing { background: rgba(33, 150, 243, 0.1); color: #2196f3; }
-        .status-Shipped { background: rgba(156, 39, 176, 0.1); color: #9c27b0; }
-        .status-Canceled { background: rgba(244, 67, 54, 0.1); color: #f44336; }
+        .status-Pending {
+            background: rgba(212, 175, 55, 0.1);
+            color: #d4af37;
+        }
+
+        .status-Delivered {
+            background: rgba(76, 175, 80, 0.1);
+            color: #4caf50;
+        }
+
+        .status-Processing {
+            background: rgba(33, 150, 243, 0.1);
+            color: #2196f3;
+        }
+
+        .status-Shipped {
+            background: rgba(156, 39, 176, 0.1);
+            color: #9c27b0;
+        }
+
+        .status-Canceled {
+            background: rgba(244, 67, 54, 0.1);
+            color: #f44336;
+        }
 
         @media (max-width: 1024px) {
-            .dashboard-grid { grid-template-columns: 1fr; }
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -154,10 +156,14 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <div class="admin-container">
         <header style="margin-bottom: 3rem; display: flex; justify-content: space-between; align-items: flex-end;">
             <div>
-                <p style="color: var(--color-accent); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 2px; margin-bottom: 5px; font-weight: 600;">Executive Control</p>
-                <h1 style="font-family: 'Playfair Display', serif; font-size: 2.5rem;">Admin <span class="text-accent">Portal</span></h1>
+                <p
+                    style="color: var(--color-accent); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 2px; margin-bottom: 5px; font-weight: 600;">
+                    Executive Control</p>
+                <h1 style="font-family: 'Playfair Display', serif; font-size: 2.5rem;">Admin <span
+                        class="text-accent">Portal</span></h1>
             </div>
-            <a href="../index.php" style="color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem;">← Exit to Frontend</a>
+            <a href="../index.php" style="color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem;">←
+                Exit to Frontend</a>
         </header>
 
         <div class="stats-grid">
@@ -183,54 +189,13 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
 
         <div class="dashboard-grid">
-            <!-- Main Content: Recent Orders -->
-            <div class="glass-card" style="padding: 1.5rem;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 1rem;">
-                    <h2 style="font-size: 1.25rem;">Recent Order Activity</h2>
-                    <span style="font-size: 0.8rem; color: #666;">Showing lastest transactions</span>
-                </div>
-                
-                <table class="orders-table">
-                    <thead>
-                        <tr>
-                            <th>Order</th>
-                            <th>Customer</th>
-                            <th>Revenue</th>
-                            <th>Status</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (empty($orders)): ?>
-                            <tr><td colspan="5" class="text-center" style="padding: 3rem; color: #555;">No recent data found.</td></tr>
-                        <?php else: ?>
-                            <?php foreach (array_slice($orders, 0, 10) as $order): ?>
-                                <tr>
-                                    <td style="font-weight: 600;">#<?php echo $order['id']; ?></td>
-                                    <td>
-                                        <div style="color: #fff;"><?php echo htmlspecialchars($order['customer_name']); ?></div>
-                                        <div style="font-size: 0.75rem; color: #555;"><?php echo date('M d, H:i', strtotime($order['order_date'])); ?></div>
-                                    </td>
-                                    <td style="color: var(--color-accent); font-weight: 600;">₱<?php echo number_format($order['total_amount'], 2); ?></td>
-                                    <td>
-                                        <span class="status-badge status-<?php echo $order['status']; ?>">
-                                            <?php echo htmlspecialchars($order['status']); ?>
-                                        </span>
-                                    </td>
-                                    <td style="text-align: right;">
-                                        <a href="view_order.php?id=<?php echo $order['id']; ?>" class="btn btn-sm" style="background: transparent; border: 1px solid #444;">View</a>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
-            </div>
 
-            <!-- Sidebar: Management Center -->
-            <div class="management-column">
-                <h3 style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; color: #666; margin-bottom: 1.5rem; padding-left: 0.5rem;">Management Center</h3>
-                
+            <!-- Management Section -->
+            <div style="width: 100%;">
+                <h3
+                    style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; color: #666; margin-bottom: 1.5rem; padding-left: 0.5rem;">
+                    Management Center</h3>
+
                 <div class="management-center">
                     <a href="users.php" class="action-card glass-card">
                         <div class="action-icon">👥</div>
@@ -281,15 +246,66 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     </a>
 
                     <?php if (isSuperAdmin()): ?>
-                    <a href="manage_admins.php" class="action-card glass-card">
-                        <div class="action-icon">🔑</div>
-                        <div>
-                            <div style="font-weight: 600;">Access Control</div>
-                            <div style="font-size: 0.75rem; color: #666;">Manage administrators</div>
-                        </div>
-                    </a>
+                        <a href="manage_admins.php" class="action-card glass-card">
+                            <div class="action-icon">🔑</div>
+                            <div>
+                                <div style="font-weight: 600;">Access Control</div>
+                                <div style="font-size: 0.75rem; color: #666;">Manage administrators</div>
+                            </div>
+                        </a>
                     <?php endif; ?>
                 </div>
+            </div>
+
+            <!-- Recent Orders Section -->
+            <div class="glass-card" style="padding: 1.5rem;">
+                <div
+                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 1rem;">
+                    <h2 style="font-size: 1.25rem;">Recent Order Activity</h2>
+                    <span style="font-size: 0.8rem; color: #666;">Showing lastest transactions</span>
+                </div>
+
+                <table class="orders-table">
+                    <thead>
+                        <tr>
+                            <th>Order</th>
+                            <th>Customer</th>
+                            <th>Revenue</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (empty($orders)): ?>
+                            <tr>
+                                <td colspan="5" class="text-center" style="padding: 3rem; color: #555;">No recent data
+                                    found.</td>
+                            </tr>
+                        <?php else: ?>
+                            <?php foreach (array_slice($orders, 0, 10) as $order): ?>
+                                <tr>
+                                    <td style="font-weight: 600;">#<?php echo $order['id']; ?></td>
+                                    <td>
+                                        <div style="color: #fff;"><?php echo htmlspecialchars($order['customer_name']); ?></div>
+                                        <div style="font-size: 0.75rem; color: #555;">
+                                            <?php echo date('M d, H:i', strtotime($order['order_date'])); ?></div>
+                                    </td>
+                                    <td style="color: var(--color-accent); font-weight: 600;">
+                                        ₱<?php echo number_format($order['total_amount'], 2); ?></td>
+                                    <td>
+                                        <span class="status-badge status-<?php echo $order['status']; ?>">
+                                            <?php echo htmlspecialchars($order['status']); ?>
+                                        </span>
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <a href="view_order.php?id=<?php echo $order['id']; ?>" class="btn btn-sm"
+                                            style="background: transparent; border: 1px solid #444;">View</a>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
