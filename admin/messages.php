@@ -14,10 +14,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
     if ($msg_id && $to_email && $reply_body) {
         $subject = "Re: " . $original_subject;
+        
+        // Formal Email Template
+        $formatted_body = "Dear Customer,\n\n";
+        $formatted_body .= $reply_body . "\n\n";
+        $formatted_body .= "Best regards,\n";
+        $formatted_body .= "The LM Hard Wine Team\n";
+        $formatted_body .= "https://lmhardwine.ccsblock2.com\n";
+        $formatted_body .= "--------------------------------------------------\n";
+        $formatted_body .= "Original Message:\n> " . $original_subject;
+
         $headers = "From: info@lmhardwine.com\r\n";
         $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
 
-        if (mail($to_email, $subject, $reply_body, $headers)) {
+        if (mail($to_email, $subject, $formatted_body, $headers)) {
             // Update status to 'replied'
             $stmt = $pdo->prepare("UPDATE contact_messages SET status = 'replied' WHERE id = ?");
             $stmt->execute([$msg_id]);
@@ -230,7 +240,7 @@ $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <tr><td colspan="5" style="text-align: center; padding: 3rem; color: #666;">No messages found.</td></tr>
                     <?php else: ?>
                         <?php foreach ($messages as $msg): ?>
-                            <tr onclick='openMessage(<?php echo json_encode($msg); ?>)'>
+                            <tr onclick='openMessage(<?php echo htmlspecialchars(json_encode($msg), ENT_QUOTES, 'UTF-8'); ?>)'>
                                 <td style="text-align: center;">
                                     <span class="msg-status status-<?php echo $msg['status'] ?? 'new'; ?>" title="<?php echo ucfirst($msg['status'] ?? 'new'); ?>"></span>
                                 </td>
