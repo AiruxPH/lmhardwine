@@ -117,8 +117,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <form method="POST" enctype="multipart/form-data" class="glass-card">
             <div class="form-group">
-                <label>Name</label>
-                <input type="text" name="name" class="form-control" required>
+                <label>Name <span class="tooltip-icon"
+                        data-tooltip="The commercial name of the wine bottle.">?</span></label>
+                <input type="text" name="name" class="form-control" required placeholder="e.g. Reserve Cabernet"
+                    autocomplete="off">
             </div>
 
             <?php
@@ -127,7 +129,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $sellers = $stmt_sellers->fetchAll();
             ?>
             <div class="form-group">
-                <label>Assign to Seller (Optional)</label>
+                <label>Assign to Seller (Optional) <span class="tooltip-icon"
+                        data-tooltip="Assign this product to a specific seller's inventory. Leave blank for House/Admin product.">?</span></label>
                 <select name="seller_id" class="form-control">
                     <option value="">-- Admin (No specific seller) --</option>
                     <?php foreach ($sellers as $seller): ?>
@@ -135,44 +138,57 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </option>
                     <?php endforeach; ?>
                 </select>
-                <small style="color: #888;">Select a seller to add this product to their inventory.</small>
             </div>
-            <div class="form-group">
-                <label>Type</label>
-                <select name="type" class="form-control">
-                    <option value="Red">Red</option>
-                    <option value="White">White</option>
-                    <option value="Rose">Rose</option>
-                </select>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                <div class="form-group">
+                    <label>Type <span class="tooltip-icon"
+                            data-tooltip="General classification: Red, White, or Rose.">?</span></label>
+                    <select name="type" class="form-control">
+                        <option value="Red">Red</option>
+                        <option value="White">White</option>
+                        <option value="Rose">Rose</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Varietal <span class="tooltip-icon"
+                            data-tooltip="The specific grape variety, e.g., Merlot, Chardonnay.">?</span></label>
+                    <input type="text" name="varietal" class="form-control" placeholder="e.g. Cabernet Sauvignon"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label>Price (₱) <span class="tooltip-icon"
+                            data-tooltip="Selling price per bottle in PHP.">?</span></label>
+                    <input type="number" step="0.01" name="price" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Stock Quantity <span class="tooltip-icon"
+                            data-tooltip="Number of bottles currently available in inventory.">?</span></label>
+                    <input type="number" name="stock_qty" class="form-control" value="10" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label>Vintage Year <span class="tooltip-icon"
+                            data-tooltip="The year the grapes were harvested.">?</span></label>
+                    <input type="number" name="year" class="form-control" value="2024" required>
+                </div>
             </div>
+
             <div class="form-group">
-                <label>Varietal</label>
-                <input type="text" name="varietal" class="form-control" placeholder="e.g. Cabernet Sauvignon" required>
-            </div>
-            <div class="form-group">
-                <label>Price (₱)</label>
-                <input type="number" step="0.01" name="price" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label>Stock Quantity</label>
-                <input type="number" name="stock_qty" class="form-control" value="10" min="0" required>
-            </div>
-            <div class="form-group">
-                <label>Vintage Year</label>
-                <input type="number" name="year" class="form-control" value="2024" required>
-            </div>
-            <div class="form-group">
-                <label>Description</label>
+                <label>Description <span class="tooltip-icon"
+                        data-tooltip="Tasting notes, origin details, and pairing suggestions.">?</span></label>
                 <textarea name="description" class="form-control" rows="4"></textarea>
             </div>
             <div class="form-group">
-                <label>Product Image</label>
+                <label>Product Image <span class="tooltip-icon"
+                        data-tooltip="High-quality photo of the bottle.">?</span></label>
                 <div class="file-upload-wrapper" style="text-align: center;">
                     <img id="image-preview" src="#" alt="Preview"
-                        style="display: none; max-width: 100%; max-height: 200px; margin-bottom: 1rem; border-radius: 4px; border: 1px solid #444;">
+                        style="display: none; max-width: 100%; max-height: 300px; margin-bottom: 1rem; border-radius: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
 
-                    <div class="file-upload-icon">📷</div>
-                    <span id="file-label">Click or Drag Image Here</span>
+                    <div id="upload-content">
+                        <div class="file-upload-icon">📷</div>
+                        <span id="file-label">Click or Drag Image Here</span>
+                    </div>
                     <input type="file" name="product_image" accept="image/*" onchange="previewImage(this)">
                 </div>
             </div>
@@ -183,7 +199,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <script>
         function previewImage(input) {
             var preview = document.getElementById('image-preview');
-            var label = document.getElementById('file-label');
+            var uploadContent = document.getElementById('upload-content');
 
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
@@ -191,10 +207,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 reader.onload = function (e) {
                     preview.src = e.target.result;
                     preview.style.display = 'inline-block';
+                    uploadContent.style.display = 'none'; // Hide text/icon
                 }
 
                 reader.readAsDataURL(input.files[0]);
-                label.textContent = input.files[0].name;
             }
         }
     </script>

@@ -129,14 +129,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <form method="POST" enctype="multipart/form-data" class="glass-card">
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
                 <div class="form-group">
-                    <label>Name</label>
+                    <label>Name <span class="tooltip-icon"
+                            data-tooltip="The commercial name of the wine bottle.">?</span></label>
                     <input type="text" name="name" id="product_name" class="form-control" required autocomplete="off">
                     <small id="name-warning" style="display:none; color: #ffc107; margin-top: 5px;">
                         ⚠️ Warning: A product with this name already exists.
                     </small>
                 </div>
                 <div class="form-group">
-                    <label>Type</label>
+                    <label>Type <span class="tooltip-icon"
+                            data-tooltip="General classification: Red, White, or Rose.">?</span></label>
                     <select name="type" class="form-control">
                         <option value="Red">Red</option>
                         <option value="White">White</option>
@@ -144,36 +146,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Varietal</label>
+                    <label>Varietal <span class="tooltip-icon"
+                            data-tooltip="The specific grape variety, e.g., Merlot, Chardonnay.">?</span></label>
                     <input type="text" name="varietal" class="form-control" placeholder="e.g. Cabernet Sauvignon"
                         required>
                 </div>
                 <div class="form-group">
-                    <label>Price (₱)</label>
+                    <label>Price (₱) <span class="tooltip-icon"
+                            data-tooltip="Selling price per bottle in PHP.">?</span></label>
                     <input type="number" step="0.01" name="price" class="form-control" required>
                 </div>
                 <div class="form-group">
-                    <label>Stock Quantity</label>
+                    <label>Stock Quantity <span class="tooltip-icon"
+                            data-tooltip="Number of bottles currently available in inventory.">?</span></label>
                     <input type="number" name="stock_qty" class="form-control" value="10" min="0" required>
                 </div>
                 <div class="form-group">
-                    <label>Vintage Year</label>
+                    <label>Vintage Year <span class="tooltip-icon"
+                            data-tooltip="The year the grapes were harvested.">?</span></label>
                     <input type="number" name="year" class="form-control" value="<?php echo date('Y'); ?>" required>
                 </div>
             </div>
 
             <div class="form-group" style="margin-top: 1.5rem;">
-                <label>Description</label>
+                <label>Description <span class="tooltip-icon"
+                        data-tooltip="Tasting notes, origin details, and pairing suggestions.">?</span></label>
                 <textarea name="description" class="form-control" rows="4"></textarea>
             </div>
 
             <div class="form-group">
-                <label>Product Image</label>
+                <label>Product Image <span class="tooltip-icon"
+                        data-tooltip="High-quality photo of the bottle.">?</span></label>
                 <div class="file-upload-wrapper" style="text-align: center;">
                     <img id="image-preview" src="#" alt="Preview"
-                        style="display: none; max-width: 100%; max-height: 200px; margin-bottom: 1rem; border-radius: 4px; border: 1px solid #444;">
-                    <div class="file-upload-icon">📷</div>
-                    <span id="file-label">Click or Drag Image Here</span>
+                        style="display: none; max-width: 100%; max-height: 300px; margin-bottom: 1rem; border-radius: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+
+                    <div id="upload-content">
+                        <div class="file-upload-icon">📷</div>
+                        <span id="file-label">Click or Drag Image Here</span>
+                    </div>
                     <input type="file" name="product_image" accept="image/*" onchange="previewImage(this)">
                 </div>
             </div>
@@ -185,7 +196,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <script>
     function previewImage(input) {
         var preview = document.getElementById('image-preview');
-        var label = document.getElementById('file-label');
+        var uploadContent = document.getElementById('upload-content');
 
         if (input.files && input.files[0]) {
             var reader = new FileReader();
@@ -193,10 +204,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             reader.onload = function (e) {
                 preview.src = e.target.result;
                 preview.style.display = 'inline-block';
+                uploadContent.style.display = 'none'; // Hide text/icon
             }
 
             reader.readAsDataURL(input.files[0]);
-            label.textContent = input.files[0].name;
         }
     }
 

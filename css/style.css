@@ -256,6 +256,66 @@ img {
     transform: translateY(0) !important;
 }
 
+/* Custom File Input */
+.file-upload-wrapper {
+    position: relative;
+    width: 100%;
+    min-height: 150px;
+    height: auto;
+    padding: 1rem;
+    border: 2px dashed rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-muted);
+    transition: var(--transition-fast);
+    cursor: pointer;
+}
+
+/* Tooltip Styles */
+.tooltip-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border-radius: 50%;
+    font-size: 11px;
+    margin-left: 8px;
+    cursor: help;
+    position: relative;
+}
+
+.tooltip-icon:hover {
+    background: var(--color-accent);
+    color: black;
+}
+
+.tooltip-icon:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 130%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(10, 10, 10, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    width: max-content;
+    max-width: 250px;
+    white-space: normal;
+    text-align: center;
+    z-index: 100;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+}
+
 /* Shopping Cart */
 .cart-overlay {
     position: fixed;
