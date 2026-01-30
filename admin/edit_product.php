@@ -78,6 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 ?>
+            <?php
             $stmt_sellers = $pdo->query("SELECT u.id, sp.brand_name FROM users u JOIN seller_profiles sp ON u.id = sp.user_id WHERE u.role = 'seller' ORDER BY sp.brand_name");
             $sellers = $stmt_sellers->fetchAll();
             ?>
