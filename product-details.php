@@ -55,27 +55,31 @@ if (!$product) {
 
             <!-- Visual Side -->
             <div class="glass-card animate-on-scroll" style="padding: 0; overflow: hidden; ">
-                <div
-                    style="height: 500px; background: #1a1a1a; display: flex; align-items: center; justify-content: center; position: relative;">
+                <div class="product-img-container" style="height: 500px;">
 
-                    <?php 
-                        $img_src = '';
-                        $is_default = false;
-                        if (!empty($product['image_path'])) {
-                            $img_src = (strpos($product['image_path'], 'uploads/') === 0) ? $product['image_path'] : 'uploads/' . $product['image_path'];
-                        } else {
-                            $is_default = true;
-                            $type = strtolower($product['type']);
-                            if (strpos($type, 'red') !== false) $img_src = 'assets/images/defaults/red_default.png';
-                            elseif (strpos($type, 'white') !== false) $img_src = 'assets/images/defaults/white_default.png';
-                            elseif (strpos($type, 'rose') !== false) $img_src = 'assets/images/defaults/rose_default.png';
-                            elseif (strpos($type, 'sparkling') !== false) $img_src = 'assets/images/defaults/sparkling_default.png';
-                            else $img_src = 'assets/images/defaults/red_default.png';
-                        }
+                    <?php
+                    $img_src = '';
+                    $is_default = false;
+                    if (!empty($product['image_path'])) {
+                        $img_src = (strpos($product['image_path'], 'uploads/') === 0) ? $product['image_path'] : 'uploads/' . $product['image_path'];
+                    } else {
+                        $is_default = true;
+                        $type = strtolower($product['type']);
+                        if (strpos($type, 'red') !== false)
+                            $img_src = 'assets/images/defaults/red_default.png';
+                        elseif (strpos($type, 'white') !== false)
+                            $img_src = 'assets/images/defaults/white_default.png';
+                        elseif (strpos($type, 'rose') !== false)
+                            $img_src = 'assets/images/defaults/rose_default.png';
+                        elseif (strpos($type, 'sparkling') !== false)
+                            $img_src = 'assets/images/defaults/sparkling_default.png';
+                        else
+                            $img_src = 'assets/images/defaults/red_default.png';
+                    }
                     ?>
                     <img src="<?php echo htmlspecialchars($img_src); ?>"
-                         alt="<?php echo htmlspecialchars($product['name']); ?>"
-                         style="width: 100%; height: 100%; object-fit: cover;">
+                        alt="<?php echo htmlspecialchars($product['name']); ?>"
+                        style="width: 100%; height: 100%; object-fit: cover;">
                     <?php if ($is_default): ?>
                         <div class="default-badge">House Placeholder Image</div>
                     <?php endif; ?>
