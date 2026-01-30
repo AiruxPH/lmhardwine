@@ -279,6 +279,16 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <div style="font-size: 0.75rem; color: #666;">View & search raw tables</div>
                         </div>
                     </a>
+
+                    <?php if (isSuperAdmin()): ?>
+                    <a href="manage_admins.php" class="action-card glass-card">
+                        <div class="action-icon">🔑</div>
+                        <div>
+                            <div style="font-weight: 600;">Access Control</div>
+                            <div style="font-size: 0.75rem; color: #666;">Manage administrators</div>
+                        </div>
+                    </a>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

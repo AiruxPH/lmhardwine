@@ -36,6 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($admin && password_verify($password, $admin['password_hash'])) {
             $_SESSION['admin_logged_in'] = true;
             $_SESSION['admin_id'] = $admin['id'];
+            $_SESSION['admin_role'] = $admin['role'] ?? 'admin'; // Fetch role
             $_SESSION['user_type'] = 'admin'; // Unified identifier
             $_SESSION['username'] = $admin['username'];
 
