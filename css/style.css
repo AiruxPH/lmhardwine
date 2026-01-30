@@ -365,6 +365,11 @@ img {
     transition: var(--transition-fast);
 }
 
+/* Mobile Nav Visibility Helpers */
+.mobile-only-nav {
+    display: none;
+}
+
 /* Mobile Responsive Utilities */
 @media (max-width: 768px) {
     .container {
