@@ -297,7 +297,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <body>
 
-    <?php include 'includes/header.php'; ?>
+
 
     <div class="dashboard-container">
 

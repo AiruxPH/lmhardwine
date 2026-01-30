@@ -91,7 +91,7 @@ $order_count = $stmt->fetch()['count'];
 
 <body>
 
-    <?php include 'includes/header.php'; ?>
+
 
     <div class="dashboard-container">
         <div class="welcome-banner">
