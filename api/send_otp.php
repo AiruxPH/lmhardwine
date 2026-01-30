@@ -36,7 +36,8 @@ try {
 
     // 4. Send Email
     $subject = "Password Reset Code - LM Hard Wine";
-    $message = "Your verification code is: " . $otp . "\n\nThis code expires in 1 minute.";
+    $message = "Your verification code is: " . $otp . "\n\nThis code expires in 2 minutes.\n\n";
+    $message .= "DISCLAIMER: If you did not request this code, please ignore this email. Someone may have entered your email address by mistake.";
     $headers = "From: noreply@lmhardwine.com";
 
     // Attempt to send (might fail on local, so we ignore result for demo and return OTP in debug)
