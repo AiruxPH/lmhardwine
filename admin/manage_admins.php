@@ -39,7 +39,7 @@ if (isset($_POST['add_admin_action'])) {
     }
 }
 
-// Handle Delete Admin
+// Handle Archive Admin (Soft Delete)
 if (isset($_GET['delete'])) {
     $id = (int) $_GET['delete'];
 
@@ -49,22 +49,23 @@ if (isset($_GET['delete'])) {
     $target_role = $stmt->fetchColumn();
 
     if ($id == $_SESSION['admin_id']) {
-        $error = "You cannot delete your own account.";
+        $error = "You cannot archive your own account.";
     } elseif ($target_role === 'super_admin') {
-        $error = "The Super Admin account cannot be deleted.";
+        $error = "The Super Admin account cannot be archived.";
     } else {
         try {
-            $stmt = $pdo->prepare("DELETE FROM admins WHERE id = ?");
+            // Soft Delete: Set is_deleted = 1
+            $stmt = $pdo->prepare("UPDATE admins SET is_deleted = 1 WHERE id = ?");
             $stmt->execute([$id]);
-            $message = "Admin account deleted successfully.";
+            $message = "Admin account archived successfully.";
         } catch (PDOException $e) {
-            $error = "Failed to delete account: " . $e->getMessage();
+            $error = "Failed to archive account: " . $e->getMessage();
         }
     }
 }
 
-// Fetch all admins
-$stmt = $pdo->query("SELECT id, username, role FROM admins ORDER BY id ASC");
+// Fetch all active admins
+$stmt = $pdo->query("SELECT id, username, role FROM admins WHERE is_deleted = 0 ORDER BY id ASC");
 $admins = $stmt->fetchAll();
 ?>
 <!DOCTYPE html>
@@ -260,8 +261,8 @@ $admins = $stmt->fetchAll();
                                     <?php if ($admin['id'] != $_SESSION['admin_id']): ?>
                                         <?php if ($admin['role'] !== 'super_admin'): ?>
                                             <a href="?delete=<?php echo $admin['id']; ?>"
-                                                onclick="return confirm('Are you sure you want to remove this administrator?')"
-                                                style="color: #f44336; text-decoration: none; font-size: 0.8rem;">Delete</a>
+                                                onclick="return confirm('Are you sure you want to archive this administrator?')"
+                                                style="color: #ff9800; text-decoration: none; font-size: 0.8rem;">Archive</a>
                                         <?php else: ?>
                                             <span style="color: #444; font-size: 0.8rem;">Protected</span>
                                         <?php endif; ?>

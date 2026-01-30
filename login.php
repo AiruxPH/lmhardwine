@@ -28,7 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $error = "Please enter both username and password.";
     } else {
         // 1. Check Admins Table First (Secure Hash - Legacy/Standard)
-        $stmt = $pdo->prepare("SELECT * FROM admins WHERE username = ?");
+        // Added is_deleted = 0 check
+        $stmt = $pdo->prepare("SELECT * FROM admins WHERE username = ? AND is_deleted = 0");
         $stmt->execute([$username]);
         $admin = $stmt->fetch();
 
@@ -46,7 +47,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // 2. Check Users Table (Sellers/Customers) - Plain Text as requested
         // Plain Text Passwords are for demonstration purposes only.
-        $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ? OR email = ?");
+        // Added is_deleted = 0 check
+        $stmt = $pdo->prepare("SELECT * FROM users WHERE (username = ? OR email = ?) AND is_deleted = 0");
         $stmt->execute([$username, $username]);
         $user = $stmt->fetch();
 

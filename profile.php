@@ -60,6 +60,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
+// Handle Account Deletion
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete_account') {
+    try {
+        $stmt = $pdo->prepare("UPDATE users SET is_deleted = 1 WHERE id = ?");
+        $stmt->execute([$user_id]);
+
+        // Destroy session and redirect
+        session_destroy();
+        header('Location: index.php');
+        exit();
+    } catch (PDOException $e) {
+        $error = "Failed to delete account: " . $e->getMessage();
+    }
+}
+
 // Fetch Current User Data
 try {
     $stmt = $pdo->prepare("
@@ -215,12 +230,23 @@ try {
                 </div>
 
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 2rem;">
-                    <button type="button" class="btn" onclick="openPasswordModal()"
-                        style="background: rgba(255, 255, 255, 0.05); color: white; border: 1px solid rgba(255,255,255,0.1);">Change
-                        Password</button>
+                    <div>
+                        <button type="button" class="btn" onclick="openPasswordModal()"
+                            style="background: rgba(255, 255, 255, 0.05); color: white; border: 1px solid rgba(255,255,255,0.1); margin-right: 10px;">Change
+                            Password</button>
+                        <button type="button" class="btn" onclick="confirmDelete()"
+                            style="background: rgba(244, 67, 54, 0.1); color: #f44336; border: 1px solid rgba(244, 67, 54, 0.3);">
+                            Delete Account
+                        </button>
+                    </div>
                     <button type="submit" class="btn btn-primary">Save Changes</button>
                 </div>
             </form>
+
+            <form id="delete-form" method="POST" style="display: none;">
+                <input type="hidden" name="action" value="delete_account">
+            </form>
+
         </div>
     </div>
 
