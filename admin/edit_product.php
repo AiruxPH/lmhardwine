@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Product - Admin</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/style.css?v=1.4">
     <style>
         .admin-container {
             max-width: 600px;
@@ -110,12 +110,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         .current-img-preview {
-            width: 100px;
-            height: 100px;
+            max-width: 100%;
+            max-height: 200px;
             object-fit: cover;
             border-radius: 4px;
             border: 1px solid #333;
-            margin-bottom: 0.5rem;
+            margin-bottom: 1rem;
             display: block;
         }
     </style>
@@ -141,7 +141,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <form method="POST" enctype="multipart/form-data" class="glass-card">
             <div class="form-group">
-                <label>Name</label>
+                <label>Name <span class="tooltip-icon"
+                        data-tooltip="The commercial name of the wine bottle.">?</span></label>
                 <input type="text" name="name" class="form-control"
                     value="<?php echo htmlspecialchars($product['name']); ?>" required>
             </div>
@@ -152,7 +153,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $sellers = $stmt_sellers->fetchAll();
             ?>
             <div class="form-group">
-                <label>Assign to Seller (Optional)</label>
+                <label>Assign to Seller (Optional) <span class="tooltip-icon"
+                        data-tooltip="Assign this product to a specific seller's inventory. Leave blank for House/Admin product.">?</span></label>
                 <select name="seller_id" class="form-control">
                     <option value="">-- Admin (No specific seller) --</option>
                     <?php foreach ($sellers as $seller): ?>
@@ -163,56 +165,63 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </select>
             </div>
 
-            <div class="form-group">
-                <label>Type</label>
-                <select name="type" class="form-control">
-                    <option value="Red" <?php echo $product['type'] == 'Red' ? 'selected' : ''; ?>>Red</option>
-                    <option value="White" <?php echo $product['type'] == 'White' ? 'selected' : ''; ?>>White</option>
-                    <option value="Rose" <?php echo $product['type'] == 'Rose' ? 'selected' : ''; ?>>Rose</option>
-                </select>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                <div class="form-group">
+                    <label>Type <span class="tooltip-icon"
+                            data-tooltip="General classification: Red, White, or Rose.">?</span></label>
+                    <select name="type" class="form-control">
+                        <option value="Red" <?php echo $product['type'] == 'Red' ? 'selected' : ''; ?>>Red</option>
+                        <option value="White" <?php echo $product['type'] == 'White' ? 'selected' : ''; ?>>White</option>
+                        <option value="Rose" <?php echo $product['type'] == 'Rose' ? 'selected' : ''; ?>>Rose</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Varietal <span class="tooltip-icon"
+                            data-tooltip="The specific grape variety, e.g., Merlot, Chardonnay.">?</span></label>
+                    <input type="text" name="varietal" class="form-control"
+                        value="<?php echo htmlspecialchars($product['varietal']); ?>" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Price (₱) <span class="tooltip-icon"
+                            data-tooltip="Selling price per bottle in PHP.">?</span></label>
+                    <input type="number" step="0.01" name="price" class="form-control"
+                        value="<?php echo $product['price']; ?>" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Stock Quantity <span class="tooltip-icon"
+                            data-tooltip="Number of bottles currently available in inventory.">?</span></label>
+                    <input type="number" name="stock_qty" class="form-control"
+                        value="<?php echo $product['stock_qty']; ?>" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Vintage Year <span class="tooltip-icon"
+                            data-tooltip="The year the grapes were harvested.">?</span></label>
+                    <input type="number" name="year" class="form-control"
+                        value="<?php echo $product['vintage_year']; ?>" required>
+                </div>
             </div>
 
             <div class="form-group">
-                <label>Varietal</label>
-                <input type="text" name="varietal" class="form-control"
-                    value="<?php echo htmlspecialchars($product['varietal']); ?>" required>
-            </div>
-
-            <div class="form-group">
-                <label>Price (₱)</label>
-                <input type="number" step="0.01" name="price" class="form-control"
-                    value="<?php echo $product['price']; ?>" required>
-            </div>
-
-            <div class="form-group">
-                <label>Stock Quantity</label>
-                <input type="number" name="stock_qty" class="form-control" value="<?php echo $product['stock_qty']; ?>"
-                    required>
-            </div>
-
-            <div class="form-group">
-                <label>Vintage Year</label>
-                <input type="number" name="year" class="form-control" value="<?php echo $product['vintage_year']; ?>"
-                    required>
-            </div>
-
-            <div class="form-group">
-                <label>Description</label>
+                <label>Description <span class="tooltip-icon"
+                        data-tooltip="Tasting notes, origin details, and pairing suggestions.">?</span></label>
                 <textarea name="description" class="form-control"
                     rows="4"><?php echo htmlspecialchars($product['description']); ?></textarea>
             </div>
 
             <div class="form-group">
-                <label>Product Image</label>
-                <div style="text-align: center; margin-bottom: 1rem;">
+                <label>Product Image <span class="tooltip-icon"
+                        data-tooltip="Update the bottle photo. Leave empty to keep the current one.">?</span></label>
+                <div class="file-upload-wrapper" style="text-align: center;">
                     <?php
                     $img_src = '';
-                    $is_default = false;
                     if ($product['image_path']) {
                         $img = $product['image_path'];
                         $img_src = (strpos($img, 'uploads/') === 0) ? '../' . $img : '../uploads/' . $img;
                     } else {
-                        $is_default = true;
                         $type = strtolower($product['type']);
                         if (strpos($type, 'red') !== false)
                             $img_src = '../assets/images/defaults/red_default.png';
@@ -220,21 +229,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             $img_src = '../assets/images/defaults/white_default.png';
                         elseif (strpos($type, 'rose') !== false)
                             $img_src = '../assets/images/defaults/rose_default.png';
-                        elseif (strpos($type, 'sparkling') !== false)
-                            $img_src = '../assets/images/defaults/sparkling_default.png';
                         else
                             $img_src = '../assets/images/defaults/red_default.png';
                     }
                     ?>
-                    <div style="position: relative; display: inline-block;">
-                        <img id="image-preview" src="<?php echo htmlspecialchars($img_src); ?>"
-                            class="current-img-preview" style="display: inline-block;">
-                    </div>
-                </div>
+                    <img id="image-preview" src="<?php echo htmlspecialchars($img_src); ?>" class="current-img-preview"
+                        style="display: inline-block; margin: 0 auto 1rem;">
 
-                <div class="file-upload-wrapper">
-                    <div class="file-upload-icon">📷</div>
-                    <span id="file-label">Change Image (Optional)</span>
+                    <div id="upload-content">
+                        <div class="file-upload-icon">📷</div>
+                        <span id="file-label">Click or Drag to Change Image</span>
+                    </div>
                     <input type="file" name="product_image" accept="image/*" onchange="previewImage(this)">
                 </div>
             </div>
@@ -247,6 +252,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         function previewImage(input) {
             var preview = document.getElementById('image-preview');
             var label = document.getElementById('file-label');
+            var uploadContent = document.getElementById('upload-content');
 
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
@@ -254,6 +260,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 reader.onload = function (e) {
                     preview.src = e.target.result;
                     preview.style.display = 'inline-block';
+                    if (uploadContent) uploadContent.style.display = 'none';
                 }
 
                 reader.readAsDataURL(input.files[0]);

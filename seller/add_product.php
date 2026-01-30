@@ -68,7 +68,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 ?>
-<!DOCTYPE html>
 <?php include 'includes/header.php'; ?>
 <!-- Header includes HTML start, Head, Body start, and Navbar -->
 
@@ -229,6 +228,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 .catch(err => console.error('Error checking name:', err));
         }, 500); // 500ms delay
     });
-</script>
-
-</html>
+</body >
+</html >

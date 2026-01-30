@@ -23,7 +23,6 @@ $stmt = $pdo->prepare("SELECT * FROM products WHERE seller_id = ? AND is_deleted
 $stmt->execute([$user_id]);
 $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
-<!DOCTYPE html>
 <?php include 'includes/header.php'; ?>
 
 <style>

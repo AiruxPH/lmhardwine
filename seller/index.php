@@ -27,7 +27,6 @@ $stmt = $pdo->prepare("
 $stmt->execute([$user_id]);
 $order_count = $stmt->fetch()['count'];
 ?>
-<!DOCTYPE html>
 <?php include 'includes/header.php'; ?>
 
 <style>

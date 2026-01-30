@@ -32,7 +32,7 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - LM Hard Wine</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/style.css?v=1.4">
     <style>
         .admin-container {
             max-width: 1300px;
@@ -288,7 +288,8 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     <td>
                                         <div style="color: #fff;"><?php echo htmlspecialchars($order['customer_name']); ?></div>
                                         <div style="font-size: 0.75rem; color: #555;">
-                                            <?php echo date('M d, H:i', strtotime($order['order_date'])); ?></div>
+                                            <?php echo date('M d, H:i', strtotime($order['order_date'])); ?>
+                                        </div>
                                     </td>
                                     <td style="color: var(--color-accent); font-weight: 600;">
                                         ₱<?php echo number_format($order['total_amount'], 2); ?></td>

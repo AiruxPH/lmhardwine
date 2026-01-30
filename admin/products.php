@@ -22,6 +22,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventory Management | Admin Dashboard</title>
+    <link rel="stylesheet" href="../css/style.css?v=1.4">
     <style>
         :root {
             --glass-bg: rgba(255, 255, 255, 0.03);
