@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jan 30, 2026 at 11:27 AM
+-- Generation Time: Jan 30, 2026 at 11:35 AM
 -- Server version: 11.8.3-MariaDB-log
 -- PHP Version: 7.2.34
 
@@ -302,17 +302,18 @@ CREATE TABLE `users` (
   `role` enum('customer','seller') NOT NULL DEFAULT 'customer',
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `is_deleted` tinyint(1) DEFAULT 0
+  `is_deleted` tinyint(1) DEFAULT 0,
+  `deletion_requested` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `email`, `password_hash`, `role`, `created_at`, `updated_at`, `is_deleted`) VALUES
-(1, 'AiruxPH', 'randythegreat000@gmail.com', 'RandyBOY999999@@@', 'customer', '2026-01-25 05:44:20', '2026-01-25 08:18:01', 0),
-(2, 'Lyndy', 'lyndy@gmail.com', 'NDR0dSy8h5', 'seller', '2026-01-25 06:08:10', '2026-01-25 06:08:10', 0),
-(3, 'dog', 'john@gmail.com', 'lylyndymae2003@', 'customer', '2026-01-25 08:00:30', '2026-01-25 08:00:30', 0);
+INSERT INTO `users` (`id`, `username`, `email`, `password_hash`, `role`, `created_at`, `updated_at`, `is_deleted`, `deletion_requested`) VALUES
+(1, 'AiruxPH', 'randythegreat000@gmail.com', 'RandyBOY999999@@@', 'customer', '2026-01-25 05:44:20', '2026-01-25 08:18:01', 0, 0),
+(2, 'Lyndy', 'lyndy@gmail.com', 'NDR0dSy8h5', 'seller', '2026-01-25 06:08:10', '2026-01-25 06:08:10', 0, 0),
+(3, 'dog', 'john@gmail.com', 'lylyndymae2003@', 'customer', '2026-01-25 08:00:30', '2026-01-25 08:00:30', 0, 0);
 
 --
 -- Indexes for dumped tables

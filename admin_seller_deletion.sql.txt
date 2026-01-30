@@ -1,0 +1,2 @@
+-- Add deletion_requested column to users table
+ALTER TABLE users ADD COLUMN deletion_requested TINYINT(1) DEFAULT 0;
