@@ -69,35 +69,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 ?>
 <?php include 'includes/header.php'; ?>
-<!-- Header includes HTML start, Head, Body start, and Navbar -->
-
-<style>
-    body {
-        padding-top: 80px;
-    }
-
-    .admin-container {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 2rem;
-    }
-
-    .alert {
-        padding: 10px;
-        margin-bottom: 1rem;
-        border-radius: 4px;
-    }
-
-    .alert-success {
-        background: rgba(76, 175, 80, 0.2);
-        color: #4caf50;
-    }
-
-    .alert-error {
-        background: rgba(244, 67, 54, 0.2);
-        color: #f44336;
-    }
-</style>
 
 <div class="admin-container">
     <header style="margin-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem;">
@@ -181,7 +152,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Add Product</button>
     </form>
 </div>
-</body>
+
 <script>
     function previewImage(input) {
         var preview = document.getElementById('image-preview');
@@ -228,5 +199,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 .catch(err => console.error('Error checking name:', err));
         }, 500); // 500ms delay
     });
-</body >
-</html >
+</script>
+</body>
+
+</html>
