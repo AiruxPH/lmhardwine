@@ -111,6 +111,13 @@ $admins = $stmt->fetchAll();
             border-radius: 4px;
         }
 
+        /* Hide default browser password toggle */
+        input[type="password"]::-ms-reveal,
+        input[type="password"]::-ms-clear,
+        input[type="password"]::-webkit-password-reveal-button {
+            display: none;
+        }
+
         .pass-toggle {
             position: absolute;
             right: 10px;
@@ -217,7 +224,7 @@ $admins = $stmt->fetchAll();
                         <label>Password</label>
                         <input type="password" name="adm_pass_field" id="admin_password" class="form-control" required
                             placeholder="Minimum 8 characters" autocomplete="new-password">
-                        <span class="pass-toggle" onclick="togglePass()">Show</span>
+                        <span class="pass-toggle" onclick="togglePass()">👁️</span>
                     </div>
                     <div class="form-group">
                         <label>Role</label>
@@ -284,10 +291,10 @@ $admins = $stmt->fetchAll();
             const toggleBtn = event.target;
             if (passInput.type === 'password') {
                 passInput.type = 'text';
-                toggleBtn.textContent = 'Hide';
+                toggleBtn.textContent = '❌'; // Or use an eye-slash SVG/emoji if available
             } else {
                 passInput.type = 'password';
-                toggleBtn.textContent = 'Show';
+                toggleBtn.textContent = '👁️';
             }
         }
     </script>
