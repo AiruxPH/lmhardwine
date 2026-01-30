@@ -172,6 +172,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
         vertical-align: middle;
         margin-right: 10px;
     }
+
+    .order-layout-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 2rem;
+    }
+
+    @media (max-width: 768px) {
+        .order-layout-grid {
+            grid-template-columns: 1fr;
+        }
+    }
 </style>
 
 <body>
@@ -332,85 +344,88 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
             </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+        <div class="order-layout-grid">
             <div class="glass-card" style="margin-bottom: 0;">
                 <h3 style="margin-bottom: 1rem;">Items to Fulfill</h3>
-                <table class="items-table">
-                    <thead>
-                        <tr>
-                            <th>Product</th>
-                            <th>Price</th>
-                            <th>Quantity</th>
-                            <th>Subtotal</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($items as $item): ?>
+                <div class="table-responsive">
+                    <table class="items-table">
+                        <thead>
                             <tr>
-                                <td>
-                                    <?php
-                                    $img = $item['image_path'] ?? '';
-                                    $display_path = (strpos($img, 'uploads/') === 0) ? '../' . $img : '../uploads/' . $img;
-                                    ?>
-                                    <img src="<?php echo htmlspecialchars($display_path); ?>" class="product-thumb">
-                                    <?php echo htmlspecialchars($item['product_name']); ?>
-                                </td>
-                                <td>₱<?php echo number_format($item['price_at_purchase'], 2); ?></td>
-                                <td><?php echo $item['quantity']; ?></td>
-                                <td class="text-accent">
-                                    ₱<?php echo number_format($item['price_at_purchase'] * $item['quantity'], 2); ?></td>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Subtotal</th>
                             </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="3" style="text-align: right; font-weight: bold; padding-top: 1.5rem;">Your
-                                Share Total:</td>
-                            <td
-                                style="font-weight: bold; padding-top: 1.5rem; font-size: 1.2rem; color: var(--color-accent);">
-                                ₱<?php echo number_format($seller_total, 2); ?>
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($items as $item): ?>
+                                <tr>
+                                    <td>
+                                        <?php
+                                        $img = $item['image_path'] ?? '';
+                                        $display_path = (strpos($img, 'uploads/') === 0) ? '../' . $img : '../uploads/' . $img;
+                                        ?>
+                                        <img src="<?php echo htmlspecialchars($display_path); ?>" class="product-thumb">
+                                        <?php echo htmlspecialchars($item['product_name']); ?>
+                                    </td>
+                                    <td>₱<?php echo number_format($item['price_at_purchase'], 2); ?></td>
+                                    <td><?php echo $item['quantity']; ?></td>
+                                    <td class="text-accent">
+                                        ₱<?php echo number_format($item['price_at_purchase'] * $item['quantity'], 2); ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" style="text-align: right; font-weight: bold; padding-top: 1.5rem;">Your
+                                    Share Total:</td>
+                                <td
+                                    style="font-weight: bold; padding-top: 1.5rem; font-size: 1.2rem; color: var(--color-accent);">
+                                    ₱<?php echo number_format($seller_total, 2); ?>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
             </div>
 
-            <div class="glass-card">
-                <h3 style="margin-bottom: 1rem;">Order Timeline</h3>
-                <div style="position: relative; padding-left: 20px; border-left: 2px solid rgba(255,255,255,0.05);">
-                    <?php foreach ($history as $h): ?>
-                        <div style="position: relative; margin-bottom: 1.5rem;">
-                            <div
-                                style="position: absolute; left: -26px; top: 5px; width: 10px; height: 10px; border-radius: 50%; background: var(--color-accent); border: 2px solid #1a1a1a;">
-                            </div>
-                            <p
-                                style="margin: 0; font-size: 0.85rem; font-weight: bold; color: #fff; text-transform: uppercase;">
-                                <?php echo htmlspecialchars($h['status_to']); ?>
-                            </p>
-                            <p style="margin: 2px 0 5px 0; font-size: 0.7rem; color: #666;">
-                                <?php echo date('M d, Y - h:i A', strtotime($h['changed_at'])); ?>
-                            </p>
-                            <?php if (!empty($h['notes'])): ?>
+                <div class="glass-card">
+                    <h3 style="margin-bottom: 1rem;">Order Timeline</h3>
+                    <div style="position: relative; padding-left: 20px; border-left: 2px solid rgba(255,255,255,0.05);">
+                        <?php foreach ($history as $h): ?>
+                            <div style="position: relative; margin-bottom: 1.5rem;">
                                 <div
-                                    style="font-size: 0.8rem; color: #aaa; background: rgba(255,255,255,0.02); padding: 8px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.03);">
-                                    <?php echo nl2br(htmlspecialchars($h['notes'])); ?>
+                                    style="position: absolute; left: -26px; top: 5px; width: 10px; height: 10px; border-radius: 50%; background: var(--color-accent); border: 2px solid #1a1a1a;">
                                 </div>
-                            <?php endif; ?>
+                                <p
+                                    style="margin: 0; font-size: 0.85rem; font-weight: bold; color: #fff; text-transform: uppercase;">
+                                    <?php echo htmlspecialchars($h['status_to']); ?>
+                                </p>
+                                <p style="margin: 2px 0 5px 0; font-size: 0.7rem; color: #666;">
+                                    <?php echo date('M d, Y - h:i A', strtotime($h['changed_at'])); ?>
+                                </p>
+                                <?php if (!empty($h['notes'])): ?>
+                                    <div
+                                        style="font-size: 0.8rem; color: #aaa; background: rgba(255,255,255,0.02); padding: 8px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.03);">
+                                        <?php echo nl2br(htmlspecialchars($h['notes'])); ?>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        <?php endforeach; ?>
+                        <div style="position: relative;">
+                            <div
+                                style="position: absolute; left: -26px; top: 5px; width: 10px; height: 10px; border-radius: 50%; background: #444; border: 2px solid #1a1a1a;">
+                            </div>
+                            <p style="margin: 0; font-size: 0.85rem; color: #888; font-weight: bold;">ORDER PLACED</p>
+                            <p style="margin: 2px 0 0 0; font-size: 0.7rem; color: #555;">
+                                <?php echo date('M d, Y - h:i A', strtotime($order['order_date'])); ?>
+                            </p>
                         </div>
-                    <?php endforeach; ?>
-                    <div style="position: relative;">
-                        <div
-                            style="position: absolute; left: -26px; top: 5px; width: 10px; height: 10px; border-radius: 50%; background: #444; border: 2px solid #1a1a1a;">
-                        </div>
-                        <p style="margin: 0; font-size: 0.85rem; color: #888; font-weight: bold;">ORDER PLACED</p>
-                        <p style="margin: 2px 0 0 0; font-size: 0.7rem; color: #555;">
-                            <?php echo date('M d, Y - h:i A', strtotime($order['order_date'])); ?>
-                        </p>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
 </body>
 

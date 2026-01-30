@@ -338,93 +338,96 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <a href="add_product.php" class="btn-add">Add Your First Wine</a>
                 </div>
             <?php else: ?>
-                <table class="styled-table">
-                    <thead>
-                        <tr>
-                            <th width="40%">Wine Details</th>
-                            <th width="20%">Price</th>
-                            <th width="20%">Status</th>
-                            <th width="20%" style="text-align: right;">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($products as $p): ?>
+                <div class="table-responsive">
+                    <table class="styled-table">
+                        <thead>
                             <tr>
-                                <td>
-                                    <div class="product-cell">
-                                        <div class="product-img-wrapper">
-                                            <?php
-                                            $img_src = '';
-                                            $is_default = false;
-                                            if (!empty($p['image_path'])) {
-                                                $img_src = (strpos($p['image_path'], 'uploads/') === 0) ? '../' . $p['image_path'] : '../uploads/' . $p['image_path'];
-                                            } else {
-                                                $is_default = true;
-                                                $type = strtolower($p['type']);
-                                                if (strpos($type, 'red') !== false)
-                                                    $img_src = '../assets/images/defaults/red_default.png';
-                                                elseif (strpos($type, 'white') !== false)
-                                                    $img_src = '../assets/images/defaults/white_default.png';
-                                                elseif (strpos($type, 'rose') !== false)
-                                                    $img_src = '../assets/images/defaults/rose_default.png';
-                                                elseif (strpos($type, 'sparkling') !== false)
-                                                    $img_src = '../assets/images/defaults/sparkling_default.png';
-                                                else
-                                                    $img_src = '../assets/images/defaults/red_default.png';
-                                            }
-                                            ?>
-                                            <img src="<?php echo htmlspecialchars($img_src); ?>"
-                                                alt="<?php echo htmlspecialchars($p['name']); ?>"
-                                                style="width: 100%; height: 100%; object-fit: cover;">
-                                        </div>
-                                        <div class="product-info">
-                                            <h3><?php echo htmlspecialchars($p['name']); ?></h3>
-                                            <span><?php echo htmlspecialchars($p['type']); ?></span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span class="price-tag">₱<?php echo number_format($p['price'], 2); ?></span>
-                                </td>
-                                <td>
-                                    <?php
-                                    $qty = (int) $p['stock_qty'];
-                                    $badgeClass = 'stock-high';
-                                    $statusText = 'In Stock (' . $qty . ')';
-
-                                    if ($qty === 0) {
-                                        $badgeClass = 'stock-out';
-                                        $statusText = 'Sold Out';
-                                    } elseif ($qty < 5) {
-                                        $badgeClass = 'stock-low';
-                                        $statusText = 'Low Stock (' . $qty . ')';
-                                    }
-                                    ?>
-                                    <span class="stock-badge <?php echo $badgeClass; ?>">
-                                        <?php echo $statusText; ?>
-                                    </span>
-                                </td>
-                                <td style="text-align: right;">
-                                    <button type="button" class="action-btn"
-                                        style="background: rgba(255, 255, 255, 0.1); color: #ccc; margin-right: 8px; border: none; cursor: pointer;"
-                                        onclick='openProductModal(<?php echo json_encode($p, JSON_HEX_APOS | JSON_HEX_QUOT); ?>)'>View</button>
-                                    <a href="edit_product.php?id=<?php echo $p['id']; ?>" class="action-btn btn-edit">Edit</a>
-                                    <a href="?delete=<?php echo $p['id']; ?>" class="action-btn btn-delete"
-                                        title="Remove Product"
-                                        onclick="return confirm('Are you sure you want to remove this product? This action cannot be undone.');">
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="2">
-                                            <path d="M3 6h18"></path>
-                                            <path
-                                                d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
-                                            </path>
-                                        </svg>
-                                    </a>
-                                </td>
+                                <th width="40%">Wine Details</th>
+                                <th width="20%">Price</th>
+                                <th width="20%">Status</th>
+                                <th width="20%" style="text-align: right;">Actions</th>
                             </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($products as $p): ?>
+                                <tr>
+                                    <td>
+                                        <div class="product-cell">
+                                            <div class="product-img-wrapper">
+                                                <?php
+                                                $img_src = '';
+                                                $is_default = false;
+                                                if (!empty($p['image_path'])) {
+                                                    $img_src = (strpos($p['image_path'], 'uploads/') === 0) ? '../' . $p['image_path'] : '../uploads/' . $p['image_path'];
+                                                } else {
+                                                    $is_default = true;
+                                                    $type = strtolower($p['type']);
+                                                    if (strpos($type, 'red') !== false)
+                                                        $img_src = '../assets/images/defaults/red_default.png';
+                                                    elseif (strpos($type, 'white') !== false)
+                                                        $img_src = '../assets/images/defaults/white_default.png';
+                                                    elseif (strpos($type, 'rose') !== false)
+                                                        $img_src = '../assets/images/defaults/rose_default.png';
+                                                    elseif (strpos($type, 'sparkling') !== false)
+                                                        $img_src = '../assets/images/defaults/sparkling_default.png';
+                                                    else
+                                                        $img_src = '../assets/images/defaults/red_default.png';
+                                                }
+                                                ?>
+                                                <img src="<?php echo htmlspecialchars($img_src); ?>"
+                                                    alt="<?php echo htmlspecialchars($p['name']); ?>"
+                                                    style="width: 100%; height: 100%; object-fit: cover;">
+                                            </div>
+                                            <div class="product-info">
+                                                <h3><?php echo htmlspecialchars($p['name']); ?></h3>
+                                                <span><?php echo htmlspecialchars($p['type']); ?></span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="price-tag">₱<?php echo number_format($p['price'], 2); ?></span>
+                                    </td>
+                                    <td>
+                                        <?php
+                                        $qty = (int) $p['stock_qty'];
+                                        $badgeClass = 'stock-high';
+                                        $statusText = 'In Stock (' . $qty . ')';
+
+                                        if ($qty === 0) {
+                                            $badgeClass = 'stock-out';
+                                            $statusText = 'Sold Out';
+                                        } elseif ($qty < 5) {
+                                            $badgeClass = 'stock-low';
+                                            $statusText = 'Low Stock (' . $qty . ')';
+                                        }
+                                        ?>
+                                        <span class="stock-badge <?php echo $badgeClass; ?>">
+                                            <?php echo $statusText; ?>
+                                        </span>
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <button type="button" class="action-btn"
+                                            style="background: rgba(255, 255, 255, 0.1); color: #ccc; margin-right: 8px; border: none; cursor: pointer;"
+                                            onclick='openProductModal(<?php echo json_encode($p, JSON_HEX_APOS | JSON_HEX_QUOT); ?>)'>View</button>
+                                        <a href="edit_product.php?id=<?php echo $p['id']; ?>"
+                                            class="action-btn btn-edit">Edit</a>
+                                        <a href="?delete=<?php echo $p['id']; ?>" class="action-btn btn-delete"
+                                            title="Remove Product"
+                                            onclick="return confirm('Are you sure you want to remove this product? This action cannot be undone.');">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2">
+                                                <path d="M3 6h18"></path>
+                                                <path
+                                                    d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                                                </path>
+                                            </svg>
+                                        </a>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
             <?php endif; ?>
         </div>
     </div>
@@ -456,7 +459,8 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         style="color: var(--accent-gold); text-transform: uppercase; letter-spacing: 2px; font-weight: 600; margin-bottom: 0.5rem;">
                     </p>
                     <h2 id="modal-name"
-                        style="font-size: 2.5rem; margin-bottom: 0.5rem; font-family: 'Playfair Display', serif;"></h2>
+                        style="font-size: 2.5rem; margin-bottom: 0.5rem; font-family: 'Playfair Display', serif;">
+                    </h2>
                     <p id="modal-varietal" style="font-size: 1.2rem; color: #aaa; margin-bottom: 1.5rem;"></p>
 
                     <div style="display: flex; gap: 2rem; margin-bottom: 2rem; align-items: center;">

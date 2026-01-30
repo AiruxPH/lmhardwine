@@ -157,85 +157,88 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </form>
 
         <div class="glass-card">
-            <table class="user-table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>User</th>
-                        <th>Email</th>
-                        <th>Role</th>
-                        <th>Profile/Brand</th>
-                        <th>Joined</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if (empty($users)): ?>
+            <div class="table-responsive">
+                <table class="user-table">
+                    <thead>
                         <tr>
-                            <td colspan="7" style="text-align: center; padding: 3rem; color: #666;">No users found matching
-                                your criteria.</td>
+                            <th>ID</th>
+                            <th>User</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Profile/Brand</th>
+                            <th>Joined</th>
+                            <th>Action</th>
                         </tr>
-                    <?php else: ?>
-                        <?php foreach ($users as $u): ?>
+                    </thead>
+                    <tbody>
+                        <?php if (empty($users)): ?>
                             <tr>
-                                <td>#
-                                    <?php echo $u['id']; ?>
-                                </td>
-                                <td>
-                                    <div
-                                        style="font-weight: bold; <?php echo $u['is_deleted'] ? 'color: #777; text-decoration: line-through;' : ''; ?>">
-                                        <?php echo htmlspecialchars($u['username']); ?>
-                                    </div>
-                                    <div style="font-size: 0.8rem; color: #666;">
-                                        <?php echo htmlspecialchars($u['full_name'] ?? ''); ?>
-                                    </div>
-                                </td>
-                                <td>
-                                    <?php echo htmlspecialchars($u['email']); ?>
-                                </td>
-                                <td>
-                                    <span class="role-badge role-<?php echo $u['role']; ?>">
-                                        <?php echo $u['role']; ?>
-                                    </span>
-                                    <?php if ($u['is_deleted']): ?>
-                                        <span
-                                            style="font-size: 0.7rem; color: #f44336; margin-left: 5px; font-weight: bold;">[ARCHIVED]</span>
-                                    <?php endif; ?>
-                                </td>
-                                <td>
-                                    <?php if ($u['role'] === 'seller'): ?>
-                                        <span style="color: var(--color-accent); font-size: 0.9rem;">
-                                            <?php echo htmlspecialchars($u['brand_name'] ?? 'N/A'); ?>
-                                        </span>
-                                    <?php else: ?>
-                                        <span style="color: #888; font-size: 0.8rem;">Personal Account</span>
-                                    <?php endif; ?>
-                                </td>
-                                <td style="font-size: 0.85rem; color: #888;">
-                                    <?php echo date('M d, Y', strtotime($u['created_at'])); ?>
-                                </td>
-                                <td>
-                                    <a href="view_user.php?id=<?php echo $u['id']; ?>" class="btn btn-sm"
-                                        style="margin-right: 5px;">View</a>
-
-                                    <?php if ($u['is_deleted']): ?>
-                                        <a href="?action=restore&id=<?php echo $u['id']; ?>" class="btn btn-sm"
-                                            style="background: rgba(76, 175, 80, 0.1); color: #4caf50; border: 1px solid rgba(76, 175, 80, 0.3);">
-                                            Restore
-                                        </a>
-                                    <?php else: ?>
-                                        <a href="?action=archive&id=<?php echo $u['id']; ?>" class="btn btn-sm"
-                                            onclick="return confirm('Are you sure you want to archive this user? They will not be able to login.');"
-                                            style="background: rgba(244, 67, 54, 0.1); color: #f44336; border: 1px solid rgba(244, 67, 54, 0.3);">
-                                            Archive
-                                        </a>
-                                    <?php endif; ?>
-                                </td>
+                                <td colspan="7" style="text-align: center; padding: 3rem; color: #666;">No users found
+                                    matching
+                                    your criteria.</td>
                             </tr>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </tbody>
-            </table>
+                        <?php else: ?>
+                            <?php foreach ($users as $u): ?>
+                                <tr>
+                                    <td>#
+                                        <?php echo $u['id']; ?>
+                                    </td>
+                                    <td>
+                                        <div
+                                            style="font-weight: bold; <?php echo $u['is_deleted'] ? 'color: #777; text-decoration: line-through;' : ''; ?>">
+                                            <?php echo htmlspecialchars($u['username']); ?>
+                                        </div>
+                                        <div style="font-size: 0.8rem; color: #666;">
+                                            <?php echo htmlspecialchars($u['full_name'] ?? ''); ?>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <?php echo htmlspecialchars($u['email']); ?>
+                                    </td>
+                                    <td>
+                                        <span class="role-badge role-<?php echo $u['role']; ?>">
+                                            <?php echo $u['role']; ?>
+                                        </span>
+                                        <?php if ($u['is_deleted']): ?>
+                                            <span
+                                                style="font-size: 0.7rem; color: #f44336; margin-left: 5px; font-weight: bold;">[ARCHIVED]</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td>
+                                        <?php if ($u['role'] === 'seller'): ?>
+                                            <span style="color: var(--color-accent); font-size: 0.9rem;">
+                                                <?php echo htmlspecialchars($u['brand_name'] ?? 'N/A'); ?>
+                                            </span>
+                                        <?php else: ?>
+                                            <span style="color: #888; font-size: 0.8rem;">Personal Account</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td style="font-size: 0.85rem; color: #888;">
+                                        <?php echo date('M d, Y', strtotime($u['created_at'])); ?>
+                                    </td>
+                                    <td>
+                                        <a href="view_user.php?id=<?php echo $u['id']; ?>" class="btn btn-sm"
+                                            style="margin-right: 5px;">View</a>
+
+                                        <?php if ($u['is_deleted']): ?>
+                                            <a href="?action=restore&id=<?php echo $u['id']; ?>" class="btn btn-sm"
+                                                style="background: rgba(76, 175, 80, 0.1); color: #4caf50; border: 1px solid rgba(76, 175, 80, 0.3);">
+                                                Restore
+                                            </a>
+                                        <?php else: ?>
+                                            <a href="?action=archive&id=<?php echo $u['id']; ?>" class="btn btn-sm"
+                                                onclick="return confirm('Are you sure you want to archive this user? They will not be able to login.');"
+                                                style="background: rgba(244, 67, 54, 0.1); color: #f44336; border: 1px solid rgba(244, 67, 54, 0.3);">
+                                                Archive
+                                            </a>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </body>

@@ -293,115 +293,119 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </header>
 
         <div class="glass-panel">
-            <table class="styled-table">
-                <thead>
-                    <tr>
-                        <th>Product Details</th>
-                        <th>Seller / Brand</th>
-                        <th>Inventory</th>
-                        <th>Price</th>
-                        <th style="text-align: right;">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if (empty($products)): ?>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
                         <tr>
-                            <td colspan="5" style="text-align: center; padding: 5rem;">
-                                <span style="font-size: 3rem; opacity: 0.1; display: block; margin-bottom: 1rem;">🍷</span>
-                                <p style="color: #666;">No products found in the database.</p>
-                            </td>
+                            <th>Product Details</th>
+                            <th>Seller / Brand</th>
+                            <th>Inventory</th>
+                            <th>Price</th>
+                            <th style="text-align: right;">Actions</th>
                         </tr>
-                    <?php else: ?>
-                        <?php foreach ($products as $p): ?>
+                    </thead>
+                    <tbody>
+                        <?php if (empty($products)): ?>
                             <tr>
-                                <td>
-                                    <div class="product-cell">
-                                        <div class="product-img-wrapper">
-                                            <?php
-                                            $img_src = '';
-                                            $is_default = false;
-                                            if ($p['image_path']) {
-                                                $img = $p['image_path'];
-                                                $img_src = (strpos($img, 'uploads/') === 0) ? '../' . $img : '../uploads/' . $img;
-                                            } else {
-                                                $is_default = true;
-                                                $type = strtolower($p['type']);
-                                                // Root-relative for JS/CSS usually, but here we are in /admin/
-                                                if (strpos($type, 'red') !== false)
-                                                    $img_src = '../assets/images/defaults/red_default.png';
-                                                elseif (strpos($type, 'white') !== false)
-                                                    $img_src = '../assets/images/defaults/white_default.png';
-                                                elseif (strpos($type, 'rose') !== false)
-                                                    $img_src = '../assets/images/defaults/rose_default.png';
-                                                elseif (strpos($type, 'sparkling') !== false)
-                                                    $img_src = '../assets/images/defaults/sparkling_default.png';
-                                                else
-                                                    $img_src = '../assets/images/defaults/red_default.png';
-                                            }
-                                            ?>
-                                            <img src="<?php echo htmlspecialchars($img_src); ?>"
-                                                alt="<?php echo htmlspecialchars($p['name']); ?>">
-                                        </div>
-                                        <div class="product-info">
-                                            <h3><?php echo htmlspecialchars($p['name']); ?></h3>
-                                            <span><?php echo htmlspecialchars($p['type']); ?> •
-                                                <?php echo htmlspecialchars($p['vintage_year']); ?></span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <?php if ($p['brand_name']): ?>
-                                        <div style="display: flex; flex-direction: column;">
-                                            <span
-                                                style="color: #fff; font-weight: 500;"><?php echo htmlspecialchars($p['brand_name']); ?></span>
-                                            <span style="color: #666; font-size: 0.8rem;">Seller ID:
-                                                #<?php echo $p['seller_id']; ?></span>
-                                        </div>
-                                    <?php else: ?>
-                                        <div style="display: flex; flex-direction: column;">
-                                            <span style="color: var(--accent-gold); font-weight: 500;">LM Hard Wine</span>
-                                            <span style="color: #666; font-size: 0.8rem;">Official House Collection</span>
-                                        </div>
-                                    <?php endif; ?>
-                                </td>
-                                <td>
-                                    <?php
-                                    $qty = (int) $p['stock_qty'];
-                                    $class = ($qty > 10) ? 'stock-high' : ($qty > 0 ? 'stock-low' : 'stock-out');
-                                    $label = ($qty > 0) ? $qty . ' in stock' : 'Sold Out';
-                                    ?>
-                                    <span class="stock-badge <?php echo $class; ?>">
-                                        <?php echo $label; ?>
-                                    </span>
-                                </td>
-                                <td>
-                                    <span class="price-tag">₱<?php echo number_format($p['price'], 2); ?></span>
-                                </td>
-                                <td style="text-align: right;">
-                                    <button type="button" class="action-btn btn-view"
-                                        onclick='openProductModal(<?php echo json_encode($p, JSON_HEX_APOS | JSON_HEX_QUOT); ?>)'>View</button>
-
-                                    <a href="edit_product.php?id=<?php echo $p['id']; ?>" class="action-btn btn-edit">Edit</a>
-
-                                    <form method="POST" style="display: inline-block;"
-                                        onsubmit="return confirm('Are you sure you want to delete this product?');">
-                                        <input type="hidden" name="delete_product_id" value="<?php echo $p['id']; ?>">
-                                        <button type="submit" class="action-btn btn-delete">
-                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                stroke-width="2">
-                                                <path d="M3 6h18"></path>
-                                                <path
-                                                    d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
-                                                </path>
-                                            </svg>
-                                        </button>
-                                    </form>
+                                <td colspan="5" style="text-align: center; padding: 5rem;">
+                                    <span
+                                        style="font-size: 3rem; opacity: 0.1; display: block; margin-bottom: 1rem;">🍷</span>
+                                    <p style="color: #666;">No products found in the database.</p>
                                 </td>
                             </tr>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </tbody>
-            </table>
+                        <?php else: ?>
+                            <?php foreach ($products as $p): ?>
+                                <tr>
+                                    <td>
+                                        <div class="product-cell">
+                                            <div class="product-img-wrapper">
+                                                <?php
+                                                $img_src = '';
+                                                $is_default = false;
+                                                if ($p['image_path']) {
+                                                    $img = $p['image_path'];
+                                                    $img_src = (strpos($img, 'uploads/') === 0) ? '../' . $img : '../uploads/' . $img;
+                                                } else {
+                                                    $is_default = true;
+                                                    $type = strtolower($p['type']);
+                                                    // Root-relative for JS/CSS usually, but here we are in /admin/
+                                                    if (strpos($type, 'red') !== false)
+                                                        $img_src = '../assets/images/defaults/red_default.png';
+                                                    elseif (strpos($type, 'white') !== false)
+                                                        $img_src = '../assets/images/defaults/white_default.png';
+                                                    elseif (strpos($type, 'rose') !== false)
+                                                        $img_src = '../assets/images/defaults/rose_default.png';
+                                                    elseif (strpos($type, 'sparkling') !== false)
+                                                        $img_src = '../assets/images/defaults/sparkling_default.png';
+                                                    else
+                                                        $img_src = '../assets/images/defaults/red_default.png';
+                                                }
+                                                ?>
+                                                <img src="<?php echo htmlspecialchars($img_src); ?>"
+                                                    alt="<?php echo htmlspecialchars($p['name']); ?>">
+                                            </div>
+                                            <div class="product-info">
+                                                <h3><?php echo htmlspecialchars($p['name']); ?></h3>
+                                                <span><?php echo htmlspecialchars($p['type']); ?> •
+                                                    <?php echo htmlspecialchars($p['vintage_year']); ?></span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <?php if ($p['brand_name']): ?>
+                                            <div style="display: flex; flex-direction: column;">
+                                                <span
+                                                    style="color: #fff; font-weight: 500;"><?php echo htmlspecialchars($p['brand_name']); ?></span>
+                                                <span style="color: #666; font-size: 0.8rem;">Seller ID:
+                                                    #<?php echo $p['seller_id']; ?></span>
+                                            </div>
+                                        <?php else: ?>
+                                            <div style="display: flex; flex-direction: column;">
+                                                <span style="color: var(--accent-gold); font-weight: 500;">LM Hard Wine</span>
+                                                <span style="color: #666; font-size: 0.8rem;">Official House Collection</span>
+                                            </div>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td>
+                                        <?php
+                                        $qty = (int) $p['stock_qty'];
+                                        $class = ($qty > 10) ? 'stock-high' : ($qty > 0 ? 'stock-low' : 'stock-out');
+                                        $label = ($qty > 0) ? $qty . ' in stock' : 'Sold Out';
+                                        ?>
+                                        <span class="stock-badge <?php echo $class; ?>">
+                                            <?php echo $label; ?>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="price-tag">₱<?php echo number_format($p['price'], 2); ?></span>
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <button type="button" class="action-btn btn-view"
+                                            onclick='openProductModal(<?php echo json_encode($p, JSON_HEX_APOS | JSON_HEX_QUOT); ?>)'>View</button>
+
+                                        <a href="edit_product.php?id=<?php echo $p['id']; ?>"
+                                            class="action-btn btn-edit">Edit</a>
+
+                                        <form method="POST" style="display: inline-block;"
+                                            onsubmit="return confirm('Are you sure you want to delete this product?');">
+                                            <input type="hidden" name="delete_product_id" value="<?php echo $p['id']; ?>">
+                                            <button type="submit" class="action-btn btn-delete">
+                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                    stroke="currentColor" stroke-width="2">
+                                                    <path d="M3 6h18"></path>
+                                                    <path
+                                                        d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                                                    </path>
+                                                </svg>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -432,7 +436,8 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         style="color: var(--color-accent); text-transform: uppercase; letter-spacing: 2px; font-weight: 600; margin-bottom: 0.5rem;">
                     </p>
                     <h2 id="modal-name"
-                        style="font-size: 2.5rem; margin-bottom: 0.5rem; font-family: 'Playfair Display', serif;"></h2>
+                        style="font-size: 2.5rem; margin-bottom: 0.5rem; font-family: 'Playfair Display', serif;">
+                    </h2>
                     <p id="modal-varietal" style="font-size: 1.2rem; color: #aaa; margin-bottom: 1.5rem;"></p>
 
                     <div style="display: flex; gap: 2rem; margin-bottom: 2rem; align-items: center;">

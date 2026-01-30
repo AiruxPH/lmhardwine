@@ -246,41 +246,43 @@ $admins = $stmt->fetchAll();
             <!-- Admins List -->
             <div class="glass-card" style="padding: 1.5rem;">
                 <h2 style="font-size: 1.2rem; margin-bottom: 1.5rem;">Active Administrators</h2>
-                <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>Username</th>
-                            <th>Role</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($admins as $admin): ?>
+                <div class="table-responsive">
+                    <table class="admin-table">
+                        <thead>
                             <tr>
-                                <td style="font-weight: 600;"><?php echo htmlspecialchars($admin['username']); ?></td>
-                                <td>
-                                    <span
-                                        class="badge <?php echo $admin['role'] === 'super_admin' ? 'badge-super' : 'badge-admin'; ?>">
-                                        <?php echo str_replace('_', ' ', $admin['role']); ?>
-                                    </span>
-                                </td>
-                                <td>
-                                    <?php if ($admin['id'] != $_SESSION['admin_id']): ?>
-                                        <?php if ($admin['role'] !== 'super_admin'): ?>
-                                            <a href="?delete=<?php echo $admin['id']; ?>"
-                                                onclick="return confirm('Are you sure you want to archive this administrator?')"
-                                                style="color: #ff9800; text-decoration: none; font-size: 0.8rem;">Archive</a>
-                                        <?php else: ?>
-                                            <span style="color: #444; font-size: 0.8rem;">Protected</span>
-                                        <?php endif; ?>
-                                    <?php else: ?>
-                                        <span style="color: #666; font-size: 0.8rem;">Its You</span>
-                                    <?php endif; ?>
-                                </td>
+                                <th>Username</th>
+                                <th>Role</th>
+                                <th>Action</th>
                             </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($admins as $admin): ?>
+                                <tr>
+                                    <td style="font-weight: 600;"><?php echo htmlspecialchars($admin['username']); ?></td>
+                                    <td>
+                                        <span
+                                            class="badge <?php echo $admin['role'] === 'super_admin' ? 'badge-super' : 'badge-admin'; ?>">
+                                            <?php echo str_replace('_', ' ', $admin['role']); ?>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <?php if ($admin['id'] != $_SESSION['admin_id']): ?>
+                                            <?php if ($admin['role'] !== 'super_admin'): ?>
+                                                <a href="?delete=<?php echo $admin['id']; ?>"
+                                                    onclick="return confirm('Are you sure you want to archive this administrator?')"
+                                                    style="color: #ff9800; text-decoration: none; font-size: 0.8rem;">Archive</a>
+                                            <?php else: ?>
+                                                <span style="color: #444; font-size: 0.8rem;">Protected</span>
+                                            <?php endif; ?>
+                                        <?php else: ?>
+                                            <span style="color: #666; font-size: 0.8rem;">Its You</span>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

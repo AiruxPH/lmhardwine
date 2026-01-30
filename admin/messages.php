@@ -284,7 +284,6 @@ $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     </tbody>
                 </table>
             </div>
-
             <!-- Pagination -->
             <?php if ($total_pages > 1): ?>
                 <div style="margin-top: 1.5rem; display: flex; justify-content: center; gap: 0.5rem;">

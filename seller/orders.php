@@ -108,48 +108,50 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <p style="color: var(--color-text-muted);">No orders found for your products yet.</p>
                 </div>
             <?php else: ?>
-                <table class="orders-table">
-                    <thead>
-                        <tr>
-                            <th>Order ID</th>
-                            <th>Date</th>
-                            <th>Customer</th>
-                            <th>Your Revenue</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($orders as $o): ?>
+                <div class="table-responsive">
+                    <table class="orders-table">
+                        <thead>
                             <tr>
-                                <td>#
-                                    <?php echo htmlspecialchars($o['order_id']); ?>
-                                </td>
-                                <td>
-                                    <?php echo date('M d, Y', strtotime($o['order_date'])); ?>
-                                </td>
-                                <td>
-                                    <?php echo htmlspecialchars($o['customer_name'] ?? 'Guest'); ?>
-                                </td>
-                                <td class="text-accent">₱
-                                    <?php echo number_format($o['seller_total'], 2); ?>
-                                </td>
-                                <td>
-                                    <?php
-                                    $statusClass = 'status-' . strtolower($o['status']);
-                                    ?>
-                                    <span class="status-badge <?php echo $statusClass; ?>">
-                                        <?php echo htmlspecialchars($o['status']); ?>
-                                    </span>
-                                </td>
-                                <td>
-                                    <a href="view_order.php?id=<?php echo $o['order_id']; ?>" class="btn btn-primary"
-                                        style="padding: 5px 15px; font-size: 0.8rem;">View Items</a>
-                                </td>
+                                <th>Order ID</th>
+                                <th>Date</th>
+                                <th>Customer</th>
+                                <th>Your Revenue</th>
+                                <th>Status</th>
+                                <th>Action</th>
                             </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($orders as $o): ?>
+                                <tr>
+                                    <td>#
+                                        <?php echo htmlspecialchars($o['order_id']); ?>
+                                    </td>
+                                    <td>
+                                        <?php echo date('M d, Y', strtotime($o['order_date'])); ?>
+                                    </td>
+                                    <td>
+                                        <?php echo htmlspecialchars($o['customer_name'] ?? 'Guest'); ?>
+                                    </td>
+                                    <td class="text-accent">₱
+                                        <?php echo number_format($o['seller_total'], 2); ?>
+                                    </td>
+                                    <td>
+                                        <?php
+                                        $statusClass = 'status-' . strtolower($o['status']);
+                                        ?>
+                                        <span class="status-badge <?php echo $statusClass; ?>">
+                                            <?php echo htmlspecialchars($o['status']); ?>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a href="view_order.php?id=<?php echo $o['order_id']; ?>" class="btn btn-primary"
+                                            style="padding: 5px 15px; font-size: 0.8rem;">View Items</a>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
             <?php endif; ?>
         </div>
     </div>
