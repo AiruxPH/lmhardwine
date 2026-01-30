@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jan 30, 2026 at 10:08 AM
+-- Generation Time: Jan 30, 2026 at 10:23 AM
 -- Server version: 11.8.3-MariaDB-log
 -- PHP Version: 7.2.34
 
@@ -41,6 +41,34 @@ CREATE TABLE `admins` (
 
 INSERT INTO `admins` (`id`, `username`, `password_hash`, `role`, `created_at`) VALUES
 (1, 'admin', '$2y$10$bv/10uJDsxjFRk9w1RYO5ObrrXUukeVmVxprOyooVPlKGNIzUEoa2', 'super_admin', '2026-01-20 15:53:25');
+
+--
+-- Triggers `admins`
+--
+DELIMITER $$
+CREATE TRIGGER `before_admin_delete` BEFORE DELETE ON `admins` FOR EACH ROW BEGIN
+    IF OLD.role = 'super_admin' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'The Super Admin account cannot be deleted.';
+    END IF;
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `before_admin_insert` BEFORE INSERT ON `admins` FOR EACH ROW BEGIN
+    IF NEW.role = 'super_admin' AND (SELECT COUNT(*) FROM admins WHERE role = 'super_admin') >= 1 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Only one Super Admin is allowed.';
+    END IF;
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `before_admin_update` BEFORE UPDATE ON `admins` FOR EACH ROW BEGIN
+    IF NEW.role = 'super_admin' AND OLD.role != 'super_admin' AND (SELECT COUNT(*) FROM admins WHERE role = 'super_admin') >= 1 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Only one Super Admin is allowed.';
+    END IF;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
