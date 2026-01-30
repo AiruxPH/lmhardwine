@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <p style="color: var(--color-text-muted);">Taste the intensity. Get in touch.</p>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-xl);">
+        <div class="contact-grid">
 
             <!-- Contact Info -->
             <div class="fade-in">

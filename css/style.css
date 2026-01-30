@@ -488,6 +488,18 @@ img {
     align-items: start;
 }
 
+.contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-xl);
+}
+
+@media (max-width: 768px) {
+    .contact-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* Fix for browser autofill white backgroundd */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,

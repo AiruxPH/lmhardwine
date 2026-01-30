@@ -9,7 +9,7 @@
         </div>
 
         <div
-            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--spacing-xl); align-items: center;">
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--spacing-xl); align-items: center;">
             <div class="animate-on-scroll">
                 <div
                     style="width: 100%; height: 500px; background: #1a1a1a; border-radius: 8px; position: relative; overflow: hidden;">
