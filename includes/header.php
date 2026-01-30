@@ -132,10 +132,6 @@ error_reporting(E_ALL);
                         <span id="cart-count" class="cart-badge">0</span>
                     </a>
                 <?php endif; ?>
-
-                <a href="products.php" class="btn btn-primary desktop-auth"
-                    style="padding: 8px 20px; font-size: 0.8rem;">Shop
-                    Now</a>
             </div>
         </div>
     </header>
