@@ -51,7 +51,7 @@ if (!$product) {
         </div>
 
         <div
-            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: var(--spacing-xl); align-items: start;">
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--spacing-xl); align-items: start;">
 
             <!-- Visual Side -->
             <div class="glass-card animate-on-scroll" style="padding: 0; overflow: hidden; ">

@@ -43,7 +43,8 @@ $history = $stmt_hist->fetchAll(PDO::FETCH_ASSOC);
                 <h1 style="font-family: 'Playfair Display', serif; font-size: 2.5rem; margin: 0;">Order <span
                         style="color: var(--color-accent);">#<?php echo $order['id']; ?></span></h1>
                 <p style="color: var(--color-text-muted); margin: 5px 0 0 0;">Placed on
-                    <?php echo date('F d, Y \a\t h:i A', strtotime($order['order_date'])); ?></p>
+                    <?php echo date('F d, Y \a\t h:i A', strtotime($order['order_date'])); ?>
+                </p>
             </div>
             <div style="text-align: right;">
                 <?php
@@ -63,7 +64,7 @@ $history = $stmt_hist->fetchAll(PDO::FETCH_ASSOC);
             </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 320px; gap: 2rem; align-items: start;">
+        <div class="order-details-grid">
             <!-- Items List -->
             <div class="glass-card" style="padding: 0;">
                 <div style="padding: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.05);">
@@ -82,14 +83,17 @@ $history = $stmt_hist->fetchAll(PDO::FETCH_ASSOC);
                                 <?php else: ?>
                                     <div
                                         style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; opacity: 0.1; font-weight: bold;">
-                                        <?php echo $item['type'] ?? '🍷'; ?></div>
+                                        <?php echo $item['type'] ?? '🍷'; ?>
+                                    </div>
                                 <?php endif; ?>
                             </div>
                             <div style="flex: 1;">
                                 <h4 style="margin: 0; font-size: 1rem; color: #fff;">
-                                    <?php echo htmlspecialchars($item['product_name']); ?></h4>
+                                    <?php echo htmlspecialchars($item['product_name']); ?>
+                                </h4>
                                 <p style="margin: 3px 0 0 0; color: #666; font-size: 0.9rem;">Quantity:
-                                    <?php echo $item['quantity']; ?></p>
+                                    <?php echo $item['quantity']; ?>
+                                </p>
                             </div>
                             <div style="text-align: right;">
                                 <p style="margin: 0; font-weight: bold; color: var(--color-accent);">
@@ -115,13 +119,16 @@ $history = $stmt_hist->fetchAll(PDO::FETCH_ASSOC);
                         style="margin-bottom: 1.2rem; font-size: 1.1rem; color: var(--color-accent); text-transform: uppercase; letter-spacing: 1px;">
                         Shipping To</h3>
                     <p style="color: #fff; font-weight: 600; margin-bottom: 5px;">
-                        <?php echo htmlspecialchars($order['customer_name']); ?></p>
+                        <?php echo htmlspecialchars($order['customer_name']); ?>
+                    </p>
                     <p style="color: #888; font-size: 0.9rem; line-height: 1.6;">
-                        <?php echo nl2br(htmlspecialchars($order['customer_address'])); ?></p>
+                        <?php echo nl2br(htmlspecialchars($order['customer_address'])); ?>
+                    </p>
                     <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.05);">
                         <p style="color: #666; font-size: 0.8rem; text-transform: uppercase;">Contact Email</p>
                         <p style="color: #ccc; font-size: 0.9rem;">
-                            <?php echo htmlspecialchars($order['customer_email']); ?></p>
+                            <?php echo htmlspecialchars($order['customer_email']); ?>
+                        </p>
                     </div>
                 </div>
 
@@ -157,9 +164,11 @@ $history = $stmt_hist->fetchAll(PDO::FETCH_ASSOC);
                                     </div>
                                     <p
                                         style="margin: 0; font-weight: 600; color: #fff; font-size: 0.9rem; text-transform: uppercase;">
-                                        <?php echo htmlspecialchars($h['status_to']); ?></p>
+                                        <?php echo htmlspecialchars($h['status_to']); ?>
+                                    </p>
                                     <p style="margin: 2px 0 0 0; font-size: 0.75rem; color: #555;">
-                                        <?php echo date('M d, Y - h:i A', strtotime($h['changed_at'])); ?></p>
+                                        <?php echo date('M d, Y - h:i A', strtotime($h['changed_at'])); ?>
+                                    </p>
                                     <?php if (!empty($h['notes'])): ?>
                                         <div
                                             style="margin-top: 5px; padding: 8px; background: rgba(255,255,255,0.02); border-radius: 4px; font-size: 0.85rem; color: #aaa; border: 1px solid rgba(255,255,255,0.03);">
@@ -178,7 +187,8 @@ $history = $stmt_hist->fetchAll(PDO::FETCH_ASSOC);
                                 style="margin: 0; font-weight: 600; color: #aaa; font-size: 0.9rem; text-transform: uppercase;">
                                 Order Placed</p>
                             <p style="margin: 2px 0 0 0; font-size: 0.75rem; color: #555;">
-                                <?php echo date('M d, Y - h:i A', strtotime($order['order_date'])); ?></p>
+                                <?php echo date('M d, Y - h:i A', strtotime($order['order_date'])); ?>
+                            </p>
                         </div>
                     </div>
                 </div>

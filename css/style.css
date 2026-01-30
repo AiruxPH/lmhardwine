@@ -449,6 +449,45 @@ img {
     background: rgba(255, 255, 255, 0.1);
 }
 
+/* Mobile Nav Visibility Helpers */
+.mobile-only-nav {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .desktop-auth {
+        display: none !important;
+    }
+
+    .mobile-only-nav {
+        display: block;
+        width: 100%;
+        text-align: center;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        padding-top: 1rem;
+    }
+
+    .nav-links li {
+        width: 100%;
+        text-align: center;
+    }
+
+    .cart-panel {
+        max-width: 85%;
+    }
+
+    .order-details-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+.order-details-grid {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 2rem;
+    align-items: start;
+}
+
 /* Fix for browser autofill white backgroundd */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,

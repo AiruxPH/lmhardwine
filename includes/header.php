@@ -65,12 +65,25 @@ error_reporting(E_ALL);
                     <li><a href="products.php">Collection</a></li>
                     <li><a href="about.php">Our Story</a></li>
                     <li><a href="contact.php">Contact</a></li>
+
+                    <!-- Mobile Only Links -->
+                    <?php if (isset($_SESSION['user_logged_in']) && $_SESSION['user_logged_in'] === true): ?>
+                        <li class="mobile-only-nav"><a
+                                href="<?php echo ($_SESSION['role'] === 'seller') ? 'seller/index.php' : 'profile.php'; ?>">My
+                                Account</a></li>
+                        <li class="mobile-only-nav"><a href="logout.php">Logout</a></li>
+                    <?php elseif (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true): ?>
+                        <li class="mobile-only-nav"><a href="admin/index.php">Admin Panel</a></li>
+                        <li class="mobile-only-nav"><a href="logout.php">Logout</a></li>
+                    <?php else: ?>
+                        <li class="mobile-only-nav"><a href="login.php">Login / Register</a></li>
+                    <?php endif; ?>
                 </ul>
             </nav>
             <div class="header-actions" style="display: flex; align-items: center; gap: 1.5rem;">
                 <!-- Auth Links -->
                 <?php if (isset($_SESSION['user_logged_in']) && $_SESSION['user_logged_in'] === true): ?>
-                    <div style="color: white; font-size: 0.9rem;">
+                    <div class="desktop-auth" style="color: white; font-size: 0.9rem;">
                         <span style="color: var(--color-text-muted);">Hello,</span>
                         <?php
                         $profileLink = ($_SESSION['role'] === 'seller') ? 'seller/profile.php' : 'profile.php';
@@ -83,12 +96,14 @@ error_reporting(E_ALL);
                                 onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'">My Orders</a>
                         <?php endif; ?>
                     </div>
-                    <a href="logout.php" style="color: white; font-size: 0.9rem; text-decoration: underline;">Logout</a>
+                    <a href="logout.php" class="desktop-auth"
+                        style="color: white; font-size: 0.9rem; text-decoration: underline;">Logout</a>
                 <?php elseif (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true): ?>
-                    <a href="admin/index.php" style="color: var(--color-accent); font-weight: bold;">Admin Panel</a>
-                    <a href="logout.php" style="color: white; font-size: 0.9rem;">Logout</a>
+                    <a href="admin/index.php" class="desktop-auth"
+                        style="color: var(--color-accent); font-weight: bold;">Admin Panel</a>
+                    <a href="logout.php" class="desktop-auth" style="color: white; font-size: 0.9rem;">Logout</a>
                 <?php else: ?>
-                    <a href="login.php" style="color: white; font-size: 0.9rem;">Login / Register</a>
+                    <a href="login.php" class="desktop-auth" style="color: white; font-size: 0.9rem;">Login / Register</a>
                 <?php endif; ?>
 
                 <button id="mobile-menu-toggle" class="mobile-toggle" aria-label="Toggle navigation">
@@ -118,7 +133,8 @@ error_reporting(E_ALL);
                     </a>
                 <?php endif; ?>
 
-                <a href="products.php" class="btn btn-primary" style="padding: 8px 20px; font-size: 0.8rem;">Shop
+                <a href="products.php" class="btn btn-primary desktop-auth"
+                    style="padding: 8px 20px; font-size: 0.8rem;">Shop
                     Now</a>
             </div>
         </div>

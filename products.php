@@ -66,7 +66,7 @@ try {
 
         <!-- Product Grid -->
         <div
-            style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: var(--spacing-md);">
+            style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--spacing-md);">
             <?php foreach ($filtered_products as $product): ?>
                 <div class="glass-card animate-on-scroll" style="">
 
