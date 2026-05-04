@@ -30,68 +30,74 @@ $order_count = $stmt->fetch()['count'];
 <!DOCTYPE html>
 <html lang="en">
 
-<style>
-    body {
-        padding-top: 80px;
-    }
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Dashboard - LM Hard Wine</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        body {
+            padding-top: 80px;
+        }
 
-    .dashboard-container {
-        max-width: 1200px;
-        margin: 2rem auto;
-        padding: 0 1rem;
-    }
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
 
-    .welcome-banner {
-        margin-bottom: 2rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        padding-bottom: 1rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: end;
-    }
+        .welcome-banner {
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+        }
 
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 1.5rem;
-        margin-bottom: 2rem;
-    }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
 
-    .stat-card {
-        padding: 1.5rem;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
+        .stat-card {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
 
-    .stat-value {
-        font-size: 2.5rem;
-        font-weight: 700;
-        color: var(--color-text-main);
-        margin-bottom: 0.5rem;
-        line-height: 1;
-    }
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--color-text-main);
+            margin-bottom: 0.5rem;
+            line-height: 1;
+        }
 
-    .stat-label {
-        color: var(--color-text-muted);
-        text-transform: uppercase;
-        font-size: 0.8rem;
-        letter-spacing: 1px;
-    }
+        .stat-label {
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
 
-    .action-card {
-        border-left: 3px solid var(--color-accent);
-        transition: transform 0.2s;
-    }
+        .action-card {
+            border-left: 3px solid var(--color-accent);
+            transition: transform 0.2s;
+        }
 
-    .action-card:hover {
-        transform: translateY(-2px);
-    }
-</style>
+        .action-card:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
 
 <body>
 
-
+    <?php include 'includes/header.php'; ?>
 
     <div class="dashboard-container">
         <div class="welcome-banner">
